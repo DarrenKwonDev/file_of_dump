@@ -7,7 +7,8 @@
 -   한 줄에서 함수 여러 번 호출 하지 말 것 (unspecified behavior)
 -   한 줄에서 동일 변수를 여러 번 바꾸지 말 것 (undefined behavior)
 -   조건문에서는 short circuit evaluation 유의
--
+-   전역 변수 prefix `g_` 붙이기
+-   가급적 모든 변수에 const를 붙이는게 좋다. (rust 기본 동작처럼)
 
 ## env settings
 
@@ -26,9 +27,13 @@ clang -std=c89 -W -Wall -pedantic-errors $file
 cmp: compare  
 je : jump if equal  
 jz : jump if zero  
+jg : jump if greater  
+jl : jump if less  
 xor : exclusive or  
 pop : pop stack  
 push: push stack  
 call: call function  
 ret : return from function  
-mov : move
+mov : move  
+dec : decrement  
+inc : increment
