@@ -23,12 +23,12 @@ clang -std=c89 -W -Wall -pedantic-errors $file
 
 ## simple assembly
 
-cmp: compare
-je : jump if equal
-jz : jump if zero
-xor : exclusive or
-pop : pop stack
-push: push stack
-call: call function
-ret : return from function
+cmp: compare  
+je : jump if equal  
+jz : jump if zero  
+xor : exclusive or  
+pop : pop stack  
+push: push stack  
+call: call function  
+ret : return from function  
 mov : move
