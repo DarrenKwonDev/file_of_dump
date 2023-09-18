@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.html": "html",
+        "*.yml": "yaml",
+        "*.gohtml": "gohtml",
+        "stdio.h": "c",
+        "limits.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
+}
