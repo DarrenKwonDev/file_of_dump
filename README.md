@@ -15,25 +15,36 @@
 ## mem model
 
 ```
-stack
-heap
+stack : 위(큰 주소)에서 아래(작은 주소)로
+heap : 아래(작은 주소)에서 위(큰 주소)로
 data
 code
 ```
 
 -   보통 개발하면서 신경쓰는 부분은 stack, heap이라 이 부분을 알아둬야.
--   stack
+-   process간 독립된 mem model을 지니고 있다면, thread는 stack을 제외한 영역을 공유한다.
+
+    -   stackless thread 사용하지 않는 이상 thread 생성 시 stack size를 지정할 수 있다.
+
+-   `stack`
+
     -   스택은 매개 변수, 지역 변수가 저장되는 곳이다. 함수의 호출과 함께 할당되며 함수의 호출이 완료되면 해당 부분을 사용하지 않는다. 지우는 것도 컴퓨팅 리소스가 필요한 일이기에. 나중에 필요하면 덮어 쓰는 방식임.
     -   함수를 오고가면서 EBP, ESP를 옮겨가고 함수 내 변수 등은 그 사이인 stack pointer에 존재함
+    -   스택 메모리의 크기는 프로그램 빌드 시(컴파일 타임)에 결정되며 스택 메모리의 위치는 실행 시(런타임)에 결정됨.
     -   변수를 선언하면 stack 영역에 할당된다고 알아두자.
     -   값형(value)를 call by value하면 스택에 복사본을 만듦.
-    -   스택 메모리의 크기는 프로그램 빌드 시(컴파일 타임)에 결정되며 스택 메모리의 위치는 실행 시(런타임)에 결정됨.
-    -   stack frame : 각 함수가 사용하는 스택 메모리의 범위. EBP와 ESP 사이의 범위임. 함수 2개 정의해놓고 호출한다면 EBP, ESP 왔다갔다 하면서 stack frame 2개 정도 잡아놓고 쓰다가 호출 완료되면 쓰지 않는다. 적극적으로 할당한 값을 메모리에서 지우지 않고 그냥 사용하지 않는다.
-    -   stack pointer
-        -   EBP (extended based pointer) : 스택 프레임의 첫 주소. Base라는 단어에 집중. → stack의 top. 현재 stack frame이 어디에 있는지 알게 해주는 포인터.
-        -   ESP (extended stack pointer) : 현재 스택 포인터 → stack의 bottom. 현재 stack frame이 어디 까지 차 있는지 보여주는 포인터이기도 함.
-    -   보통 stack은 1MB 정도 된다고 한다. 얼마 되지 않기 때문에 재귀 호출할 때 탈출문을 제대로 작성하지 않으면 call stack 터지곤한다. stack 관점에서 보자면 함수 호출할 때마다 stack frame을 할당하는데 이게 계속 쌓이다보니 stack 메모리가 부족해져서 발생하는 문제다.
-    -   또, 너무 큰 데이터는 stack에 넣으면 안된다. 이럴 때는 ‘동적 메모리 할당'하는게 좋다. os에게 메모리 달라고 부탁하는 것.
+    -   너무 큰 데이터는 stack에 넣으면 안된다. 이럴 때는 ‘동적 메모리 할당'하는게 좋다. os에게 메모리 달라고 부탁하는 것.
+    -   `stack frame`
+        -   각 함수가 사용하는 스택 메모리의 범위. EBP와 ESP 사이의 범위.
+        -   함수 2개 정의해놓고 호출한다면 EBP, ESP 왔다갔다 하면서 stack frame 2개 정도 잡아놓고 쓰다가 호출 완료되면 쓰지 않는다.
+        -   적극적으로 할당한 값을 메모리에서 지우지 않고 그냥 사용하지 않는다.
+    -   `stack pointer`
+        -   `EBP` (extended based pointer) : 스택 프레임의 첫 주소. Base라는 단어에 집중. → stack의 top. 현재 stack frame이 어디에 있는지 알게 해주는 포인터.
+        -   `ESP` (extended stack pointer) : 현재 스택 포인터 → stack의 bottom. 현재 stack frame이 어디 까지 차 있는지 보여주는 포인터이기도 함.
+    -   `call stack`
+        -   stack 자료구조의 LIFO 특성이 stack 메모리에도 적용된다. 함수의 특성상 나중에 호출된 함수가 반환되지 않음녀 전에 쌓인 스택은 반환되지 않는다. 이런 특성을 이용해 함수의 호출과 반환을 관리하는 메모리 영역을 call stack이라고 한다.
+        -   clang windows 기준 stack은 1MB 정도 된다고 한다. 얼마 되지 않기 때문에 재귀 호출할 때 탈출문을 제대로 작성하지 않으면 call stack 터지곤한다. stack 관점에서 보자면 함수 호출할 때마다 stack frame을 할당하는데 이게 계속 쌓이다보니 stack 메모리가 부족해져서 발생하는 문제다.
+
 -   heap
 
 ## env settings
@@ -46,7 +57,12 @@ code
 
 ```bash
 clang -std=c89 -W -Wall -pedantic-errors $file
+clang -S $file # assembly output
 ```
+
+## resources
+
+[dive into system](https://diveintosystems.org/book/index.html)
 
 ## simple assembly
 
@@ -60,6 +76,19 @@ pop : pop stack
 push: push stack  
 call: call function  
 ret : return from function  
-mov : move  
+mov : move (mov a,b는 b를 a에 대입하라는 의미)  
 dec : decrement  
 inc : increment
+
+## registers
+
+ebp : base pointer
+esp : stack pointer
+
+e.x 꼴을 따르고 있음  
+eax : extended accumulator register
+ebx : extended base register
+ecx : extended counter register
+edx : extended data register
+
+<img src="./imgs/registers.png" />
