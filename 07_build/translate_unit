@@ -1,0 +1,35 @@
+# 1 "./adder.c"
+# 1 "<built-in>" 1
+# 1 "<built-in>" 3
+# 400 "<built-in>" 3
+# 1 "<command line>" 1
+# 1 "<built-in>" 2
+# 1 "./adder.c" 2
+# 1 "./adder.h" 1
+int add(const int a, const int b);
+# 2 "./adder.c" 2
+
+int add(const int a, const int b) {
+    return a + b;
+}
+# 1 "./main.c"
+# 1 "<built-in>" 1
+# 1 "<built-in>" 3
+# 400 "<built-in>" 3
+# 1 "<command line>" 1
+# 1 "<built-in>" 2
+# 1 "./main.c" 2
+# 1 "./adder.h" 1
+int add(const int a, const int b);
+# 2 "./main.c" 2
+
+
+
+
+
+
+
+int main(void) {
+    const int res = add(1, 2);
+    return 0;
+}

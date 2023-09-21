@@ -4,7 +4,8 @@
         "*.yml": "yaml",
         "*.gohtml": "gohtml",
         "stdio.h": "c",
-        "limits.h": "c"
+        "limits.h": "c",
+        "adder.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

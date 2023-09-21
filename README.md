@@ -10,7 +10,86 @@
 -   전역 변수 prefix `g_` 붙이기
 -   가급적 모든 변수에 const를 붙이는게 좋다. (rust 기본 동작처럼)
     -   변수가 기본이고 상수가 별도 표기하는 것이 아니라, 관점을 달리해서 기본이 상수로, 변수가 별도 표기하는 것이 좋다고 생각함. 문제는 C-lang와 그 영향을 받은 c-like language들이 이런 관점을 가지고 있지 않다는 것임.
--
+-   build target (platform) 환경을 알아 두어라.
+
+## compiler
+
+-   clang
+    -   LLVM 컴파일러 구조를 사용하는 계열
+    -   gcc 사용 인터페이스를 거의 비슷함. mac에서 gcc는 clang을 wrapping한 것일 정도.
+    -   보통 이걸 쓰게 된다.
+-   gcc (GNU Compiler Collection)
+    -   거의 모든 표준 지원 + cross platform
+-   MS visual C++
+    -   cpp 컴파일러임에도 .c 확장자면 컴파일함.
+    -   C99 표준. C11은 거의 지원하지 않음.
+    -   window에서는 이 컴파일러를 사용하는 경우가 많음.
+
+## build process
+
+```mermaid
+flowchart LR
+
+A(source code .h, .c) -- preprocessing --> B(translation unit)
+B -- compile --> C(assembly code .s)
+C -- assembler --> D(object code)
+D -- linker --> E(machine code, 실행 코드, 라이브러리)
+```
+
+-   모든 c 파일을 컴파일하여 object code로 만들어 놓고 마지막에 linking 작업을 함
+
+-   전처리(preprocessing)
+    -   전처리기라는 별도의 프로그램이 담당하곤 함.
+    -   주석 제거, 매크로 확장, include한 내용을 붙여 넣기 등.
+    -   위 과정을 거쳐 만들어진 것이 확장된 소스 코드 = translation unit
+-   compile
+    -   assembly 언어를 뱉음. 특정 target platform에 종속적임.
+-   assemble
+    -   0과 1로 이루어진 기계어이긴 하지만 아직 linking을 거치지 않아 기계가 실행할 순 없음.
+-   linker
+    -   obj 코드를 모아 linking. 여러 obj 파일을 하나의 실행 파일로 만듦.
+
+## module & lib
+
+-   header(.h)와 c파일(.c)
+
+    -   c 파일
+        -   로직 코드 존재. 함수 정의, 전역 변수, 매크로 등.
+    -   header 파일
+        -   공유하고자 하는 것 정의. 함수 선언, 매크로, extern 등. #include 구문으로 포함함.
+
+-   `#include <>` vs `#include ""`
+
+    -   디스크 상 어디에서 header 파일을 찾는가?의 차이
+    -   <>는 시스템 경로. 즉, C에서 제공하는 기본 라이브러리를 include할 때 주로 사용
+    -   ""는 현재 work dir에서 먼저 찾고 없으면 시스템 경로에서 찾음.
+    -   즉, 직접 만든 header는 ""로, 기본 라이브러리는 <>로 include 하자.
+
+-   extern
+
+    -   '외부 변수'. .h든 .c든 extern이 선언되면 '나 외부에 있는 것을 사용하겠다'는 의미.
+
+-   static
+
+    -   선언된 파일 내 혹은 블록 내에서만 사용할 수 있으며 extern으로 호출하여도 Undefined symbols 에러가 발생한다.
+    -   `_s` 붙이는 컨벤션 권고.
+    -   함수 내 선언된 static은 함수 호출이 끝나고 GC 당하지 않고 계속 유지 된다.
+    -   static 변수를 선언하고, 해당 변수를 mutable하는 별도 함수를 만들어 호출하는 방법이 안전함. 일종의 setter 함수.
+
+-   static library vs dynamic library
+
+    -   정적 라이브러리는 라이브러리 + 내 코드가 합쳐져서 컴파일되고 실행 파일에 포함됨. 실행 파일이 커짐.
+        -   즉, 정적 라이브러리는 만들어 놓고 코드에 복붙하는 것과 같다.
+        -   실행이 빠른 장점이 있긴 함.
+    -   동적 라이브는 이미 존재하는 내 실행 파일에서 실행할 때 lazy하게 동적 라이브러리를 로딩하여 링킹이 진행됨.
+        -   실행하다가 필요한 코드를 건드리면 동적 라이브러리가 로드됨
+        -   흔히 보는 `dll`이 `dynamic link library`의 약자임.
+        -   여러 실행 파일들이 동일한 라이브러리를 공유하여 메모리를 절약할 수 있는 장점
+
+-   circular header include
+    -   include guard를 사용하자.
+    -   #ifndef, #define, #endif를 사용하여 중복 include를 방지하는 것.
+    -   #pragma once를 사용할 수도 있으나 표준은 아님.
 
 ## mem model
 
@@ -28,7 +107,7 @@ code
 
 -   `stack`
 
-    -   스택은 매개 변수, 지역 변수가 저장되는 곳이다. 함수의 호출과 함께 할당되며 함수의 호출이 완료되면 해당 부분을 사용하지 않는다. 지우는 것도 컴퓨팅 리소스가 필요한 일이기에. 나중에 필요하면 덮어 쓰는 방식임.
+    -   스택은 매개 변수, 지역 변수가 저장되는 곳이다. 함수의 호출과 함께 할당되며 함수의 호출이 완료되면 해당 부분을 사용하지 않는다. 지우는 것도 컴퓨팅 리소스가 필요한 일이기에. 나중에 필요하면 덮어 쓰는 방식임. (함수 자체는 code에 올라가고, 함수 내 사용하는 변수들이 stack에 올라감)
     -   함수를 오고가면서 EBP, ESP를 옮겨가고 함수 내 변수 등은 그 사이인 stack pointer에 존재함
     -   스택 메모리의 크기는 프로그램 빌드 시(컴파일 타임)에 결정되며 스택 메모리의 위치는 실행 시(런타임)에 결정됨.
     -   변수를 선언하면 stack 영역에 할당된다고 알아두자.
@@ -57,7 +136,10 @@ code
 
 ```bash
 clang -std=c89 -W -Wall -pedantic-errors $file
+
+clang -E $file # preprocessor output (translation unit)
 clang -S $file # assembly output
+clang -c $file # object output
 ```
 
 ## resources
