@@ -21,8 +21,14 @@ int main(void) {
     // 따라서 (0, 0) 원소를 출력하기 위해서는 두 번 deref해야 한다.
     printf("ptr is... %p, %p, %d\n", ptr, *ptr, **ptr);
 
+    // 배열 행의 시작 주소를 출력해보자.
+    printf("%p, %p\n", arr[0], ptr[0]);
+    printf("%p, %p\n", arr[1], ptr[1]);
+    printf("%p, %p\n", arr[2], ptr[2]);
+
     // 특정 원소를 출력해보자.
     // 각각 (0행 1열), (1행 2열)의 값을 출력하라는 의미.
+    printf("%d, %d\n", arr[0][1], arr[1][2]);
     printf("%d, %d\n", ptr[0][1], *(ptr[1] + 2));
 
     printf("size of matrix : %lu\n", sizeof(arr)); // 4(int) * 2 * 3 = 24
