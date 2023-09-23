@@ -7,5 +7,22 @@
     AllowShortIfStatementsOnASingleLine: false, 
     IndentCaseLabels: false, 
     ColumnLimit: 0, 
-    AccessModifierOffset: -4 
+    AccessModifierOffset: -4,
+    PointerAlignment: Left,
 }
+
+"""
+
+- PointerAlignment
+int *num = 0; (X)
+int* num = 0; (O)
+
+- BreakBeforeBraces
+void func() 
+{
+    
+} (X)
+void func() {
+
+} (O)
+"""

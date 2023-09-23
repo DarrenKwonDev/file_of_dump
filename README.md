@@ -1,5 +1,23 @@
 # clang_tutorial
 
+<!--ts-->
+
+-   [clang_tutorial](#clang_tutorial)
+    -   [권고 사항](#권고-사항)
+    -   [compiler](#compiler)
+    -   [build process](#build-process)
+    -   [module \& lib](#module--lib)
+    -   [mem model](#mem-model)
+    -   [mem issues](#mem-issues)
+    -   [ptr, dereference](#ptr-dereference)
+    -   [env settings](#env-settings)
+    -   [clang command](#clang-command)
+    -   [resources](#resources)
+    -   [simple assembly](#simple-assembly)
+    -   [registers](#registers)
+
+<!--te-->
+
 ## 권고 사항
 
 -   전방 선언 꼭 해라. 함수 선언은 필수라 생각해라.
@@ -103,7 +121,9 @@ code
 -   보통 개발하면서 신경쓰는 부분은 stack, heap이라 이 부분을 알아둬야.
 -   process간 독립된 mem model을 지니고 있다면, thread는 stack을 제외한 영역을 공유한다.
 
-    -   stackless thread 사용하지 않는 이상 thread 생성 시 stack size를 지정할 수 있다.
+-   stackless thread 사용하지 않는 이상 thread 생성 시 stack size를 지정할 수 있다.
+
+-   문자열
 
 -   `stack`
 
@@ -126,6 +146,57 @@ code
 
 -   heap
 
+## mem issues
+
+-   memory stomp
+
+    -   프로그램 내 다른 변수가 저장된 메모리를 덮어쓰는 것
+
+-   segmentation fault의 원인
+    -   null 값을 가리키는 포인터에 접근할 경우
+    -   할당 받은 메모리 공간을 넘은 곳을 건드린 경우
+    -   더 이상 존재하지 않는 메모리 영역을 가리킬 경우
+    -   read-only 표시 메모리 영역에 쓰려고 할 경우
+
+## ptr, dereference
+
+-   pointer = 주소를 저장하는 변수 (참조)
+
+    -   `int* p_num`과 `int *p_num`은 같다.
+    -   int\* = pointer to int
+    -   int\* = pointer to int\*
+    -   x64에선 8byte, x86에선 4byte. 즉, word size 크기임.
+    -   call by value, call by reference 개념은 C에서 구분이 무익하다. 엄밀히 따지면 ptr 값을 복사해서 함수 내부에서 사용하는 것이다. 다만 메모리 주소를 통해 직접 값을 변경하기 때문에 그 변경이 원본에도 반영된다. 동작만 보면 call by reference와 같다. ptr를 함수에 넘겼음은 대부분 원본을 mutable하는 의도를 가졌을 것이다.
+    -   타 언어에서 기본 자료형을 제외하고는 모두 포인터라 봐도 무방하다. instance, object, , list, arr, ...
+
+-   arr ptr
+
+    -   ptr에 배열 할당하면 배열 첫 원소의 주소를 가리키는 ptr이 된다.
+    -   arr를 가리키는 ptr에 정수를 더하거나 빼는 것은 (++, -- 도 포함) 다음 원소 주소로의 이동을 의미한다.
+
+-   dereference(역참조)
+
+    -   포인터가 가리키는 주소에 저장된 값을 가져오는 것
+    -   역참조를 통해 값 변경을 가능
+
+-   함수에서 포인터 변수를 반환할 때 주의하라.
+
+    -   dangling ptr
+
+        -   함수 내 지역변수가 존재하는 stack frame은 함수가 return되면 방치 된다. 추후 동작에 따라서 해당 메모리는 다른 것이 덮어 쓰게 된다.
+        -   따라서 함수는 포인터 변수를 반환하면 안된다. 유효하지 않은 주소를 반환하기 때문이다.
+
+    -   함수 반환 값이 ptr이어도 되는 경우
+        -   전역 변수
+        -   파일 속 static 전역 변수
+        -   함수 내 static 변수
+        -   heap에 생성한 데이터
+
+-   null ptr
+    -   (void\*)0을 가리키는 ptr
+    -   null handling을 위해 assert, early return, 접미사 붙이기 등 프로그래밍 가시성을 높이자.
+    -   역참조한 결과는 표준에 정의되지 않음.
+
 ## env settings
 
 [EditUsing Clang in Visual Studio Code](https://code.visualstudio.com/docs/cpp/config-clang-mac)
@@ -140,6 +211,9 @@ clang -std=c89 -W -Wall -pedantic-errors $file
 clang -E $file # preprocessor output (translation unit)
 clang -S $file # assembly output
 clang -c $file # object output
+
+# for your convenience
+nodemon --exec "clang $file && ./a.out" -e c
 ```
 
 ## resources
