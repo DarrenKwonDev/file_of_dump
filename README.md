@@ -29,6 +29,8 @@
 -   가급적 모든 변수에 const를 붙이는게 좋다. (rust 기본 동작처럼)
     -   변수가 기본이고 상수가 별도 표기하는 것이 아니라, 관점을 달리해서 기본이 상수로, 변수가 별도 표기하는 것이 좋다고 생각함. 문제는 C-lang와 그 영향을 받은 c-like language들이 이런 관점을 가지고 있지 않다는 것임.
 -   build target (platform) 환경을 알아 두어라.
+-   포인터를 반환하는 함수의 경우 dangling pointer를 조심하라. 함수 내 지역변수를 가리키는 포인터는 함수가 사라지면 stack frame 내에 의도한 값을 가지지 않을 가능성이 높다.
+-   NULL이 될 가능성이 존재하는 것은 접미사로 `or_null`을 붙일 것
 
 ## compiler
 
@@ -120,10 +122,7 @@ code
 
 -   보통 개발하면서 신경쓰는 부분은 stack, heap이라 이 부분을 알아둬야.
 -   process간 독립된 mem model을 지니고 있다면, thread는 stack을 제외한 영역을 공유한다.
-
 -   stackless thread 사용하지 않는 이상 thread 생성 시 stack size를 지정할 수 있다.
-
--   문자열
 
 -   `stack`
 
@@ -166,13 +165,15 @@ code
     -   int\* = pointer to int
     -   int\* = pointer to int\*
     -   x64에선 8byte, x86에선 4byte. 즉, word size 크기임.
+        -   sizeof(short\*) == sizeof(double\*)
+        -   ptr의 좌측 자료형은 해당 포인터가 무엇을 가리키고 있는 지에 대한 정보이지 크기를 나타내는 것이 아니다.
     -   call by value, call by reference 개념은 C에서 구분이 무익하다. 엄밀히 따지면 ptr 값을 복사해서 함수 내부에서 사용하는 것이다. 다만 메모리 주소를 통해 직접 값을 변경하기 때문에 그 변경이 원본에도 반영된다. 동작만 보면 call by reference와 같다. ptr를 함수에 넘겼음은 대부분 원본을 mutable하는 의도를 가졌을 것이다.
     -   타 언어에서 기본 자료형을 제외하고는 모두 포인터라 봐도 무방하다. instance, object, , list, arr, ...
+    -   arr를 가리키는 ptr에 정수를 더하거나 빼는 것은 (++, -- 도 포함) 다음 원소 주소로의 이동을 의미한다. 배열을 가리키는 ptr에서 주로 사용되나 일반 값을 나타내는 ptr에서도 적용된다.
 
 -   arr ptr
 
     -   ptr에 배열 할당하면 배열 첫 원소의 주소를 가리키는 ptr이 된다.
-    -   arr를 가리키는 ptr에 정수를 더하거나 빼는 것은 (++, -- 도 포함) 다음 원소 주소로의 이동을 의미한다.
 
 -   dereference(역참조)
 
@@ -193,9 +194,34 @@ code
         -   heap에 생성한 데이터
 
 -   null ptr
+
     -   (void\*)0을 가리키는 ptr
     -   null handling을 위해 assert, early return, 접미사 붙이기 등 프로그래밍 가시성을 높이자.
     -   역참조한 결과는 표준에 정의되지 않음.
+
+-   const ptr
+    -   `int* const`
+        -   주소를 보호하는 ptr
+        -   <u>포인터의 메모리를 고정하고 싶을 때 사용함. 메모리가 가리키는 값은 변경 가능</u>
+            -   ```c
+                int* const p = &a;
+                *p = b; // ok
+                p = &b; // error
+                p++;    // error
+                ```
+        -   ptr = &new 꼴 불가.
+    -   `const int*`, `int const*`
+        -   값을 보호하는 ptr
+        -   <u>포인터가 가리키는 값을 고정하고 싶을 때 사용함. 포인터가 담은 메모리 주소를 변경 가능</u>
+        -   \*ptr = new 꼴 불가.
+        -   ptr를 통한 값 변경을 막는 것이지 값 자체는 바꿀 수 있음.
+            -   ```c
+                const int* p = &a;
+                a = 10; // ok
+                p = &b; // ok
+                *p = 5; // error
+                ```
+        -   직관적으로, const int가 정수 값 보호를 말하기에 const int\* 형태가 가장 많이 사용됨
 
 ## env settings
 

@@ -18,9 +18,9 @@ void process2(int data[20]) {
 
 int main(void) {
     int nums[20];
-    int nums2[10]
+    int nums2[10];
 
-        size_t arr_size = sizeof(nums);
+    size_t arr_size = sizeof(nums);
     const size_t arr_cnt = arr_size / sizeof(int);
     const size_t arr_cnt_2 = ARRAY_LENGTH(nums);
 
