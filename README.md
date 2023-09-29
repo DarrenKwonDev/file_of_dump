@@ -15,6 +15,7 @@
     -   [resources](#resources)
     -   [simple assembly](#simple-assembly)
     -   [registers](#registers)
+    -   [what to do after basic c](#what-to-do-after-basic-c)
 
 <!--te-->
 
@@ -274,3 +275,14 @@ ecx : extended counter register
 edx : extended data register
 
 <img src="./imgs/registers.png" />
+
+## what to do after basic c
+
+-   [pintOS](https://casys-kaist.github.io/pintos-kaist/introduction/getting_started.html)
+    -   https://github.com/casys-kaist/pintos-kaist
+-   build-your-own-x
+    -   https://github.com/codecrafters-io/build-your-own-x
+    -   https://build-your-own-x.vercel.app/
+    -   [Build Your Own Redis with C/C++](https://build-your-own.org/)
+-   [libuv](https://libuv.org/)
+-   [cython](https://github.com/cython/cython)
