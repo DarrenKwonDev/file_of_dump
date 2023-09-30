@@ -4,14 +4,16 @@
 
 -   [clang_tutorial](#clang_tutorial)
     -   [권고 사항](#권고-사항)
+    -   [env settings](#env-settings)
+    -   [clang command](#clang-command)
     -   [compiler](#compiler)
     -   [build process](#build-process)
     -   [module \& lib](#module--lib)
     -   [mem model](#mem-model)
     -   [mem issues](#mem-issues)
     -   [ptr, dereference](#ptr-dereference)
-    -   [env settings](#env-settings)
-    -   [clang command](#clang-command)
+    -   [stdlib](#stdlib)
+        -   [string.h](#stringh)
     -   [resources](#resources)
     -   [simple assembly](#simple-assembly)
     -   [registers](#registers)
@@ -32,6 +34,30 @@
 -   build target (platform) 환경을 알아 두어라.
 -   포인터를 반환하는 함수의 경우 dangling pointer를 조심하라. 함수 내 지역변수를 가리키는 포인터는 함수가 사라지면 stack frame 내에 의도한 값을 가지지 않을 가능성이 높다.
 -   NULL이 될 가능성이 존재하는 것은 접미사로 `or_null`을 붙일 것
+-   문자열은 순회하는 등 문자열의 길이에 의존하는 로직을 건드릴 때는 null char가 포함되어 있음을 염두에 두어라.
+    -   {'a', 'b'}와 같은 꼴로 작성 된 경우 null char가 포함되어 있지 않으므로 주의하라. 애초에 이런 방식으로 문자열을 만들지 않도록 하자.
+    -   strcpy, strcat 등 작업 후 반환되는 문자열에는 무조건 마지막에 null char를 넣어주도록하자. null char가 원래 있었다면 상관 없고, 없었다면 위험한 문자열이기 때문이다.
+    -   strlen은 null char를 제외한 길이를 반환한다.
+
+## env settings
+
+[EditUsing Clang in Visual Studio Code](https://code.visualstudio.com/docs/cpp/config-clang-mac)  
+[Visual Studio Code C++ July 2021 Update: Disassembly View, Macro Expansion and Windows ARM64 Debugging](https://devblogs.microsoft.com/cppblog/visual-studio-code-c-july-2021-update-disassembly-view-macro-expansion-and-windows-arm64-debugging/#disassembly-view)
+
+## clang command
+
+[clang docs](https://clang.llvm.org/docs/ClangCommandLineReference.html)
+
+```bash
+clang -std=c89 -W -Wall -pedantic-errors $file
+
+clang -E $file # preprocessor output (translation unit)
+clang -S $file # assembly output
+clang -c $file # object output
+
+# for your convenience
+nodemon --exec "clang $file && ./a.out" -e c
+```
 
 ## compiler
 
@@ -146,6 +172,11 @@ code
 
 -   heap
 
+-   data
+    -   전역변수는 데이터 섹션에 저장
+    -   문자열 리터럴은 일반적으로 프로그램의 데이터 섹션에 저장됩니다. 이러한 문자열은 읽기 전용(read-only)일 수 있으며, 프로그램 실행 중에 수정할 수 없습니다. 따라서 문자열 리터럴은 변경할 수 없는 상수(constant)로 취급됩니다.
+-   code
+
 ## mem issues
 
 -   memory stomp
@@ -224,24 +255,42 @@ code
                 ```
         -   직관적으로, const int가 정수 값 보호를 말하기에 const int\* 형태가 가장 많이 사용됨
 
-## env settings
+## stdlib
 
-[EditUsing Clang in Visual Studio Code](https://code.visualstudio.com/docs/cpp/config-clang-mac)
+https://en.cppreference.com/w/c
 
-## clang command
+### [string.h](https://en.cppreference.com/w/c/string/byte)
 
-[clang docs](https://clang.llvm.org/docs/ClangCommandLineReference.html)
+-   전반적으로 'dest'가 의도보다 크기가 작다면 남의 메모리를 밟거나 컴파일이 되지 않는 등의 문제가 발생합니다.
+-   C11에 `_s` 접미사가 붙은 secure 함수가 추가됨.
 
-```bash
-clang -std=c89 -W -Wall -pedantic-errors $file
+-   strlen
 
-clang -E $file # preprocessor output (translation unit)
-clang -S $file # assembly output
-clang -c $file # object output
+    -   O(n)입니다. 그래서 가급적 C에서 문자열을 다룰 때는 문자열의 길이를 알고 있는 것이 좋습니다.
 
-# for your convenience
-nodemon --exec "clang $file && ./a.out" -e c
-```
+-   strcmp, strncmp
+
+-   strcpy, strncpy
+    -   전에 있던 dest는 덮어씌워지게 됩니다. dest의 크기가 src보다 작다면 문제가 발생합니다.
+    -   기본적으로 null char를 붙여주려고는 하나 src의 길이가 n보다 큰 경우에는 null char를 붙여주지 않습니다.
+    -   strncpy(dest, src, n)은 src 문자열에서 최대 n 개의 문자를 dest 문자열로 복사합니다.
+        -   src의 길이가 n보다 작은 경우, 예를 들어 strncpy(dest, "ab", 5) 라면 나머지 공간을 \0를 붙입니다. 따라서 결과는 dest + "ab\0\0\0" 꼴이 됩니다.
+        -   src의 길이가 n보다 큰 경우, 예를 들어 strncpy(dest, "abc", 1) 라면 dest + "a" 꼴이 됩니다. 그런데 이 경우에는 <u>null char를 붙여주지 않으므로 코더가 알아서 붙여야 합니다.</u>
+-   strcat, strncat
+
+    -   dest 문자열의 끝에 src 문자열을 붙입니다. dest의 크기가 src보다 작다면 문제가 발생합니다.
+    -   strncat(dest, src, n)에서 dest에 남아 있는 공간이 n보다 적다면 의도치 않은 경과를 불러올 수 있습니다. 따라서, dest가 n만큼의 문자를 합칠 공간이 있는지 확인해야 합니다.
+
+-   strstr
+
+    -   char* strstr(const char* str, const char\* substr)
+    -   substr이 str에 있으면 해당 substr이 시작하는 위치를 반환함. 없으면 null ptr
+    -   즉, 찾은 문자열의 시작 위치를 알고 싶다면 반환한 포인터와 배열 포인터를 빼면 된다.
+
+-   strtok
+    -   타 함수와 다르게 예외적으로 원본 문자열을 변환한다.
+    -   기본은 토크나이징이다.
+    -   str내 포함된 delims들이 \0로 치환된다. 즉, strtok는 원본 문자열을 수정한다.
 
 ## resources
 

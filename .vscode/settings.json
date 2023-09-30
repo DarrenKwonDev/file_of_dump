@@ -5,7 +5,11 @@
         "*.gohtml": "gohtml",
         "stdio.h": "c",
         "limits.h": "c",
-        "adder.h": "c"
+        "adder.h": "c",
+        "string.h": "c",
+        "sstream": "c",
+        "__locale": "c",
+        "ios": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
