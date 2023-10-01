@@ -262,6 +262,7 @@ https://en.cppreference.com/w/c
 -   전반적으로 'dest'가 의도보다 크기가 작다면 남의 메모리를 밟거나 컴파일이 되지 않는 등의 문제가 발생합니다.
 -   C11에 `_s` 접미사가 붙은 secure 함수가 추가됨.
 -   strcpy, strcat 등 작업 후 반환되는 문자열에는 무조건 마지막에 null char를 넣어주도록하자. null char가 원래 있었다면 상관 없고, 없었다면 위험한 문자열이기 때문이다.
+-   C89에 n 붙은 메서드 제공 안함. C99부터 제공함.
 
 -   strlen
 
@@ -288,9 +289,15 @@ https://en.cppreference.com/w/c
     -   즉, 찾은 문자열의 시작 위치를 알고 싶다면 반환한 포인터와 배열 포인터를 빼면 된다.
 
 -   strtok
+
     -   타 함수와 다르게 예외적으로 원본 문자열을 변환한다.
     -   기본은 토크나이징이다.
     -   str내 포함된 delims들이 \0로 치환된다. 즉, strtok는 원본 문자열을 수정한다.
+
+-   출력과 관련하여
+    -   표준에서 stdin, stdout, stderr에 대한 버퍼링 표준이 존재하지 않음.
+    -   line buffering, full buffering, unbuffering이 존재함. 일반적으로 line buffering이 default인 경우가 많은 듯 함.
+    -   문자열 스트림이 없다. 대신 sprinf를 사용하자.
 
 ## resources
 
@@ -335,3 +342,5 @@ edx : extended data register
     -   [Build Your Own Redis with C/C++](https://build-your-own.org/)
 -   [libuv](https://libuv.org/)
 -   [cython](https://github.com/cython/cython)
+-   [sqlite](https://sqlite.org/src/doc/trunk/README.md)
+-   [learncpp](https://www.learncpp.com/)
