@@ -1,6 +1,6 @@
 # clang_tutorial
 
-<!--ts-->
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 -   [clang_tutorial](#clang_tutorial)
     -   [권고 사항](#권고-사항)
@@ -8,21 +8,24 @@
     -   [clang command](#clang-command)
     -   [compiler](#compiler)
     -   [build process](#build-process)
-    -   [module \& lib](#module--lib)
+    -   [module & lib](#module--lib)
     -   [mem model](#mem-model)
     -   [mem issues](#mem-issues)
     -   [ptr, dereference](#ptr-dereference)
+    -   [File input/output](#file-inputoutput)
     -   [stdlib](#stdlib)
         -   [string.h](#stringh)
-    -   [resources](#resources)
     -   [simple assembly](#simple-assembly)
     -   [registers](#registers)
     -   [what to do after basic c](#what-to-do-after-basic-c)
 
-<!--te-->
+<!-- code_chunk_output -->
 
 ## 권고 사항
 
+-   MUST READ DOC.
+    -   [doc](https://en.cppreference.com/w/c)
+    -   [Microsoft C++, C 및 어셈블러 설명서](https://learn.microsoft.com/ko-kr/cpp/?view=msvc-170)
 -   전방 선언 꼭 해라. 함수 선언은 필수라 생각해라.
     -   C89 기준 아직 등장하지 않은 함수는 int 반환 함수로 컴파일러가 알아서 가정하기 때문임
 -   한 줄에서 함수 여러 번 호출 하지 말 것 (unspecified behavior)
@@ -253,6 +256,36 @@ code
                 ```
         -   직관적으로, const int가 정수 값 보호를 말하기에 const int\* 형태가 가장 많이 사용됨
 
+## [File input/output](https://en.cppreference.com/w/c/io)
+
+입력 받기의 전략
+
+1. 한 글자씩 읽기
+    - [getchar](https://en.cppreference.com/w/c/io/getchar)
+    - getchar -> putchar
+2. 한 줄씩 읽기
+    - [gets](https://en.cppreference.com/w/c/io/gets)
+    - gets -> puts
+    - [fgets](https://en.cppreference.com/w/c/io/fgets)
+3. 한 데이터씩 읽기
+    - [scanf](https://en.cppreference.com/w/c/io/fscanf)
+4. 한 블록씩 읽기 (이진 데이터)
+
+C로 사용자 입력을 받았을 때 권장되는 방식은 `fgets`와 `sscanf`
+
+[FILE type](https://en.cppreference.com/w/c/io/FILE)
+
+"스트림을 제어하기 위해 필요한 정보를 담고 있는 자료형"
+스트림을 제어하기 위해 필요한 정보?
+
+1. 파일 위치 표시자
+2. 스트림이 사용하는 버퍼의 포인터
+3. 읽기/쓰기 중에 발생한 오류를 기록하는 오류 표시자
+4. 파일의 끝에 도달했음을 기록하는 EOF 지시자
+
+Each FILE object denotes a C stream.
+입력 출력 스트림은 오직 FILE 포인터로만 접근 및 조작 가능
+
 ## stdlib
 
 https://en.cppreference.com/w/c
@@ -263,6 +296,7 @@ https://en.cppreference.com/w/c
 -   C11에 `_s` 접미사가 붙은 secure 함수가 추가됨.
 -   strcpy, strcat 등 작업 후 반환되는 문자열에는 무조건 마지막에 null char를 넣어주도록하자. null char가 원래 있었다면 상관 없고, 없었다면 위험한 문자열이기 때문이다.
 -   C89에 n 붙은 메서드 제공 안함. C99부터 제공함.
+-   타 언어와 달리 임시 문자열을 생성해주는 등의 부가 작업을 해주지 않고, 포인터를 활용해 메모리 추가 할당 없이 최대한 작업하려고 함. 따라서, 메모리 관리에 대한 책임은 코더에게 있다.
 
 -   strlen
 
@@ -298,10 +332,6 @@ https://en.cppreference.com/w/c
     -   표준에서 stdin, stdout, stderr에 대한 버퍼링 표준이 존재하지 않음.
     -   line buffering, full buffering, unbuffering이 존재함. 일반적으로 line buffering이 default인 경우가 많은 듯 함.
     -   문자열 스트림이 없다. 대신 sprinf를 사용하자.
-
-## resources
-
-[dive into system](https://diveintosystems.org/book/index.html)
 
 ## simple assembly
 
@@ -344,3 +374,4 @@ edx : extended data register
 -   [cython](https://github.com/cython/cython)
 -   [sqlite](https://sqlite.org/src/doc/trunk/README.md)
 -   [learncpp](https://www.learncpp.com/)
+-   [dive into system](https://diveintosystems.org/book/index.html)
