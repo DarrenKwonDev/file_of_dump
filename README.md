@@ -13,6 +13,7 @@
     -   [mem issues](#mem-issues)
     -   [ptr, dereference](#ptr-dereference)
     -   [File input/output](#file-inputoutput)
+        -   [File](#file)
     -   [stdlib](#stdlib)
         -   [string.h](#stringh)
     -   [simple assembly](#simple-assembly)
@@ -263,28 +264,67 @@ code
 1. 한 글자씩 읽기
     - [getchar](https://en.cppreference.com/w/c/io/getchar)
     - getchar -> putchar
-2. 한 줄씩 읽기
+2. 한 줄씩 읽기(문자열 단위)
     - [gets](https://en.cppreference.com/w/c/io/gets)
     - gets -> puts
     - [fgets](https://en.cppreference.com/w/c/io/fgets)
-3. 한 데이터씩 읽기
+3. 한 데이터씩 읽기(형식화된 데이터)
     - [scanf](https://en.cppreference.com/w/c/io/fscanf)
 4. 한 블록씩 읽기 (이진 데이터)
+    - [fread](https://en.cppreference.com/w/c/io/fread)
 
 C로 사용자 입력을 받았을 때 권장되는 방식은 `fgets`와 `sscanf`
+
+### File
 
 [FILE type](https://en.cppreference.com/w/c/io/FILE)
 
 "스트림을 제어하기 위해 필요한 정보를 담고 있는 자료형"
 스트림을 제어하기 위해 필요한 정보?
 
-1. 파일 위치 표시자
+1. 파일 위치 표시자(file position indicator)
 2. 스트림이 사용하는 버퍼의 포인터
 3. 읽기/쓰기 중에 발생한 오류를 기록하는 오류 표시자
 4. 파일의 끝에 도달했음을 기록하는 EOF 지시자
 
+이외에도 공식 문서 가면 FILE이 일반적으로 가지고 있는 것들이 많다. 읽어보라.
+
 Each FILE object denotes a C stream.
 입력 출력 스트림은 오직 FILE 포인터로만 접근 및 조작 가능
+
+파일 스트림이란 것은 소켓, 파이프 등등을 통칭하는 것이다.
+
+---
+
+파일을 여는 법
+
+1. 파일을 열어 파일 스트림을 생성한다. (fopen)
+2. 파일 스트림을 활용한다. (fread, fwrite, fgets, ...)
+3. 파일을 닫는다. (fclose)
+
+---
+
+indicator.
+stream에는 3개의 표시자가 존재.
+
+End-of-file status indicator. (EOF 표시자)
+Error status indicator. (오류 표시자)
+file position indicator (파일 위치 표시자)
+
+indicator를 조정하는 여러 함수들 존재
+
+[ftell](https://en.cppreference.com/w/c/io/ftell) : Returns the file position indicator for the file stream stream
+[rewind](https://en.cppreference.com/w/c/io/rewind) : file position indicator를 처음으로 이동
+[fseek](https://en.cppreference.com/w/c/io/fseek) : Sets the file position indicator for the file stream stream to the value pointed to by offset.
+
+### io redirection
+
+```text
+./a.out < input.txt
+./a.out > output.txt
+./a.out < input.txt > output.txt
+./a.out 2> error.txt
+```
 
 ## stdlib
 
