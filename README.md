@@ -57,7 +57,7 @@
 [Visual Studio Code C++ July 2021 Update: Disassembly View, Macro Expansion and Windows ARM64 Debugging](https://devblogs.microsoft.com/cppblog/visual-studio-code-c-july-2021-update-disassembly-view-macro-expansion-and-windows-arm64-debugging/#disassembly-view)
 [Debug C++ in Visual Studio Code](https://code.visualstudio.com/docs/cpp/cpp-debug)
 
-## clang, lldb
+## clang, lldb, etc...
 
 ### clang
 
@@ -76,6 +76,8 @@ nodemon --exec "clang $file && ./a.out" -e c
 
 ### lldb
 
+https://lldb.llvm.org/use/tutorial.html
+
 ```bash
 clang -g ./main.c
 lldb ./a.out
@@ -83,6 +85,8 @@ b main.c:30 # 30번째 줄에 breakpoint 걸기
 r # 진행
 n # 한 줄 씩
 ```
+
+### leaks
 
 ## compiler
 
