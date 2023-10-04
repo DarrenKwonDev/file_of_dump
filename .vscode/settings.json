@@ -9,7 +9,8 @@
         "string.h": "c",
         "sstream": "c",
         "__locale": "c",
-        "ios": "c"
+        "ios": "c",
+        "chrono": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

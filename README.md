@@ -14,6 +14,8 @@
     -   [ptr, dereference](#ptr-dereference)
     -   [File input/output](#file-inputoutput)
         -   [File](#file)
+        -   [io redirection](#io-redirection)
+    -   [struct](#struct)
     -   [stdlib](#stdlib)
         -   [string.h](#stringh)
     -   [simple assembly](#simple-assembly)
@@ -39,7 +41,12 @@
 -   포인터를 반환하는 함수의 경우 dangling pointer를 조심하라. 함수 내 지역변수를 가리키는 포인터는 함수가 사라지면 stack frame 내에 의도한 값을 가지지 않을 가능성이 높다.
 -   NULL이 될 가능성이 존재하는 것은 접미사로 `or_null`을 붙일 것
 -   문자열은 순회하는 등 문자열의 길이에 의존하는 로직을 건드릴 때는 null char가 포함되어 있음을 염두에 두어라.
+-   C에서 모든 자료형은 '값형'이다. 포인터를 넘겨 pass by reference를 구현하는 것이다.
     -   {'a', 'b'}와 같은 꼴로 작성 된 경우 null char가 포함되어 있지 않으므로 주의하라. 애초에 이런 방식으로 문자열을 만들지 않도록 하자.
+-   fopen하면 fclose를 곧바로 작성하라. 잊기 쉽다. 그 외의 다른 리소스들도 마찬가지.
+-   구조체 작성할 때 메모리 패딩을 고려하여 각 요소의 순서를 4의 배수가 되도록 배치하라.
+    -   4바이트가 아닌 요소를 구조체 최하단으로 배치하는 휴리스틱이 유용한 편.
+    -   #pragma pack을 사용하는 방법도 있지만 비표준.
 
 ## env settings
 
@@ -325,6 +332,8 @@ indicator를 조정하는 여러 함수들 존재
 ./a.out < input.txt > output.txt
 ./a.out 2> error.txt
 ```
+
+## struct
 
 ## stdlib
 
