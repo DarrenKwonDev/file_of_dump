@@ -1,11 +1,9 @@
-# clang_tutorial
-
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- toc -->
 
 -   [clang_tutorial](#clang_tutorial)
-    -   [권고 사항](#권고-사항)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
     -   [env settings](#env-settings)
-    -   [clang command](#clang-command)
+    -   [clang, lldb](#clang-lldb)
     -   [compiler](#compiler)
     -   [build process](#build-process)
     -   [module & lib](#module--lib)
@@ -21,8 +19,11 @@
     -   [simple assembly](#simple-assembly)
     -   [registers](#registers)
     -   [what to do after basic c](#what-to-do-after-basic-c)
+    -   [youtube](#youtube)
 
-<!-- code_chunk_output -->
+<!-- tocstop -->
+
+# clang_tutorial
 
 ## 권고 사항
 
@@ -52,8 +53,9 @@
 
 [EditUsing Clang in Visual Studio Code](https://code.visualstudio.com/docs/cpp/config-clang-mac)  
 [Visual Studio Code C++ July 2021 Update: Disassembly View, Macro Expansion and Windows ARM64 Debugging](https://devblogs.microsoft.com/cppblog/visual-studio-code-c-july-2021-update-disassembly-view-macro-expansion-and-windows-arm64-debugging/#disassembly-view)
+[Debug C++ in Visual Studio Code](https://code.visualstudio.com/docs/cpp/cpp-debug)
 
-## clang command
+## clang, lldb
 
 [clang docs](https://clang.llvm.org/docs/ClangCommandLineReference.html)
 
@@ -425,3 +427,7 @@ edx : extended data register
 -   [learncpp](https://www.learncpp.com/)
 -   [dive into system](https://diveintosystems.org/book/index.html)
 -   [cpling](https://github.com/rdjondo/cplings)
+
+## youtube
+
+[Jacob Sorber](https://www.youtube.com/watch?v=AYSISa95oJE&ab_channel=JacobSorber)
