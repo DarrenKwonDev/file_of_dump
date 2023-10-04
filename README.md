@@ -424,3 +424,4 @@ edx : extended data register
 -   [sqlite](https://sqlite.org/src/doc/trunk/README.md)
 -   [learncpp](https://www.learncpp.com/)
 -   [dive into system](https://diveintosystems.org/book/index.html)
+-   [cpling](https://github.com/rdjondo/cplings)

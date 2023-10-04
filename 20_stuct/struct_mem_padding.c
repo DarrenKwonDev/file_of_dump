@@ -1,5 +1,10 @@
 #include <stdio.h>
 
+/*
+    mem padding 이유?
+    메모리를 읽어올 때 각 시스템의 워드(word) 경계에서 읽어오는 것이 효율적이기 때문에
+*/
+
 enum {
     NAME_LEN = 32,
 };
