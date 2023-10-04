@@ -1,27 +1,25 @@
-
-
 <!-- toc -->
 
-- [clang_tutorial](#clang_tutorial)
-  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-  * [env settings](#env-settings)
-  * [clang, lldb](#clang-lldb)
-  * [compiler](#compiler)
-  * [build process](#build-process)
-  * [module & lib](#module--lib)
-  * [mem model](#mem-model)
-  * [mem issues](#mem-issues)
-  * [ptr, dereference](#ptr-dereference)
-  * [File input/output](#file-inputoutput)
-    + [File](#file)
-    + [io redirection](#io-redirection)
-  * [struct](#struct)
-  * [stdlib](#stdlib)
-    + [string.h](#stringh)
-  * [simple assembly](#simple-assembly)
-  * [registers](#registers)
-  * [what to do after basic c](#what-to-do-after-basic-c)
-  * [youtube](#youtube)
+-   [clang_tutorial](#clang_tutorial)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+    -   [env settings](#env-settings)
+    -   [clang, lldb](#clang-lldb)
+    -   [compiler](#compiler)
+    -   [build process](#build-process)
+    -   [module & lib](#module--lib)
+    -   [mem model](#mem-model)
+    -   [mem issues](#mem-issues)
+    -   [ptr, dereference](#ptr-dereference)
+    -   [File input/output](#file-inputoutput)
+        -   [File](#file)
+        -   [io redirection](#io-redirection)
+    -   [struct](#struct)
+    -   [stdlib](#stdlib)
+        -   [string.h](#stringh)
+    -   [simple assembly](#simple-assembly)
+    -   [registers](#registers)
+    -   [what to do after basic c](#what-to-do-after-basic-c)
+    -   [youtube](#youtube)
 
 <!-- tocstop -->
 
@@ -59,6 +57,8 @@
 
 ## clang, lldb
 
+### clang
+
 [clang docs](https://clang.llvm.org/docs/ClangCommandLineReference.html)
 
 ```bash
@@ -70,6 +70,20 @@ clang -c $file # object output
 
 # for your convenience
 nodemon --exec "clang $file && ./a.out" -e c
+```
+
+### lldb
+
+```bash
+clang -g ./main.c
+lldb ./a.out
+b main.c:30 # 30번째 줄에 breakpoint 걸기
+r # 진행
+n # 한 줄 씩
+```
+
+```bash
+
 ```
 
 ## compiler
