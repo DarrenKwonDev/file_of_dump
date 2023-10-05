@@ -14,8 +14,14 @@
 """
 
 - PointerAlignment
-int *num = 0; (X)
-int* num = 0; (O)
+int *num = 0; (Right)
+int* num = 0; (Left) 
+
+그러나 int* a, b; 와 같이 a는 포인터, b는 int형 변수로 선언되는데 Left로 선언하면 둘다 int*로 혼동되기 쉽다.
+그래서 Right로 해놓는 경우가 많다.
+https://www.codeproject.com/Articles/7042/How-to-interpret-complex-C-C-declarations#intro
+
+그런데 가독성 측면에선 Left가 좋긴 하다.
 
 - BreakBeforeBraces
 void func() 

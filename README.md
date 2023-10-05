@@ -15,7 +15,9 @@
   * [mem model](#mem-model)
   * [mem issues](#mem-issues)
   * [ptr, dereference](#ptr-dereference)
-  * [function ptr](#function-ptr)
+    + [포인터를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
+    + [ptr basic](#ptr-basic)
+    + [function ptr](#function-ptr)
   * [File input/output](#file-inputoutput)
     + [File](#file)
     + [io redirection](#io-redirection)
@@ -224,6 +226,37 @@ code
 
 ## ptr, dereference
 
+### 포인터를 읽는 방법(rt_lt rule)
+
+꽤나 복잡해지기 때문에 알아두어야 한다.
+right-left rule(rt_lt rule)은 매우 중요하다!
+
+[rt_lt rule](https://cseweb.ucsd.edu/~gbournou/CSE131/rt_lt.rule.html)
+[How to interpret complex C/C++ declarations](https://www.codeproject.com/Articles/7042/How-to-interpret-complex-C-C-declarations)
+
+1. Start reading from the identifier
+2. go right, and then go left. When you encounter parentheses, the direction should be reversed.
+
+```c
+int *a; // pointer to int
+int **a; // pointer to pointer to int
+int (*p)(char); // pointer to (char) -> int
+int (*fun[2])(float, float); // array of 2 pointers to (float, float) -> int
+
+// foo는 포인터인데 그 포인터는 void*를 인자로 받고 char를 반환한다.
+char (*foo)(void*)
+
+// foo는 포인터인데 (int, void(*)int)를 인자로 받고 int*를 반환한다.
+int* (*foo)(int, void(*)(int))
+
+// 1. func는 int, void (*)(int) 를 인자로 받으며 포인터(*)를 반환한다.
+// 2. 그리고 그 포인터는 (int)를 받고 void를 받환하는 함수이다.
+void (*func(int, void (*)(int)))(int);
+
+```
+
+### ptr basic
+
 -   pointer = 주소를 저장하는 변수 (참조)
 
     -   `int* p_num`과 `int *p_num`은 같다.
@@ -288,7 +321,9 @@ code
                 ```
         -   직관적으로, const int가 정수 값 보호를 말하기에 const int\* 형태가 가장 많이 사용됨
 
-## function ptr
+### function ptr
+
+기본 annotation은 `반환형 (*변수명)(매개변수 목록)` 이다.
 
 ## [File input/output](https://en.cppreference.com/w/c/io)
 
