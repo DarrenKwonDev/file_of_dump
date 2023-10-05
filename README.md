@@ -17,6 +17,7 @@
   * [ptr, dereference](#ptr-dereference)
     + [포인터를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
     + [ptr basic](#ptr-basic)
+    + [const ptr](#const-ptr)
     + [function ptr](#function-ptr)
   * [File input/output](#file-inputoutput)
     + [File](#file)
@@ -214,6 +215,17 @@ code
 
 ## mem issues
 
+-   dangling ptr
+
+    -   함수에서 포인터 변수를 반환할 때 주의하라.
+    -   함수 내 지역변수가 존재하는 stack frame은 함수가 return되면 방치 된다. 추후 동작에 따라서 해당 메모리는 다른 것이 덮어 쓰게 된다.
+    -   따라서 함수는 포인터 변수를 반환하면 안된다. 유효하지 않은 주소를 반환하기 때문이다.
+    -   함수 반환 값이 ptr이어도 되는 경우
+        -   전역 변수
+        -   파일 속 static 전역 변수
+        -   함수 내 static 변수
+        -   heap에 생성한 데이터
+
 -   memory stomp
 
     -   프로그램 내 다른 변수가 저장된 메모리를 덮어쓰는 것
@@ -230,29 +242,28 @@ code
 
 꽤나 복잡해지기 때문에 알아두어야 한다.
 right-left rule(rt_lt rule)은 매우 중요하다!
-
 [rt_lt rule](https://cseweb.ucsd.edu/~gbournou/CSE131/rt_lt.rule.html)
-[How to interpret complex C/C++ declarations](https://www.codeproject.com/Articles/7042/How-to-interpret-complex-C-C-declarations)
 
-1. Start reading from the identifier
-2. go right, and then go left. When you encounter parentheses, the direction should be reversed.
+1.  Start reading from the identifier
+2.  go right, and then go left. When you encounter parentheses, the direction should be reversed.
+3.  If you hit a left parenthesis, that's the beginning of a () symbol, even if there is stuff in between the parentheses.
+
+각 symbol은 아래처럼 영문 번역하는 것이 쉽다.
+
+-   as "pointer to" - always on the left side
+-   [] as "array of" - always on the right side
+-   () as "function returning" - always on the right side
 
 ```c
-int *a; // pointer to int
-int **a; // pointer to pointer to int
-int (*p)(char); // pointer to (char) -> int
-int (*fun[2])(float, float); // array of 2 pointers to (float, float) -> int
-
-// foo는 포인터인데 그 포인터는 void*를 인자로 받고 char를 반환한다.
-char (*foo)(void*)
-
-// foo는 포인터인데 (int, void(*)int)를 인자로 받고 int*를 반환한다.
-int* (*foo)(int, void(*)(int))
-
-// 1. func는 int, void (*)(int) 를 인자로 받으며 포인터(*)를 반환한다.
-// 2. 그리고 그 포인터는 (int)를 받고 void를 받환하는 함수이다.
-void (*func(int, void (*)(int)))(int);
-
+int *a; // a is pointer to int
+int **a; // a is pointer to pointer to int
+int *p[]; // p is array of pointer to int
+int (*p)(char); // p is pointer to function (char) -> int
+int (*f[2])(float, float); // f is array of pointers to (float, float) -> int
+char (*foo)(void*) // foo is pointer to (void*) -> char
+int* (*foo)(int, void(*)(int)) // foo is pointer to (int, void(*)(int)) -> int*
+void (*func(int, void (*)(int)))(int); // func is function retuning pointer to function (int) -> void
+int (*(*fun_one)(char *,double))[9][20]; // fun_one is pointer to function expecting (char *,double) and returning pointer to array (size 9) of array (size 20) of int.
 ```
 
 ### ptr basic
@@ -278,26 +289,17 @@ void (*func(int, void (*)(int)))(int);
     -   포인터가 가리키는 주소에 저장된 값을 가져오는 것
     -   역참조를 통해 값 변경을 가능
 
--   함수에서 포인터 변수를 반환할 때 주의하라.
-
-    -   dangling ptr
-
-        -   함수 내 지역변수가 존재하는 stack frame은 함수가 return되면 방치 된다. 추후 동작에 따라서 해당 메모리는 다른 것이 덮어 쓰게 된다.
-        -   따라서 함수는 포인터 변수를 반환하면 안된다. 유효하지 않은 주소를 반환하기 때문이다.
-
-    -   함수 반환 값이 ptr이어도 되는 경우
-        -   전역 변수
-        -   파일 속 static 전역 변수
-        -   함수 내 static 변수
-        -   heap에 생성한 데이터
-
 -   null ptr
 
     -   (void\*)0을 가리키는 ptr
     -   null handling을 위해 assert, early return, 접미사 붙이기 등 프로그래밍 가시성을 높이자.
     -   역참조한 결과는 표준에 정의되지 않음.
 
--   const ptr
+-   void\*
+    -   어떠한 포인터라도 대입 가능함.
+
+### const ptr
+
     -   `int* const`
         -   주소를 보호하는 ptr
         -   <u>포인터의 메모리를 고정하고 싶을 때 사용함. 메모리가 가리키는 값은 변경 가능</u>
