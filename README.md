@@ -1,27 +1,31 @@
+
+
 <!-- toc -->
 
--   [clang_tutorial](#clang_tutorial)
-    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-    -   [env settings](#env-settings)
-    -   [clang, lldb](#clang-lldb)
-        -   [clang](#clang)
-        -   [lldb](#lldb)
-    -   [compiler](#compiler)
-    -   [build process](#build-process)
-    -   [module & lib](#module--lib)
-    -   [mem model](#mem-model)
-    -   [mem issues](#mem-issues)
-    -   [ptr, dereference](#ptr-dereference)
-    -   [File input/output](#file-inputoutput)
-        -   [File](#file)
-        -   [io redirection](#io-redirection)
-    -   [struct](#struct)
-    -   [stdlib](#stdlib)
-        -   [string.h](#stringh)
-    -   [simple assembly](#simple-assembly)
-    -   [registers](#registers)
-    -   [what to do after basic c](#what-to-do-after-basic-c)
-    -   [youtube](#youtube)
+- [clang_tutorial](#clang_tutorial)
+  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+  * [env settings](#env-settings)
+  * [clang, lldb, etc...](#clang-lldb-etc)
+    + [clang](#clang)
+    + [lldb](#lldb)
+    + [leaks](#leaks)
+  * [compiler](#compiler)
+  * [build process](#build-process)
+  * [module & lib](#module--lib)
+  * [mem model](#mem-model)
+  * [mem issues](#mem-issues)
+  * [ptr, dereference](#ptr-dereference)
+  * [function ptr](#function-ptr)
+  * [File input/output](#file-inputoutput)
+    + [File](#file)
+    + [io redirection](#io-redirection)
+  * [struct](#struct)
+  * [stdlib](#stdlib)
+    + [string.h](#stringh)
+  * [simple assembly](#simple-assembly)
+  * [registers](#registers)
+  * [what to do after basic c](#what-to-do-after-basic-c)
+  * [youtube](#youtube)
 
 <!-- tocstop -->
 
@@ -283,6 +287,8 @@ code
                 *p = 5; // error
                 ```
         -   직관적으로, const int가 정수 값 보호를 말하기에 const int\* 형태가 가장 많이 사용됨
+
+## function ptr
 
 ## [File input/output](https://en.cppreference.com/w/c/io)
 
