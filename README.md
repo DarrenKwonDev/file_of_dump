@@ -23,6 +23,7 @@
     + [File](#file)
     + [io redirection](#io-redirection)
   * [struct](#struct)
+  * [err handing principle](#err-handing-principle)
   * [stdlib](#stdlib)
     + [string.h](#stringh)
   * [simple assembly](#simple-assembly)
@@ -57,6 +58,8 @@
 -   구조체 작성할 때 메모리 패딩을 고려하여 각 요소의 순서를 4의 배수가 되도록 배치하라.
     -   4바이트가 아닌 요소를 구조체 최하단으로 배치하는 휴리스틱이 유용한 편.
     -   #pragma pack을 사용하는 방법도 있지만 비표준.
+-   va_start/va_end 구문 사이 가독성을 위해 {}를 넣는 것을 추천
+-   모든 함수 및 로직에서 null 체킹을 하는 것은 잘못된 방식이다. 문제의 원인을 찾는 곳은 최소한인 곳이 좋다.
 
 ## env settings
 
@@ -398,6 +401,29 @@ indicator를 조정하는 여러 함수들 존재
 
 ## struct
 
+## err handing principle
+
+-   버그와 오류
+
+    -   버그(bug) : 일어날 수 없다고 가정한 것. 프로그램에서 대응할 수 없음. 다시 만들어야 함.
+    -   오류(error) : 실제 실행 중 일어날 수 있는 예외적 상황. 프로그램에서 대처해야 함.
+
+-   버그 대응
+
+    -   try/catch/finally 구문이 C에는 없다.
+    -   crush 내용을 수집해야 함.
+    -   os가 던져주는 signal을 받아서 처리할 수는 있긴 함. 그러나 문제가 프로그램단에서 해결할 수 없는 다른 에러인 경우도 잦음.
+    -   코드 수정
+
+-   오류 대응
+    -   오류 상황을 처리하는 로직은 최소한으로, 가급적 빠르게 null을 쳐낼 것.
+        -   그 이후 사용되는 데이터는 유효성을 만족한 것이라고 가정하고 assert로 검증할 것.
+    -   오류 코드를 사용하라. 모든 오류 코드는 하나의 enum으로 만들어서 관리하는 것이 유용하다.
+    -   errno는 외부 라이브러리인 경우 신경을 안 쓴 채로 작성한 경우가 많기 때문에 신뢰하기 어려운 경우가 있다. 그래서 그냥 오류 코드를 직접 만들어서 사용하는 것이 좋다.
+    -   경계 조건(boundary)에서 데이터 유효성 검사 필수.
+        -   내 프로그램 vs (파일 시스템, 키보드 입력, 외부 라이브러리, DB 호출 결과값, 다른 서비스 호출 결과값, ...)
+        -   외부 세계에서 null이 들어오면 assertion으로 쳐내야지 받아내면 안된다. 혹여나 null을 허용한다면 함수 , 메서드 이름이나 주석으로 문서화해야 함.
+
 ## stdlib
 
 https://en.cppreference.com/w/c
@@ -488,6 +514,7 @@ edx : extended data register
 -   [learncpp](https://www.learncpp.com/)
 -   [dive into system](https://diveintosystems.org/book/index.html)
 -   [cpling](https://github.com/rdjondo/cplings)
+-   [cpp books](https://m.blog.naver.com/sssang97/221324271234)
 
 ## youtube
 
