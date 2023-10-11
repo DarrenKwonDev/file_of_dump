@@ -12,8 +12,14 @@
   * [compiler](#compiler)
   * [build process](#build-process)
   * [module & lib](#module--lib)
-  * [mem model](#mem-model)
-  * [mem issues](#mem-issues)
+  * [register](#register)
+    + [registers 종류](#registers-%EC%A2%85%EB%A5%98)
+  * [memory](#memory)
+    + [mem model](#mem-model)
+    + [stack](#stack)
+    + [heap](#heap)
+    + [data, code](#data-code)
+    + [mem issues](#mem-issues)
   * [ptr, dereference](#ptr-dereference)
     + [포인터를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
     + [ptr basic](#ptr-basic)
@@ -27,7 +33,6 @@
   * [stdlib](#stdlib)
     + [string.h](#stringh)
   * [simple assembly](#simple-assembly)
-  * [registers](#registers)
   * [what to do after basic c](#what-to-do-after-basic-c)
   * [youtube](#youtube)
 
@@ -177,46 +182,106 @@ D -- linker --> E(machine code, 실행 코드, 라이브러리)
     -   #ifndef, #define, #endif를 사용하여 중복 include를 방지하는 것.
     -   #pragma once를 사용할 수도 있으나 표준은 아님.
 
-## mem model
+## register
+
+메모리 접근 속도가 느려서 cpu와 DRAM 소통 하기 전에 SRAM을 캐슁으로 사용하는 개념 = register
+
+cpu --bus--> RAM
+cpu --bus--> DISK
+
+각 속도 차이가 매우 큼.
+
+-   메모리는 HDD 보다 **10^5 ~ 10^6** 정도 빠르다.
+
+    -   왜? 물리적으로 헤더가 움직여야 하므로 느림.
+    -   -   SSD는 물리적으로 탐색하지 않아 비교적 빠르다. 그러나 CPU로의 전송 속도 차이는 여전.
+    -   연산을 위해 CPU 버스 태우는 전송 속도도 느리다. 메모리-cpu는 계산 때려보니 **9GB/sec** 정도이지만 Disk-cpu는 **80MB/sec**. 정말 어마어마한 차이.
+
+DRAM : 저렴. 기록 유지를 위해 주기적으로 data write 필요
+SRAM : 정적램. 작성하면 다시 지워지지 않아 static. 다만 비용 비쌈.
+
+cpu와 DRAM 사이에 SRAM을 두자. 그것이 register.
+cpu가 연산할 대상을 register에 올려놓고 연산을 수행한다. 그 후 DRAM으로 write back하는 과정으로 cpu-ram 사이의 작업.
+
+### registers 종류
+
+일반적인 x86 아키텍처에서는 아래 레지스터들이 존재.
+
+-   8개 범용 레지스터 (esp, ebp, eax, ebx, ecx, edx, ...)
+-   6개 세그먼트 레지스터
+-   1개 플래그 레지스터
+-   1개 명령어 포인터
+
+ebp : base pointer
+esp : stack pointer
+
+e.x 꼴을 따르고 있는 종류들.  
+eax : extended accumulator register
+ebx : extended base register
+ecx : extended counter register
+edx : extended data register
+
+<img src="./imgs/registers.png" />
+
+## memory
+
+### mem model
 
 ```
 stack : 위(큰 주소)에서 아래(작은 주소)로
 heap : 아래(작은 주소)에서 위(큰 주소)로
-data
-code
+data : 전역 변수, 문자열 리터럴
+code : 함수 코드
 ```
 
 -   보통 개발하면서 신경쓰는 부분은 stack, heap이라 이 부분을 알아둬야.
--   process간 독립된 mem model을 지니고 있다면, thread는 stack을 제외한 영역을 공유한다.
--   stackless thread 사용하지 않는 이상 thread 생성 시 stack size를 지정할 수 있다.
+
+### stack
+
+-   thread and stack
+
+    -   stack은 프로그램의 thread 마다 각자의 용도에 맞게 사용하도록 떼어준 공간.
+    -   process간 독립된 mem model을 지니고 있다면, thread는 stack을 제외한 영역을 공유한다.
+    -   stackless thread 사용하지 않는 이상 thread 생성 시 stack size를 지정할 수 있다.
 
 -   `stack`
 
+    -   [함수 호출 규약 (calling convention)](https://en.wikipedia.org/wiki/Calling_convention)
+        -   함수를 호출할 때 stack에 어떤 것이 어떤 순서로 들어가는 지에 대한 규약.
     -   스택은 매개 변수, 지역 변수가 저장되는 곳이다. 함수의 호출과 함께 할당되며 함수의 호출이 완료되면 해당 부분을 사용하지 않는다. 지우는 것도 컴퓨팅 리소스가 필요한 일이기에. 나중에 필요하면 덮어 쓰는 방식임. (함수 자체는 code에 올라가고, 함수 내 사용하는 변수들이 stack에 올라감)
     -   함수를 오고가면서 EBP, ESP를 옮겨가고 함수 내 변수 등은 그 사이인 stack pointer에 존재함
     -   스택 메모리의 크기는 프로그램 빌드 시(컴파일 타임)에 결정되며 스택 메모리의 위치는 실행 시(런타임)에 결정됨.
     -   변수를 선언하면 stack 영역에 할당된다고 알아두자.
     -   값형(value)를 call by value하면 스택에 복사본을 만듦.
     -   너무 큰 데이터는 stack에 넣으면 안된다. 이럴 때는 ‘동적 메모리 할당'하는게 좋다. os에게 메모리 달라고 부탁하는 것.
-    -   `stack frame`
-        -   각 함수가 사용하는 스택 메모리의 범위. EBP와 ESP 사이의 범위.
-        -   함수 2개 정의해놓고 호출한다면 EBP, ESP 왔다갔다 하면서 stack frame 2개 정도 잡아놓고 쓰다가 호출 완료되면 쓰지 않는다.
-        -   적극적으로 할당한 값을 메모리에서 지우지 않고 그냥 사용하지 않는다.
-    -   `stack pointer`
-        -   `EBP` (extended based pointer) : 스택 프레임의 첫 주소. Base라는 단어에 집중. → stack의 top. 현재 stack frame이 어디에 있는지 알게 해주는 포인터.
-        -   `ESP` (extended stack pointer) : 현재 스택 포인터 → stack의 bottom. 현재 stack frame이 어디 까지 차 있는지 보여주는 포인터이기도 함.
-    -   `call stack`
-        -   stack 자료구조의 LIFO 특성이 stack 메모리에도 적용된다. 함수의 특성상 나중에 호출된 함수가 반환되지 않음녀 전에 쌓인 스택은 반환되지 않는다. 이런 특성을 이용해 함수의 호출과 반환을 관리하는 메모리 영역을 call stack이라고 한다.
-        -   clang windows 기준 stack은 1MB 정도 된다고 한다. 얼마 되지 않기 때문에 재귀 호출할 때 탈출문을 제대로 작성하지 않으면 call stack 터지곤한다. stack 관점에서 보자면 함수 호출할 때마다 stack frame을 할당하는데 이게 계속 쌓이다보니 stack 메모리가 부족해져서 발생하는 문제다.
+
+-   `stack frame`
+
+    -   각 함수가 사용하는 스택 메모리의 범위. EBP와 ESP 사이의 범위.
+    -   함수 2개 정의해놓고 호출한다면 EBP, ESP 왔다갔다 하면서 stack frame 2개 정도 잡아놓고 쓰다가 호출 완료되면 쓰지 않는다.
+    -   적극적으로 할당한 값을 메모리에서 지우지 않고 그냥 사용하지 않는다.
+
+-   `stack pointer`
+
+    -   `EBP` (extended based pointer) : 스택 프레임의 첫 주소. Base라는 단어에 집중. → stack의 top. 현재 stack frame이 어디에 있는지 알게 해주는 포인터.
+    -   `ESP` (extended stack pointer) : 현재 스택 포인터 → stack의 bottom. 현재 stack frame이 어디 까지 차 있는지 보여주는 포인터이기도 함.
+
+-   `call stack`
+    -   stack 자료구조의 LIFO 특성이 stack 메모리에도 적용된다. 함수의 특성상 나중에 호출된 함수가 반환되지 않음녀 전에 쌓인 스택은 반환되지 않는다. 이런 특성을 이용해 함수의 호출과 반환을 관리하는 메모리 영역을 call stack이라고 한다.
+    -   clang windows 기준 stack은 1MB 정도 된다고 한다. 얼마 되지 않기 때문에 재귀 호출할 때 탈출문을 제대로 작성하지 않으면 call stack 터지곤한다. stack 관점에서 보자면 함수 호출할 때마다 stack frame을 할당하는데 이게 계속 쌓이다보니 stack 메모리가 부족해져서 발생하는 문제다.
+
+### heap
 
 -   heap
+
+### data, code
 
 -   data
     -   전역변수는 데이터 섹션에 저장
     -   문자열 리터럴은 일반적으로 프로그램의 데이터 섹션에 저장됩니다. 이러한 문자열은 읽기 전용(read-only)일 수 있으며, 프로그램 실행 중에 수정할 수 없습니다. 따라서 문자열 리터럴은 변경할 수 없는 상수(constant)로 취급됩니다.
 -   code
 
-## mem issues
+### mem issues
 
 -   dangling ptr
 
@@ -416,6 +481,7 @@ indicator를 조정하는 여러 함수들 존재
     -   코드 수정
 
 -   오류 대응
+    -   C에서는 exception이 없음.
     -   오류 상황을 처리하는 로직은 최소한으로, 가급적 빠르게 null을 쳐낼 것.
         -   그 이후 사용되는 데이터는 유효성을 만족한 것이라고 가정하고 assert로 검증할 것.
     -   오류 코드를 사용하라. 모든 오류 코드는 하나의 enum으로 만들어서 관리하는 것이 유용하다.
@@ -486,19 +552,6 @@ ret : return from function
 mov : move (mov a,b는 b를 a에 대입하라는 의미)  
 dec : decrement  
 inc : increment
-
-## registers
-
-ebp : base pointer
-esp : stack pointer
-
-e.x 꼴을 따르고 있음  
-eax : extended accumulator register
-ebx : extended base register
-ecx : extended counter register
-edx : extended data register
-
-<img src="./imgs/registers.png" />
 
 ## what to do after basic c
 
