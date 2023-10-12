@@ -15,6 +15,8 @@ double +- 1.7*10-308 ~ +- 1.7*10308 %lf 정밀도 15자리
 ~(bitwise not), &(bitwise and), |(bitwise or), ^(bitwise xor),
 <<(bitwise left shift), >>(bitwise right shift)
 
+---
+
 ```c
 /*
 heuristic
@@ -49,6 +51,8 @@ int main(void) {
 }
 ```
 
+---
+
 -   `int* const`
     -   주소를 보호하는 ptr
     -   <u>포인터의 메모리를 고정하고 싶을 때 사용함. 메모리가 가리키는 값은 변경 가능</u>
@@ -72,9 +76,34 @@ int main(void) {
             *p = 5; // error
             ```
 
+---
+
+[rt_lt rule](https://cseweb.ucsd.edu/~gbournou/CSE131/rt_lt.rule.html)
+
+-   as "pointer to" - always on the left side
+-   [] as "array of" - always on the right side
+-   () as "function returning" - always on the right side
+
 ```c
-int(*ptr)[3] = arr; // 열이 3인 2차원 배열 포인터
-int* ptr2[3] = arr; // [int*, int*, int*] 형태의 배열
+int *a; // a is pointer to int
+int **a; // a is pointer to pointer to int
+int *p[]; // p is array of pointer to int
+int (*p)(char); // p is pointer to function (char) -> int
+int (*f[2])(float, float); // f is array of pointers to (float, float) -> int
+char (*foo)(void*) // foo is pointer to (void*) -> char
+int* (*foo)(int, void(*)(int)) // foo is pointer to (int, void(*)(int)) -> int*
+void (*func(int, void (*)(int)))(int); // func is function retuning pointer to function (int) -> void
+int (*(*fun_one)(char *,double))[9][20]; // fun_one is pointer to function expecting (char *,double) and returning pointer to array (size 9) of array (size 20) of int.
+void (*(*f[])())() // f is array of pointer to function () -> pointer to function () -> void
 ```
 
 ---
+
+-   동적 할당 작성시 주의점
+    -   free 먼저 작성. 특히 지역 변수 내 malloc한 경우 함수 종료 시 그냥 나가버리면 해당 메모리 주소를 잃어버리게 되어 free할 수 없으니 유의.
+    -   malloc으로 할당 받은 포인터로 연산 금지. 가급적이면 해당 주소를 복사해서 사용하라.
+    -   free한 메모리를 또 free하면 안 됨
+    -   해제만 메모리를 사용하려고 하면 안 됨
+    -   free한 뒤에 변수에 NULL을 대입하여 초기화 할 것
+        -   1. null ptr는 free로 전달해도 안전함.
+        -   2. 해제된 것이라는 것은 명확히 함.

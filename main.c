@@ -1,35 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#define LEN 3
-#define BUFF_LEN 32
 
 int main(void) {
-    char* lines[LEN];
-    char buff[BUFF_LEN];
-    size_t i;
+    void* num;
+    int* p; // malloc으로 할당 받은 포인터로 연산 금지. 가급적이면 해당 주소를 복사해서 사용하라.
 
-    for (i = 0; i < 3; i++) {
-        if (!fgets(buff, sizeof(char) * BUFF_LEN, stdin)) {
-            printf("fgets error\n");
-            return 1;
-        }
+    num = malloc(sizeof(int));
+    p = num;
 
-        // buff에 입력된 string 만큼의 길이만큼 동적 배열을 생성.
-        lines[i] = malloc(strlen(buff) + 1); // +1 for '\0'
-        if (!lines[i]) {
-            printf("malloc error\n");
-            return 1;
-        }
+    *p = 10;
+    *p *= 3;
 
-        strcpy(lines[i], buff); // buff의 값을 lines[i]에 복사.
-    }
+    printf("*p: %d\n", *p);
 
-    for (i = 0; i < 3; i++) {
-        printf("%s", lines[i]);
-        free(lines[i]);
-    }
+    free(num);
 
-    return 0;
+    // 1. null ptr는 free로 전달해도 안전함.
+    // 2. 해제된 것이라는 것은 명확히 함.
+    num = NULL;
+    p = NULL;
 }

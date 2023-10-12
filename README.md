@@ -301,8 +301,18 @@ code : 함수 코드
         -   3. 힙 관리자에게 반환
 
 -   <stdlib.h>
+
     -   malloc(할당), calloc(할당), realloc(재할당)
     -   free(해제)
+
+-   동적 할당 작성시 주의점
+    -   free 먼저 작성. 특히 지역 변수 내 malloc한 경우 함수 종료 시 그냥 나가버리면 해당 메모리 주소를 잃어버리게 되어 free할 수 없으니 유의.
+    -   malloc으로 할당 받은 포인터로 연산 금지. 가급적이면 해당 주소를 복사해서 사용하라.
+    -   free한 메모리를 또 free하면 안 됨
+    -   해제만 메모리를 사용하려고 하면 안 됨
+    -   free한 뒤에 변수에 NULL을 대입하여 초기화 할 것
+        -   1. null ptr는 free로 전달해도 안전함.
+        -   2. 해제된 것이라는 것은 명확히 함.
 
 ### data, code
 
@@ -367,7 +377,6 @@ int* (*foo)(int, void(*)(int)) // foo is pointer to (int, void(*)(int)) -> int*
 void (*func(int, void (*)(int)))(int); // func is function retuning pointer to function (int) -> void
 int (*(*fun_one)(char *,double))[9][20]; // fun_one is pointer to function expecting (char *,double) and returning pointer to array (size 9) of array (size 20) of int.
 void (*(*f[])())() // f is array of pointer to function () -> pointer to function () -> void
-void* malloc(size_t size); // malloc is function takes (size_t size) and returning void*
 ```
 
 ### ptr basic

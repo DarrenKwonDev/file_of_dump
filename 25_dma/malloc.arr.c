@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define LEN 3
-#define BUFF_LEN 256
+#define BUFF_LEN 32
 
 int main(void) {
     char* lines[LEN];
@@ -28,6 +28,7 @@ int main(void) {
 
     for (i = 0; i < 3; i++) {
         printf("%s", lines[i]);
+        free(lines[i]);
     }
 
     return 0;
