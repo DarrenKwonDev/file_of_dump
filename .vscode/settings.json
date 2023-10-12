@@ -11,7 +11,11 @@
         "__locale": "c",
         "ios": "c",
         "chrono": "c",
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "cstdlib": "c",
+        "locale": "c",
+        "ostream": "c",
+        "new": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -19,9 +19,10 @@
     + [stack](#stack)
     + [heap](#heap)
     + [data, code](#data-code)
+    + [func about mem management](#func-about-mem-management)
     + [mem issues](#mem-issues)
   * [ptr, dereference](#ptr-dereference)
-    + [포인터를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
+    + [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
     + [ptr basic](#ptr-basic)
     + [const ptr](#const-ptr)
     + [function ptr](#function-ptr)
@@ -59,7 +60,9 @@
 -   문자열은 순회하는 등 문자열의 길이에 의존하는 로직을 건드릴 때는 null char가 포함되어 있음을 염두에 두어라.
 -   C에서 모든 자료형은 '값형'이다. 포인터를 넘겨 pass by reference를 구현하는 것이다.
     -   {'a', 'b'}와 같은 꼴로 작성 된 경우 null char가 포함되어 있지 않으므로 주의하라. 애초에 이런 방식으로 문자열을 만들지 않도록 하자.
--   fopen하면 fclose를 곧바로 작성하라. 잊기 쉽다. 그 외의 다른 리소스들도 마찬가지.
+-   할당 및 해제를 항상 같이 작성하라.
+    -   fopen하면 fclose를 곧바로 작성하라. 잊기 쉽다. 그 외의 다른 리소스들도 마찬가지.
+    -   malloc하면 free를 곧바로 작성하라.
 -   구조체 작성할 때 메모리 패딩을 고려하여 각 요소의 순서를 4의 배수가 되도록 배치하라.
     -   4바이트가 아닌 요소를 구조체 최하단으로 배치하는 휴리스틱이 유용한 편.
     -   #pragma pack을 사용하는 방법도 있지만 비표준.
@@ -274,6 +277,7 @@ code : 함수 코드
 
 -   stack과 달리 compiler, cpu 등이 메모리 관리를 해주지 않고 코더가 직접 관리하는 영역.
     -   너무 큰 데이터는 stack에 넣으면 안된다. (비디오 처리와 같은 경우) 이럴 때는 heap을 활용해 ‘동적 메모리 할당'하는게 좋다.
+    -   DMA(dynamic memory allocation)
 -   용량 제한이 없다 (컴퓨터에 남은 메모리 만큼 사용 가능)
 -   코더가 데이터 수명을 직접 제어. stack의 경우 함수 호출이 끝나면 해당 영역은 방치된다.
 
@@ -289,12 +293,27 @@ code : 함수 코드
     -   stack에 비해 할당, 해제 속도가 느리다.
         -   offset 기반으로 움직이는 stack과 달리 할당하고자 하는 메모리 공간을 찾아야 하므로(메모리 조각화) 속도가 느리다.
 
+-   `동적 메모리 할당`
+
+    -   메모리 할당 -> 사용 -> 해제
+        -   1. 힙 관리자에게 n byte만큼을 달라 요청
+        -   2. 반환된 포인터를 활용
+        -   3. 힙 관리자에게 반환
+
+-   <stdlib.h>
+    -   malloc(할당), calloc(할당), realloc(재할당)
+    -   free(해제)
+
 ### data, code
 
 -   data
     -   전역변수는 데이터 섹션에 저장
     -   문자열 리터럴은 일반적으로 프로그램의 데이터 섹션에 저장됩니다. 이러한 문자열은 읽기 전용(read-only)일 수 있으며, 프로그램 실행 중에 수정할 수 없습니다. 따라서 문자열 리터럴은 변경할 수 없는 상수(constant)로 취급됩니다.
 -   code
+
+### func about mem management
+
+-   memset, memcpy, memcmp
 
 ### mem issues
 
@@ -321,7 +340,7 @@ code : 함수 코드
 
 ## ptr, dereference
 
-### 포인터를 읽는 방법(rt_lt rule)
+### 포인터와 함수를 읽는 방법(rt_lt rule)
 
 꽤나 복잡해지기 때문에 알아두어야 한다.
 right-left rule(rt_lt rule)은 매우 중요하다!
@@ -347,6 +366,8 @@ char (*foo)(void*) // foo is pointer to (void*) -> char
 int* (*foo)(int, void(*)(int)) // foo is pointer to (int, void(*)(int)) -> int*
 void (*func(int, void (*)(int)))(int); // func is function retuning pointer to function (int) -> void
 int (*(*fun_one)(char *,double))[9][20]; // fun_one is pointer to function expecting (char *,double) and returning pointer to array (size 9) of array (size 20) of int.
+void (*(*f[])())() // f is array of pointer to function () -> pointer to function () -> void
+void* malloc(size_t size); // malloc is function takes (size_t size) and returning void*
 ```
 
 ### ptr basic
