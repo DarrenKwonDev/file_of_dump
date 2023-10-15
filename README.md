@@ -460,9 +460,8 @@ void (*(*f[])())() // f is array of pointer to function () -> pointer to functio
     - [getchar](https://en.cppreference.com/w/c/io/getchar)
     - getchar -> putchar
 2. 한 줄씩 읽기(문자열 단위)
-    - [gets](https://en.cppreference.com/w/c/io/gets)
-    - gets -> puts
     - [fgets](https://en.cppreference.com/w/c/io/fgets)
+    - gets는 쓰지 말자.
 3. 한 데이터씩 읽기(형식화된 데이터)
     - [scanf](https://en.cppreference.com/w/c/io/fscanf)
 4. 한 블록씩 읽기 (이진 데이터)
