@@ -101,16 +101,25 @@ void (*(*f[])())() // f is array of pointer to function () -> pointer to functio
 
 -   동적 할당 작성시 원칙
 
+-   기타
+
+    -   최대한 정적 메모리(stack)를 사용하고, 동적 메모리(heap)는 최소한으로 사용하는 것이 좋다.
+    -   접두사로 pa\_ (pointer allocated) 를 붙여 malloc되었다는 것을 명시하는 것이 좋다.
+
 -   할당
 
     1. malloc으로 할당 받은 포인터는 복사하여 사용하라.
         - 해당 주소가 바뀌면 free할 수가 없기 때문이다.
-    2. realloc을 한다고 했을 때 동일한 포인터를 반환받을 수 있을 지는 모른다.
-    3. realloc의 반환값은 항상 임시 포인터 변수에 담은 후 NULL이 아닌 것을 체크한 후에 원래 포인터에 대입할 것.
+
+-   재할당
+
+    1. realloc을 한다고 했을 때 동일한 포인터를 반환받을 수 있을 지는 모른다.
+    2. realloc의 반환값은 항상 임시 포인터 변수에 담은 후 NULL이 아닌 것을 체크한 후에 원래 포인터에 대입할 것.
         - realloc이 실패하면 기존 메모리를 해제하지 않고, 원래 ptr 주소를 상실해서 메모리 누수가 발생할 수 있음.
         - 그러나 NULL을 반환할 정도라면 프로그램 뻗는게 맞다고 생각해서 에러 핸들링 안하는 경우도 종종 있다.
 
 -   해제
+
     1. free 먼저 작성.
         - 특히 지역 변수 내 malloc한 경우 함수 종료 시 그냥 나가버리면 해당 메모리 주소를 잃어버리게 되어 free할 수 없으니 유의.
     2. free한 뒤에 변수에 NULL을 대입하여 초기화 할 것
@@ -119,3 +128,23 @@ void (*(*f[])())() // f is array of pointer to function () -> pointer to functio
     3. 기타 free 주의점
         - free한 메모리를 또 free하면 안 됨
         - 해제만 메모리를 사용하려고 하면 안 됨
+
+-   동적 메모리의 소유권
+    -   동적 메모리를 생성한 함수에서 그 메모리를 해제할 책임이 있다.
+        -   소유주가 아닌 것이 메모리를 해제하면 안된다.
+        -   간단한 휴리스틱으로 malloc한 곳에서 free하면 된다는 원칙 적용.
+    -   cpp에서의 RAII(자원 획득은 초기화, resource acquisition is initialization)와 유사한 개념이다.
+
+---
+
+-   <string.h>
+
+    -   [memset](https://en.cppreference.com/w/c/string/byte/memset)
+        -   void *memset( void *dest, int ch, size_t count );
+        -   문자 ch를 count만큼 dest에 쓴다.
+    -   [memcpy](https://en.cppreference.com/w/c/string/byte/memcpy)
+        -   void* memcpy( void *dest, const void \*src, size_t count );
+        -   src를 count만큼 읽어서 dest에 쓴다.
+    -   [memcmp](https://en.cppreference.com/w/c/string/byte/memcmp)
+        -   int memcmp( const void* lhs, const void* rhs, size_t count );
+        -   count만큼 메모리를 비교. \0을 만나도 비교를 진행함.

@@ -4,10 +4,10 @@
 #define LEN 5
 
 int main(void) {
-    int* nums = malloc(sizeof(int) * LEN);
+    int* pa_nums = malloc(sizeof(int) * LEN);
 
-    free(nums);
-    free(nums); // wrong!
+    free(pa_nums);
+    free(pa_nums); // wrong!
 
     return 0;
 }

@@ -22,23 +22,23 @@
 */
 
 int main(void) {
-    void* nums;
+    void* pa_nums;
     void* tmp;
-    nums = malloc(sizeof(int) * 3);
+    pa_nums = malloc(sizeof(int) * 3);
 
     // 만약에 실패했다고 가정하자. (NULL 반환)
-    // 그렇다면 nums는 어떻게 되는 것인가?
+    // 그렇다면 pa_nums는 어떻게 되는 것인가?
     // 해제되지 않고 남아 있다. 그러나 주소는 잃어버렸다. 따라서 메모리 누수가 발생한다.
-    tmp = realloc(nums, sizeof(int) * 5);
+    tmp = realloc(pa_nums, sizeof(int) * 5);
 
     // 이를 방지하기 위해 realloc의 반환값은 임시 포인터에 저장하고, null이 아닌 경우에만 포인터에 할당하도록하자.
-    if (nums != NULL) {
-        nums = tmp;
+    if (pa_nums != NULL) {
+        pa_nums = tmp;
     }
 
     /* code */
 
     // 다 사용한 후 해제
-    free(nums);
-    nums = NULL;
+    free(pa_nums);
+    pa_nums = NULL;
 }

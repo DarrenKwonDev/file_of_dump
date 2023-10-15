@@ -16,7 +16,8 @@
         "locale": "c",
         "ostream": "c",
         "new": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "typeinfo": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

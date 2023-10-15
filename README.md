@@ -1,41 +1,39 @@
-
-
 <!-- toc -->
 
-- [clang_tutorial](#clang_tutorial)
-  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-  * [env settings](#env-settings)
-  * [clang, lldb, etc...](#clang-lldb-etc)
-    + [clang](#clang)
-    + [lldb](#lldb)
-    + [leaks](#leaks)
-  * [compiler](#compiler)
-  * [build process](#build-process)
-  * [module & lib](#module--lib)
-  * [register](#register)
-    + [registers 종류](#registers-%EC%A2%85%EB%A5%98)
-  * [memory](#memory)
-    + [mem model](#mem-model)
-    + [stack](#stack)
-    + [heap](#heap)
-    + [data, code](#data-code)
-    + [func about mem management](#func-about-mem-management)
-    + [mem issues](#mem-issues)
-  * [ptr, dereference](#ptr-dereference)
-    + [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
-    + [ptr basic](#ptr-basic)
-    + [const ptr](#const-ptr)
-    + [function ptr](#function-ptr)
-  * [File input/output](#file-inputoutput)
-    + [File](#file)
-    + [io redirection](#io-redirection)
-  * [struct](#struct)
-  * [err handing principle](#err-handing-principle)
-  * [stdlib](#stdlib)
-    + [string.h](#stringh)
-  * [simple assembly](#simple-assembly)
-  * [what to do after basic c](#what-to-do-after-basic-c)
-  * [youtube](#youtube)
+-   [clang_tutorial](#clang_tutorial)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+    -   [env settings](#env-settings)
+    -   [clang, lldb, etc...](#clang-lldb-etc)
+        -   [clang](#clang)
+        -   [lldb](#lldb)
+        -   [leaks](#leaks)
+    -   [compiler](#compiler)
+    -   [build process](#build-process)
+    -   [module & lib](#module--lib)
+    -   [register](#register)
+        -   [registers 종류](#registers-%EC%A2%85%EB%A5%98)
+    -   [memory](#memory)
+        -   [mem model](#mem-model)
+        -   [stack](#stack)
+        -   [heap](#heap)
+        -   [data, code](#data-code)
+        -   [func about mem management](#func-about-mem-management)
+        -   [mem issues](#mem-issues)
+    -   [ptr, dereference](#ptr-dereference)
+        -   [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
+        -   [ptr basic](#ptr-basic)
+        -   [const ptr](#const-ptr)
+        -   [function ptr](#function-ptr)
+    -   [File input/output](#file-inputoutput)
+        -   [File](#file)
+        -   [io redirection](#io-redirection)
+    -   [struct](#struct)
+    -   [err handing principle](#err-handing-principle)
+    -   [stdlib](#stdlib)
+        -   [string.h](#stringh)
+    -   [simple assembly](#simple-assembly)
+    -   [what to do after basic c](#what-to-do-after-basic-c)
+    -   [youtube](#youtube)
 
 <!-- tocstop -->
 
@@ -295,6 +293,7 @@ code : 함수 코드
 
 -   `동적 메모리 할당`
 
+    -   최대한 정적 메모리를 사용하고, 동적 메모리는 최소한으로 사용하는 것이 좋다.
     -   메모리 할당 -> 사용 -> 해제
         -   1. 힙 관리자에게 n byte만큼을 달라 요청
         -   2. 반환된 포인터를 활용
@@ -306,16 +305,6 @@ code : 함수 코드
     -   calloc(할당)
     -   [realloc(재할당)](https://en.cppreference.com/w/c/memory/realloc)
     -   free(해제)
-
--   <string.h>
-
-    -   [memset](https://en.cppreference.com/w/c/string/byte/memset)
-        -   void *memset( void *dest, int ch, size_t count );
-        -   문자 ch를 count만큼 dest에 쓴다.
-    -   [memcpy](https://en.cppreference.com/w/c/string/byte/memcpy)
-        -   void* memcpy( void *dest, const void \*src, size_t count );
-        -   src를 count만큼 읽어서 dest에 쓴다.
-    -   memcmp
 
 -   동적 할당 작성시 원칙
 

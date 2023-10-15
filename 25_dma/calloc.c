@@ -15,15 +15,15 @@
 */
 
 int main(void) {
-    int* a = calloc(sizeof(int), 3);
+    int* pa_a = calloc(sizeof(int), 3);
 
     // 위는 아래와 동일하다.
-    void* b = malloc(sizeof(int) * 3);
-    memset(b, 0, sizeof(int) * 3);
+    void* pa_b = malloc(sizeof(int) * 3);
+    memset(pa_b, 0, sizeof(int) * 3);
 
-    free(a);
-    a = NULL;
+    free(pa_a);
+    pa_a = NULL;
 
-    free(b);
+    free(pa_b);
     b = NULL;
 }

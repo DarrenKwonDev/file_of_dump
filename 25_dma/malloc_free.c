@@ -15,21 +15,21 @@
 */
 
 int main(void) {
-    void* num;
+    void* pa_num;
     int* p; // malloc으로 할당 받은 포인터로 연산 금지. 가급적이면 해당 주소를 복사해서 사용하라.
 
-    num = malloc(sizeof(int));
-    p = num; // void*는 캐스팅하지 않아도 됨.
+    pa_num = malloc(sizeof(int));
+    p = pa_num; // void*는 캐스팅하지 않아도 됨.
 
     *p = 10;
     *p *= 3;
 
     printf("*p: %d\n", *p);
 
-    free(num);
+    free(pa_num);
 
     // 1. null ptr는 free로 전달해도 안전함. (또 free하는 실수 예방)
     // 2. 해제된 것이라는 것은 명확히 함.
-    num = NULL;
+    pa_num = NULL;
     p = NULL;
 }
