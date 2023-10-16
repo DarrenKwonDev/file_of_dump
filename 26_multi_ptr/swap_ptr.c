@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 
-void swap_ptr(int** x, int** y) {
-    int* temp = *x;
-    *x = *y;
-    *y = temp;
+void swap_ptr(int** p, int** q) {
+    int* temp = *p;
+    *p = *q;
+    *q = temp;
 }
 
 int main(void) {

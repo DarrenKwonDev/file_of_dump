@@ -160,6 +160,8 @@ void (*(*f[])())() // f is array of pointer to function () -> pointer to functio
 
 C로 사용자 입력을 받았을 때 권장되는 방식은 `fgets`와 `sscanf`
 
+-   printf 출력에서 개행문자는 무시하.ㅁ
+
 -   <string.h>
 
     -   [memset](https://en.cppreference.com/w/c/string/byte/memset)

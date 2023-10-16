@@ -1,39 +1,41 @@
+
+
 <!-- toc -->
 
--   [clang_tutorial](#clang_tutorial)
-    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-    -   [env settings](#env-settings)
-    -   [clang, lldb, etc...](#clang-lldb-etc)
-        -   [clang](#clang)
-        -   [lldb](#lldb)
-        -   [leaks](#leaks)
-    -   [compiler](#compiler)
-    -   [build process](#build-process)
-    -   [module & lib](#module--lib)
-    -   [register](#register)
-        -   [registers 종류](#registers-%EC%A2%85%EB%A5%98)
-    -   [memory](#memory)
-        -   [mem model](#mem-model)
-        -   [stack](#stack)
-        -   [heap](#heap)
-        -   [data, code](#data-code)
-        -   [func about mem management](#func-about-mem-management)
-        -   [mem issues](#mem-issues)
-    -   [ptr, dereference](#ptr-dereference)
-        -   [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
-        -   [ptr basic](#ptr-basic)
-        -   [const ptr](#const-ptr)
-        -   [function ptr](#function-ptr)
-    -   [File input/output](#file-inputoutput)
-        -   [File](#file)
-        -   [io redirection](#io-redirection)
-    -   [struct](#struct)
-    -   [err handing principle](#err-handing-principle)
-    -   [stdlib](#stdlib)
-        -   [string.h](#stringh)
-    -   [simple assembly](#simple-assembly)
-    -   [what to do after basic c](#what-to-do-after-basic-c)
-    -   [youtube](#youtube)
+- [clang_tutorial](#clang_tutorial)
+  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+  * [env settings](#env-settings)
+  * [clang, lldb, etc...](#clang-lldb-etc)
+    + [clang](#clang)
+    + [lldb](#lldb)
+    + [leaks](#leaks)
+  * [compiler](#compiler)
+  * [build process](#build-process)
+  * [module & lib](#module--lib)
+  * [register](#register)
+    + [registers 종류](#registers-%EC%A2%85%EB%A5%98)
+  * [memory](#memory)
+    + [mem model](#mem-model)
+    + [stack](#stack)
+    + [heap](#heap)
+    + [data, code](#data-code)
+    + [func about mem management](#func-about-mem-management)
+    + [mem issues](#mem-issues)
+  * [ptr, dereference](#ptr-dereference)
+    + [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
+    + [ptr basic](#ptr-basic)
+    + [const ptr](#const-ptr)
+    + [function ptr](#function-ptr)
+  * [File input/output](#file-inputoutput)
+    + [File](#file)
+    + [io redirection](#io-redirection)
+  * [struct](#struct)
+  * [err handing principle](#err-handing-principle)
+  * [stdlib](#stdlib)
+    + [string.h](#stringh)
+  * [simple assembly](#simple-assembly)
+  * [what to do after basic c](#what-to-do-after-basic-c)
+  * [youtube](#youtube)
 
 <!-- tocstop -->
 
@@ -42,30 +44,46 @@
 ## 권고 사항
 
 -   MUST READ DOC.
+
     -   [doc](https://en.cppreference.com/w/c)
     -   [Microsoft C++, C 및 어셈블러 설명서](https://learn.microsoft.com/ko-kr/cpp/?view=msvc-170)
--   전방 선언 꼭 해라. 함수 선언은 필수라 생각해라.
-    -   C89 기준 아직 등장하지 않은 함수는 int 반환 함수로 컴파일러가 알아서 가정하기 때문임
--   한 줄에서 함수 여러 번 호출 하지 말 것 (unspecified behavior)
--   한 줄에서 동일 변수를 여러 번 바꾸지 말 것 (undefined behavior)
--   조건문에서는 short circuit evaluation 유의
--   전역 변수 prefix `g_` 붙이기
--   가급적 모든 변수에 const를 붙이는게 좋다. (rust 기본 동작처럼)
-    -   변수가 기본이고 상수가 별도 표기하는 것이 아니라, 관점을 달리해서 기본이 상수로, 변수가 별도 표기하는 것이 좋다고 생각함. 문제는 C-lang와 그 영향을 받은 c-like language들이 이런 관점을 가지고 있지 않다는 것임.
--   build target (platform) 환경을 알아 두어라.
--   포인터를 반환하는 함수의 경우 dangling pointer를 조심하라. 함수 내 지역변수를 가리키는 포인터는 함수가 사라지면 stack frame 내에 의도한 값을 가지지 않을 가능성이 높다.
--   NULL이 될 가능성이 존재하는 것은 접미사로 `or_null`을 붙일 것
--   문자열은 순회하는 등 문자열의 길이에 의존하는 로직을 건드릴 때는 null char가 포함되어 있음을 염두에 두어라.
--   C에서 모든 자료형은 '값형'이다. 포인터를 넘겨 pass by reference를 구현하는 것이다.
-    -   {'a', 'b'}와 같은 꼴로 작성 된 경우 null char가 포함되어 있지 않으므로 주의하라. 애초에 이런 방식으로 문자열을 만들지 않도록 하자.
--   할당 및 해제를 항상 같이 작성하라.
-    -   fopen하면 fclose를 곧바로 작성하라. 잊기 쉽다. 그 외의 다른 리소스들도 마찬가지.
-    -   malloc하면 free를 곧바로 작성하라.
--   구조체 작성할 때 메모리 패딩을 고려하여 각 요소의 순서를 4의 배수가 되도록 배치하라.
+
+-   `접두사 혹은 접미사 붙이기`
+
+    -   전역 변수 prefix `g_` 붙이기
+    -   NULL이 될 가능성이 존재하는 것은 접미사로 `or_null`을 붙일 것
+    -   동적 할당하는 함수가 있다면 접미사로 `_malloc`을 붙일 것
+    -   malloc의 결과로 반환된 포인터에는 접두사로 pa\_ (pointer allocated) 를 붙일 것.
+
+-   `ptr`
+
+    -   값과 주소를 구별하여 도식 혹은 표를 그려 접근하라.
+    -   더블 포인터 이상의 경우 헷갈린다면 '변수의 주소를 바꿀 순 없지만 값을 변형할 순 있다'를 염두에 두고 역참조를 따라가보라.
+    -   포인터를 반환하는 함수의 경우 dangling pointer를 조심하라. 함수 내 지역변수를 가리키는 포인터는 함수가 사라지면 stack frame 내에 의도한 값을 가지지 않을 가능성이 높다.
+
+-   `구조체`
+
+    -   구조체 작성할 때 메모리 패딩을 고려하여 각 요소의 순서를 4의 배수가 되도록 배치하라.
     -   4바이트가 아닌 요소를 구조체 최하단으로 배치하는 휴리스틱이 유용한 편.
     -   #pragma pack을 사용하는 방법도 있지만 비표준.
--   va_start/va_end 구문 사이 가독성을 위해 {}를 넣는 것을 추천
--   모든 함수 및 로직에서 null 체킹을 하는 것은 잘못된 방식이다. 문제의 원인을 찾는 곳은 최소한인 곳이 좋다.
+
+-   `기타 코드 작성`
+    -   전방 선언 꼭 해라. 함수 선언은 필수라 생각해라.
+        -   C89 기준 아직 등장하지 않은 함수는 int 반환 함수로 컴파일러가 알아서 가정하기 때문임
+    -   한 줄에서 함수 여러 번 호출 하지 말 것 (unspecified behavior)
+    -   한 줄에서 동일 변수를 여러 번 바꾸지 말 것 (undefined behavior)
+    -   조건문에서는 short circuit evaluation 유의
+    -   가급적 모든 변수에 const를 붙이는게 좋다. (rust 기본 동작처럼)
+        -   변수가 기본이고 상수가 별도 표기하는 것이 아니라, 관점을 달리해서 기본이 상수로, 변수가 별도 표기하는 것이 좋다고 생각함. 문제는 C-lang와 그 영향을 받은 c-like language들이 이런 관점을 가지고 있지 않다는 것임.
+    -   build target (platform) 환경을 알아 두어라.
+    -   문자열은 순회하는 등 문자열의 길이에 의존하는 로직을 건드릴 때는 null char가 포함되어 있음을 염두에 두어라.
+    -   C에서 모든 자료형은 '값형'이다. 포인터를 넘겨 pass by reference를 구현하는 것이다.
+        -   {'a', 'b'}와 같은 꼴로 작성 된 경우 null char가 포함되어 있지 않으므로 주의하라. 애초에 이런 방식으로 문자열을 만들지 않도록 하자.
+    -   할당 및 해제를 항상 같이 작성하라.
+        -   fopen하면 fclose를 곧바로 작성하라. 잊기 쉽다. 그 외의 다른 리소스들도 마찬가지.
+        -   malloc하면 free를 곧바로 작성하라.
+    -   va_start/va_end 구문 사이 가독성을 위해 {}를 넣는 것을 추천
+    -   모든 함수 및 로직에서 null 체킹을 하는 것은 잘못된 방식이다. 문제의 원인을 찾는 곳은 최소한인 곳이 좋다.
 
 ## env settings
 
@@ -564,6 +582,13 @@ https://en.cppreference.com/w/c
     -   strlen은 null char를 제외한 길이를 반환한다.
 
 -   strcmp, strncmp
+
+    ```c
+    // love가 완성되면 cnt 올리기
+    if (strncmp(p_buff, "love", 4) == 0) {
+        love_cnt++;
+    }
+    ```
 
 -   strcpy, strncpy
     -   전에 있던 dest는 덮어씌워지게 됩니다. dest의 크기가 src보다 작다면 문제가 발생합니다.
