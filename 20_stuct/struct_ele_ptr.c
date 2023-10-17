@@ -22,7 +22,7 @@ int main() {
 
     clone = name; // 구조체 얕은 복사 (주소만 복사)
 
-    name.lastname[0] = 'N';
+    name.lastname[0] = 'N'; // clone의 lastname도 바뀐다.
 
     printf("origin: %s %s\n", name.firstname, name.lastname);
     printf("clone: %s %s\n", clone.firstname, clone.lastname);

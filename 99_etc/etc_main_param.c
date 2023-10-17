@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+// argv is array of char*
+// 즉, 문자열 담고 있는 배열.
 int main(int argc, const char* argv[]) {
     /*
         argc는 들어온 인자의 수

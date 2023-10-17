@@ -57,6 +57,9 @@ int main(void) {
     // // 역참조 먼저 + 전위 연산 (as a int)
     int num = ++*p; // num: 135, p: 0x104
     printf("%d, %p\n", num, p);
+
+    // p + 1 ==  ++p == ptr1[1]
+    // (char*)ptr1 + 1 == 1비트 이동해.
 }
 ```
 
@@ -67,7 +70,7 @@ int main(void) {
     -   <u>포인터의 메모리를 고정하고 싶을 때 사용함. 메모리가 가리키는 값은 변경 가능</u>
         -   ```c
             int* const p = &a;
-            *p = b; // ok
+            *p = b; // okz
             p = &b; // error
             p++;    // error
             ```
@@ -148,28 +151,25 @@ void (*(*f[])())() // f is array of pointer to function () -> pointer to functio
 
 -   입력 받기의 전략
 
-메모리뷰랑 디버거 켜놓고 짚어봐야 한다.
-
 1. 한 글자씩 읽기
-    - [getchar](https://en.cppreference.com/w/c/io/getchar)
-    - getchar -> putchar
+
+    - [getchar](https://en.cppreference.com/w/c/io/getchar), fgetc(putchar, fputc) : 한 글자씩 읽고 쓴다.
+
 2. 한 줄씩 읽기(문자열 단위)
     - [fgets](https://en.cppreference.com/w/c/io/fgets)
         - char *fgets( char *str, int count, FILE \*stream );
         - stream에서 count-1만큼 읽어서 str에 쓴다.
-        - 개행문자도 읽어온다. 따라서 strlen을 찍으면 \n 까지 읽어서 반환한다. -> 개행문자가 싫다면 scanf
+        - `개행문자도 읽어온다.` 따라서 strlen을 찍으면 \n 까지 읽어서 반환한다. -> 개행문자가 싫다면 scanf
+        - `마지막에 \0(null char) 를 붙여`준다. 하지만 신뢰하지 말고 코드로 len - 1에 null char를 넣어주자.
         - 공백이 있는 문자열을 받기 위해서 scanf 대신 fgets를 쓰는게 편리한 편.
-        - 마지막에 \0(null char) 를 붙여주긴 하지만 신뢰하지 말고 코드로 len - 1에 null char를 넣어주자.
     - gets는 쓰지 말자.
 3. 한 데이터씩 읽기(형식화된 데이터)
     - [scanf](https://en.cppreference.com/w/c/io/fscanf)
-    - 공백을 잘라 읽는다. i love you 에서 i만 읽어옴.
+    - 데이터를 구분 짓는 기준이 공백임. 따라서 공백을 잘라 읽는다. i love you 에서 i만 읽어옴. scanf는 문자열을 입력받기에 적절하지 않음. fgets나 다른 함수를 권고함.
 4. 한 블록씩 읽기 (이진 데이터)
     - [fread](https://en.cppreference.com/w/c/io/fread)
 
 C로 사용자 입력을 받았을 때 권장되는 방식은 `fgets`와 `sscanf`
-
--   printf 출력에서 개행문자는 무시하.ㅁ
 
 -   <string.h>
 

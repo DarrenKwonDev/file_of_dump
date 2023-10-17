@@ -26,8 +26,11 @@
     + [ptr basic](#ptr-basic)
     + [const ptr](#const-ptr)
     + [function ptr](#function-ptr)
-  * [File input/output](#file-inputoutput)
-    + [File](#file)
+  * [Stream](#stream)
+    + [파일 스트림을 다루기](#%ED%8C%8C%EC%9D%BC-%EC%8A%A4%ED%8A%B8%EB%A6%BC%EC%9D%84-%EB%8B%A4%EB%A3%A8%EA%B8%B0)
+    + [io](#io)
+    + [FILE type](#file-type)
+    + [stream indicator](#stream-indicator)
     + [io redirection](#io-redirection)
   * [struct](#struct)
   * [err handing principle](#err-handing-principle)
@@ -476,28 +479,56 @@ void (*(*f[])())() // f is array of pointer to function () -> pointer to functio
 
 기본 annotation은 `반환형 (*변수명)(매개변수 목록)` 이다.
 
-## [File input/output](https://en.cppreference.com/w/c/io)
+## Stream
 
-입력 받기의 전략
+스트림?
+OS가 제공하는 입출려 장치와 실행 중인 프로세스를 연결하는 데이터 통로.
+콘솔(키보드, 모니터)은 표준 스트림에 해당하여 따로 스트림 생성을 OS에게 요청할 필요 없으나 파일 스트림등은 직접 스트림 생성을 요구해야 한다.(file open)
+
+buffer?
+스트림에서 버퍼에 저장한 뒤 일정한 chunk로 잘라 프로세스에게 제공된다.
+fgets로 문자열 단위로 읽을 때 enter를 치면 스트림을 거쳐 입력 버퍼에 저장된다.
+버퍼에 내용이 생겼으므로 fgets는 버퍼에서 문자를 읽어올 수 있다.
+여기서, 전송되고 남은 문자들은 여전히 버퍼에 남아 있다.
+
+### 파일 스트림을 다루기
+
+1. 파일을 열어 파일 스트림을 생성한다. (fopen)
+2. 파일 스트림을 활용한다. (fread, fwrite, fgets, ...)
+3. 파일을 닫는다. (fclose)
+
+### [io](https://en.cppreference.com/w/c/io)
+
+메모리뷰랑 디버거 켜놓고 짚어봐야 한다.
+
+-   입력 받기의 전략
 
 1. 한 글자씩 읽기
-    - [getchar](https://en.cppreference.com/w/c/io/getchar)
-    - getchar -> putchar
+
+    - [getchar](https://en.cppreference.com/w/c/io/getchar), fgetc(putchar, fputc) : 한 글자씩 읽고 쓴다.
+
 2. 한 줄씩 읽기(문자열 단위)
     - [fgets](https://en.cppreference.com/w/c/io/fgets)
+        - char *fgets( char *str, int count, FILE \*stream );
+        - stream에서 count-1만큼 읽어서 str에 쓴다.
+        - `개행문자도 읽어온다.` 따라서 strlen을 찍으면 \n 까지 읽어서 반환한다. -> 개행문자가 싫다면 scanf
+        - `마지막에 \0(null char) 를 붙여`준다. 하지만 신뢰하지 말고 코드로 len - 1에 null char를 넣어주자.
+        - 공백이 있는 문자열을 받기 위해서 scanf 대신 fgets를 쓰는게 편리한 편.
     - gets는 쓰지 말자.
 3. 한 데이터씩 읽기(형식화된 데이터)
     - [scanf](https://en.cppreference.com/w/c/io/fscanf)
+    - 데이터를 구분 짓는 기준이 공백임. 따라서 공백을 잘라 읽는다. i love you 에서 i만 읽어옴. scanf는 문자열을 입력받기에 적절하지 않음. fgets나 다른 함수를 권고함.
 4. 한 블록씩 읽기 (이진 데이터)
     - [fread](https://en.cppreference.com/w/c/io/fread)
 
 C로 사용자 입력을 받았을 때 권장되는 방식은 `fgets`와 `sscanf`
 
-### File
+### [FILE type](https://en.cppreference.com/w/c/io/FILE)
 
-[FILE type](https://en.cppreference.com/w/c/io/FILE)
+FILE type?
 
 "스트림을 제어하기 위해 필요한 정보를 담고 있는 자료형"
+
 스트림을 제어하기 위해 필요한 정보?
 
 1. 파일 위치 표시자(file position indicator)
@@ -512,18 +543,9 @@ Each FILE object denotes a C stream.
 
 파일 스트림이란 것은 소켓, 파이프 등등을 통칭하는 것이다.
 
----
+### stream indicator
 
-파일을 여는 법
-
-1. 파일을 열어 파일 스트림을 생성한다. (fopen)
-2. 파일 스트림을 활용한다. (fread, fwrite, fgets, ...)
-3. 파일을 닫는다. (fclose)
-
----
-
-indicator.
-stream에는 3개의 표시자가 존재.
+stream에는 3개의 표시자(indicator)가 존재.
 
 End-of-file status indicator. (EOF 표시자)
 Error status indicator. (오류 표시자)
@@ -571,8 +593,6 @@ indicator를 조정하는 여러 함수들 존재
         -   외부 세계에서 null이 들어오면 assertion으로 쳐내야지 받아내면 안된다. 혹여나 null을 허용한다면 함수 , 메서드 이름이나 주석으로 문서화해야 함.
 
 ## stdlib
-
-https://en.cppreference.com/w/c
 
 ### [string.h](https://en.cppreference.com/w/c/string/byte)
 
