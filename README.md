@@ -183,10 +183,14 @@ D -- linker --> E(machine code, 실행 코드, 라이브러리)
 
 -   static
 
-    -   선언된 파일 내 혹은 블록 내에서만 사용할 수 있으며 extern으로 호출하여도 Undefined symbols 에러가 발생한다.
-    -   `_s` 붙이는 컨벤션 권고.
-    -   함수 내 선언된 static은 함수 호출이 끝나고 GC 당하지 않고 계속 유지 된다.
+    -   지역 변수(함수의 매개 변수 포함)은 block scope 벗어나면 무시됨. 그러나 static 지역 변수를 선언하면 함수 호출이 끝나고 GC 당하지 않고 계속 유지 된다.
+    -   static 지역 변수는 사실상 전역 변수처럼 프로그램이 종료될 때까지 메모리에 남아있음. 따라서 둘 다 프로세스가 종료할 때 까지 메모리 주소를 유지하는데에는 차이가 없다.
+        -   그렇다면 왜 static 지역 변수를 사용하는가?
+        -   static 지역 변수의 의의는 선언된 파일 내 혹은 블록 내에서만 사용할 수 있으며 extern으로 호출하여도 Undefined symbols 에러가 발생한다는 점.
+            -   static 지역 변수 : 해당 함수 스코프 내에서만 접근 가능.
+            -   static 전역 변수 : 선언된 파일 스코프(.c, .h) 내에서만 접근 가능하며 extern 불가
     -   static 변수를 선언하고, 해당 변수를 mutable하는 별도 함수를 만들어 호출하는 방법이 안전함. 일종의 setter 함수.
+    -   `_s` 붙이는 컨벤션 권고.
 
 -   static library vs dynamic library
 
