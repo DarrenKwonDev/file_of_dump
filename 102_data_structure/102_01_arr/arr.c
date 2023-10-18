@@ -6,7 +6,6 @@ enum { INVALID_INDEX = -1 };
 
 void insert_at(size_t index, int n);
 void remove_at(size_t index);
-void remove_at_unordered(size_t index);
 size_t find_index(int n);
 
 int s_nums[MAX_NUMS];
@@ -34,8 +33,6 @@ int main() {
     remove_at(0);
     remove_at(0);
     // {5, 4, 3, 2, 1}
-
-    remove_at_unordered(2); // 2번째 원소 빠르게 지우고 정렬하지 않기.
 
     printf("%zu\n", find_index(3)); // 2
     printf("%zu\n", find_index(7)); // -1
@@ -95,20 +92,4 @@ size_t find_index(int n) {
     }
 
     return INVALID_INDEX;
-}
-
-// O(1)
-// 왜 이런 식으로 함? 배열의 순서가 중요하지 않은 경우가 많음.
-void remove_at_unordered(size_t index) {
-    assert(index < s_nums_count);
-
-    // {1, 2, 3, 4, 5}이 있다.
-    // index 2를 지우려고 해보자.
-    // 제거하되 하나씩 당겨오지 않기로 한다. (그것이 O(n)의 원인이므로)
-    // 대신, 그곳을 마지막 원소로 채워 넣는다.
-
-    // s_nums[2] = s_nums[4];
-    // {1, 2, 5, 4}가 된다.
-    // 맨 마지막 원소는 이미 --s_nums_count 연산을 통해 접근할 수 없게 된 것이나 마찬가지.
-    s_nums[index] = s_nums[--s_nums_count];
 }
