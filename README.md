@@ -1,44 +1,43 @@
-
-
 <!-- toc -->
 
-- [clang_tutorial](#clang_tutorial)
-  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-  * [env settings](#env-settings)
-  * [clang, lldb, etc...](#clang-lldb-etc)
-    + [clang](#clang)
-    + [lldb](#lldb)
-    + [leaks](#leaks)
-  * [compiler](#compiler)
-  * [build process](#build-process)
-  * [module & lib](#module--lib)
-  * [register](#register)
-    + [registers 종류](#registers-%EC%A2%85%EB%A5%98)
-  * [memory](#memory)
-    + [mem model](#mem-model)
-    + [stack](#stack)
-    + [heap](#heap)
-    + [data, code](#data-code)
-    + [func about mem management](#func-about-mem-management)
-    + [mem issues](#mem-issues)
-  * [ptr, dereference](#ptr-dereference)
-    + [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
-    + [ptr basic](#ptr-basic)
-    + [const ptr](#const-ptr)
-    + [function ptr](#function-ptr)
-  * [Stream](#stream)
-    + [파일 스트림을 다루기](#%ED%8C%8C%EC%9D%BC-%EC%8A%A4%ED%8A%B8%EB%A6%BC%EC%9D%84-%EB%8B%A4%EB%A3%A8%EA%B8%B0)
-    + [io](#io)
-    + [FILE type](#file-type)
-    + [stream indicator](#stream-indicator)
-    + [io redirection](#io-redirection)
-  * [struct](#struct)
-  * [err handing principle](#err-handing-principle)
-  * [stdlib](#stdlib)
-    + [string.h](#stringh)
-  * [simple assembly](#simple-assembly)
-  * [what to do after basic c](#what-to-do-after-basic-c)
-  * [youtube](#youtube)
+-   [clang_tutorial](#clang_tutorial)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+    -   [env settings](#env-settings)
+    -   [clang, lldb, etc...](#clang-lldb-etc)
+        -   [clang](#clang)
+        -   [lldb](#lldb)
+        -   [leaks](#leaks)
+    -   [compiler](#compiler)
+    -   [build process](#build-process)
+        -   [module & lib](#module--lib)
+        -   [preprocessor(전처리기)](#preprocessor%EC%A0%84%EC%B2%98%EB%A6%AC%EA%B8%B0)
+    -   [register](#register)
+        -   [registers 종류](#registers-%EC%A2%85%EB%A5%98)
+    -   [memory](#memory)
+        -   [mem model](#mem-model)
+        -   [stack](#stack)
+        -   [heap](#heap)
+        -   [data, code](#data-code)
+        -   [func about mem management](#func-about-mem-management)
+        -   [mem issues](#mem-issues)
+    -   [ptr, dereference](#ptr-dereference)
+        -   [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
+        -   [ptr basic](#ptr-basic)
+        -   [const ptr](#const-ptr)
+        -   [function ptr](#function-ptr)
+    -   [Stream](#stream)
+        -   [파일 스트림을 다루기](#%ED%8C%8C%EC%9D%BC-%EC%8A%A4%ED%8A%B8%EB%A6%BC%EC%9D%84-%EB%8B%A4%EB%A3%A8%EA%B8%B0)
+        -   [io](#io)
+        -   [FILE type](#file-type)
+        -   [stream indicator](#stream-indicator)
+        -   [io redirection](#io-redirection)
+    -   [struct](#struct)
+    -   [err handing principle](#err-handing-principle)
+    -   [stdlib](#stdlib)
+        -   [string.h](#stringh)
+    -   [simple assembly](#simple-assembly)
+    -   [what to do after basic c](#what-to-do-after-basic-c)
+    -   [youtube](#youtube)
 
 <!-- tocstop -->
 
@@ -89,6 +88,7 @@
         -   malloc하면 free를 곧바로 작성하라.
     -   va_start/va_end 구문 사이 가독성을 위해 {}를 넣는 것을 추천
     -   모든 함수 및 로직에서 null 체킹을 하는 것은 잘못된 방식이다. 문제의 원인을 찾는 곳은 최소한인 곳이 좋다.
+    -   매크로 함수의 구현부에는 괄호()를 칠 것.
 
 ## env settings
 
@@ -127,6 +127,8 @@ n # 한 줄 씩
 
 ### leaks
 
+안 다뤄봄. 메모리 누수 탐지에 용이함.
+
 ## compiler
 
 -   clang
@@ -164,7 +166,7 @@ D -- linker --> E(machine code, 실행 코드, 라이브러리)
 -   linker
     -   obj 코드를 모아 linking. 여러 obj 파일을 하나의 실행 파일로 만듦.
 
-## module & lib
+### module & lib
 
 -   header(.h)와 c파일(.c)
 
@@ -209,6 +211,31 @@ D -- linker --> E(machine code, 실행 코드, 라이브러리)
     -   include guard를 사용하자.
     -   #ifndef, #define, #endif를 사용하여 중복 include를 방지하는 것.
     -   #pragma once를 사용할 수도 있으나 표준은 아님.
+
+### [preprocessor(전처리기)](https://en.cppreference.com/w/c/preprocessor)
+
+전처리기 연산자
+
+`#` 혹은 `##`
+
+전처리기가 하는 일(cppref 사이트에 다 적혀 있다...)
+
+1. 다른 파일을 include (#include)
+2. 매크로를 다른 텍스트로 대체 (#define, #undef)
+3. 소스 파일의 일부를 조건부로 컴파일 (#if, #ifdef, #ifndef, #else #elif, #endif)
+4. 일부러 오류 발생 (#error)
+
+[Predefined Macro Symbols](https://en.cppreference.com/w/c/preprocessor/replace#Predefined_macros)
+
+`__FILE__` : 현재 파일 이름
+`__LINE__` : 현재 줄 번호
+`__STDC_VERSION__` : C 표준 버전
+... 이하 공식 문서 찾아볼 것.
+
+macro function
+
+장. 함수 호출에 따른 오버로드가 없음.  
+단. 그런데 디버깅하기 힘듦. breakpoint? 안 걸림. 뇌지컬로 뚫어야 함.
 
 ## register
 
