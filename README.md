@@ -1,43 +1,48 @@
+
+
 <!-- toc -->
 
--   [clang_tutorial](#clang_tutorial)
-    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-    -   [env settings](#env-settings)
-    -   [clang, lldb, etc...](#clang-lldb-etc)
-        -   [clang](#clang)
-        -   [lldb](#lldb)
-        -   [leaks](#leaks)
-    -   [compiler](#compiler)
-    -   [build process](#build-process)
-        -   [module & lib](#module--lib)
-        -   [preprocessor(전처리기)](#preprocessor%EC%A0%84%EC%B2%98%EB%A6%AC%EA%B8%B0)
-    -   [register](#register)
-        -   [registers 종류](#registers-%EC%A2%85%EB%A5%98)
-    -   [memory](#memory)
-        -   [mem model](#mem-model)
-        -   [stack](#stack)
-        -   [heap](#heap)
-        -   [data, code](#data-code)
-        -   [func about mem management](#func-about-mem-management)
-        -   [mem issues](#mem-issues)
-    -   [ptr, dereference](#ptr-dereference)
-        -   [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
-        -   [ptr basic](#ptr-basic)
-        -   [const ptr](#const-ptr)
-        -   [function ptr](#function-ptr)
-    -   [Stream](#stream)
-        -   [파일 스트림을 다루기](#%ED%8C%8C%EC%9D%BC-%EC%8A%A4%ED%8A%B8%EB%A6%BC%EC%9D%84-%EB%8B%A4%EB%A3%A8%EA%B8%B0)
-        -   [io](#io)
-        -   [FILE type](#file-type)
-        -   [stream indicator](#stream-indicator)
-        -   [io redirection](#io-redirection)
-    -   [struct](#struct)
-    -   [err handing principle](#err-handing-principle)
-    -   [stdlib](#stdlib)
-        -   [string.h](#stringh)
-    -   [simple assembly](#simple-assembly)
-    -   [what to do after basic c](#what-to-do-after-basic-c)
-    -   [youtube](#youtube)
+- [clang_tutorial](#clang_tutorial)
+  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+  * [env settings](#env-settings)
+  * [clang, lldb, etc...](#clang-lldb-etc)
+    + [clang](#clang)
+    + [lldb](#lldb)
+    + [leaks](#leaks)
+    + [기타 도구들](#%EA%B8%B0%ED%83%80-%EB%8F%84%EA%B5%AC%EB%93%A4)
+  * [compiler](#compiler)
+  * [build process](#build-process)
+    + [module & lib](#module--lib)
+    + [preprocessor(전처리기)](#preprocessor%EC%A0%84%EC%B2%98%EB%A6%AC%EA%B8%B0)
+    + [custom lib](#custom-lib)
+    + [CMake](#cmake)
+  * [register](#register)
+    + [registers 종류](#registers-%EC%A2%85%EB%A5%98)
+  * [memory](#memory)
+    + [mem model](#mem-model)
+    + [stack](#stack)
+    + [heap](#heap)
+    + [data, code](#data-code)
+    + [func about mem management](#func-about-mem-management)
+    + [mem issues](#mem-issues)
+  * [ptr, dereference](#ptr-dereference)
+    + [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
+    + [ptr basic](#ptr-basic)
+    + [const ptr](#const-ptr)
+    + [function ptr](#function-ptr)
+  * [Stream](#stream)
+    + [파일 스트림을 다루기](#%ED%8C%8C%EC%9D%BC-%EC%8A%A4%ED%8A%B8%EB%A6%BC%EC%9D%84-%EB%8B%A4%EB%A3%A8%EA%B8%B0)
+    + [io](#io)
+    + [FILE type](#file-type)
+    + [stream indicator](#stream-indicator)
+    + [io redirection](#io-redirection)
+  * [struct](#struct)
+  * [err handing principle](#err-handing-principle)
+  * [stdlib](#stdlib)
+    + [string.h](#stringh)
+  * [simple assembly](#simple-assembly)
+  * [what to do after basic c](#what-to-do-after-basic-c)
+  * [youtube](#youtube)
 
 <!-- tocstop -->
 
@@ -129,6 +134,14 @@ n # 한 줄 씩
 
 안 다뤄봄. 메모리 누수 탐지에 용이함.
 
+### 기타 도구들
+
+> 지금 와서 C 코드를 짜야 한다면 무조건 메모리 안전성을 확인해 주는 도구를 사용해야 한다. 이를테면 Zed Shaw의 《깐깐하게 배우는 C(Learn C the Hard Way)》에서는 초장에 바로 valgrind를 쓰도록 하고 있다.
+>
+> -   https://hut.mearie.org/c-language/
+
+https://github.com/nothings/single_file_libs
+
 ## compiler
 
 -   clang
@@ -197,16 +210,6 @@ D -- linker --> E(machine code, 실행 코드, 라이브러리)
     -   static 변수를 선언하고, 해당 변수를 mutable하는 별도 함수를 만들어 호출하는 방법이 안전함. 일종의 setter 함수.
     -   `_s` 붙이는 컨벤션 권고.
 
--   static library vs dynamic library
-
-    -   정적 라이브러리는 라이브러리 + 내 코드가 합쳐져서 컴파일되고 실행 파일에 포함됨. 실행 파일이 커짐.
-        -   즉, 정적 라이브러리는 만들어 놓고 코드에 복붙하는 것과 같다.
-        -   실행이 빠른 장점이 있긴 함.
-    -   동적 라이브는 이미 존재하는 내 실행 파일에서 실행할 때 lazy하게 동적 라이브러리를 로딩하여 링킹이 진행됨.
-        -   실행하다가 필요한 코드를 건드리면 동적 라이브러리가 로드됨
-        -   흔히 보는 `dll`이 `dynamic link library`의 약자임.
-        -   여러 실행 파일들이 동일한 라이브러리를 공유하여 메모리를 절약할 수 있는 장점
-
 -   circular header include
     -   include guard를 사용하자.
     -   #ifndef, #define, #endif를 사용하여 중복 include를 방지하는 것.
@@ -236,6 +239,50 @@ macro function
 
 장. 함수 호출에 따른 오버로드가 없음.  
 단. 그런데 디버깅하기 힘듦. breakpoint? 안 걸림. 뇌지컬로 뚫어야 함.
+
+### custom lib
+
+-   static library vs dynamic library
+
+    -   정적 라이브러리는 라이브러리 + 내 코드가 합쳐져서 컴파일되고 실행 파일에 포함됨. 실행 파일이 커짐.
+        -   즉, 정적 라이브러리는 만들어 놓고 코드에 복붙하는 것과 같다.
+        -   실행이 빠른 장점이 있긴 함.
+    -   동적 라이브는 이미 존재하는 내 실행 파일에서 실행할 때 lazy하게 동적 라이브러리를 로딩하여 링킹이 진행됨.
+        -   실행하다가 필요한 코드를 건드리면 동적 라이브러리가 로드됨
+        -   흔히 보는 `dll`이 `dynamic link library`의 약자임.
+        -   여러 실행 파일들이 동일한 라이브러리를 공유하여 메모리를 절약할 수 있는 장점
+
+-   정적 라이브러리
+
+1. 라이브러리 소스코드 `.c` 파일을 object code까지 컴파일 함 (-c)
+   `clang -c lib_source.c -o lib_source.o`
+
+2. `llvm-ar`(window 계열), `ar`(리눅스 계열)를 사용하여 object code를 archive로 묶음. 그 결과 `.lib` (window 계열), `.a` (리눅스 계열. '아카이브')
+   `llvm-ar -rc ../lib/custom.lib lib_source.o`
+
+3. lib를 사용할 코드에서 헤더 파일을 #include "" 하여 사용. (<>가 아님에 주의.)
+   단, 경로는 컴파일 시 지정해주어야 함.
+
+-   `-I` : 헤더파일 검색 경로 추가
+-   `-L` : .lib, .a 파일이 있는 폴더
+-   `-l` : 사용할 라이브러리(특이하게 -l 플래그 뒤 띄어쓰기를 하지 않고 적어야 함)
+
+```
+clang
+    -std=c89
+    -W -W -pedantic-errors
+    -I <dir> -L <dir> -l<lib_name> *.c
+\\
+clang -I "../lib_source" -L "../lib" -lcustom_lib *.c
+```
+
+1. 실행 파일과 정적 라이브러리를 함께 링킹하여 최종 빌드함.
+
+-   동적 라이브러리
+
+### CMake
+
+[official site](https://cmake.org/)
 
 ## register
 
