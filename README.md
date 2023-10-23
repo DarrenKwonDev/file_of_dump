@@ -16,7 +16,7 @@
     + [module & lib](#module--lib)
     + [preprocessor(전처리기)](#preprocessor%EC%A0%84%EC%B2%98%EB%A6%AC%EA%B8%B0)
   * [static, dynamic library](#static-dynamic-library)
-    + [CMake](#cmake)
+    + [modern CMake](#modern-cmake)
   * [register](#register)
     + [registers 종류](#registers-%EC%A2%85%EB%A5%98)
   * [memory](#memory)
@@ -41,6 +41,10 @@
   * [err handing principle](#err-handing-principle)
   * [stdlib](#stdlib)
     + [string.h](#stringh)
+  * [standard](#standard)
+    + [C89, ANSI](#c89-ansi)
+    + [C99](#c99)
+    + [C11 및 그 후](#c11-%EB%B0%8F-%EA%B7%B8-%ED%9B%84)
   * [simple assembly](#simple-assembly)
   * [what to do after basic c](#what-to-do-after-basic-c)
   * [youtube](#youtube)
@@ -303,13 +307,13 @@ clang -I "../lib_source" -L "../lib" -lcustom_lib *.c
 프로그램이 실행될 때 필요한 동적 라이브러리를 로딩 후 링킹해 줌.
 동적 라이브러리 함수 및 값들을 메모리에 로드 및 매핑해야 하는데 이 정보가 포맷에 저장되어 있으므로 동적 라이브러리는 OS에 종속적임.
 
-### CMake
+### modern CMake
 
-autotools make cmake ninja 이런거 다 지뢰인데...  
-어쩔 수 없이 밟아야 할 때가 있음
+C/Cpp 버전은 하위를 쓰더라도 build process는 최신 방식을 쓰자.  
+3.0 이상의 modern CMake를 권고함.
 
-[official site](https://cmake.org/)
-[An Introduction to Modern CMake](https://cliutils.gitlab.io/modern-cmake/)
+[official site](https://cmake.org/)  
+[An Introduction to Modern CMake](https://cliutils.gitlab.io/modern-cmake/)  
 [effective_modern_cmake](https://gist.github.com/mbinna/c61dbb39bca0e4fb7d1f73b0d66a4fd1)
 
 ## register
@@ -747,6 +751,31 @@ indicator를 조정하는 여러 함수들 존재
     -   표준에서 stdin, stdout, stderr에 대한 버퍼링 표준이 존재하지 않음.
     -   line buffering, full buffering, unbuffering이 존재함. 일반적으로 line buffering이 default인 경우가 많은 듯 함.
     -   문자열 스트림이 없다. 대신 sprinf를 사용하자.
+
+## standard
+
+### C89, ANSI
+
+C의 기본
+
+### C99
+
+-   인라인함수
+
+    -   "인라인이 실패할 경우를 대비하여 함수 심볼도 만들어야 함"
+        1. .h에 inline 함수 구현
+        2. 그에 대응하는 .c 파일 만듦
+        3. .c에서 .h을 include
+        4. .c에서 인라인 함수의 선언을 한 후 extern 처리
+
+-   한 줄 주석 (//)
+-   restrict
+-   va_copy()
+-   <tgmah.h>
+-   long long int
+-   ...
+
+### C11 및 그 후
 
 ## simple assembly
 
