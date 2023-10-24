@@ -44,6 +44,7 @@
   * [standard](#standard)
     + [C89, ANSI](#c89-ansi)
     + [C99](#c99)
+  * [(type generic math)](#-type-generic-math)
     + [C11 및 그 후](#c11-%EB%B0%8F-%EA%B7%B8-%ED%9B%84)
   * [simple assembly](#simple-assembly)
   * [what to do after basic c](#what-to-do-after-basic-c)
@@ -789,9 +790,12 @@ C의 기본
     -   고정폭 정수(fixed width integer type). 솔직히 플랫폼마다 short, int, long 등 자료형 달라지는 거 대응하기 힘듦.
     -   (u)int8_t, (u)int16_t, (u)int32_t, (u)int64_t
 -   <complex.h>
--   <tgmah.h>
 -   IEEE 754 부동 소수점 지원
     -   float은 32bit, double은 64bit, long double은 80bit(다른 경우도 잦음), 기타 사칙연산, 제곱근 올림 등 표준을 지킨다.
+-   부동소수점 에러처리 개선과 <fenv.h>
+    -   [floating-point error, math_errhandling](https://en.cppreference.com/w/c/numeric/math/math_errhandling)
+    -   [Floating-point environment, fenv.h](https://en.cppreference.com/w/c/numeric/fenv/FE_exceptions)
+-   ## <tgmath.h> (type generic math)
 
 ### C11 및 그 후
 
