@@ -4,13 +4,6 @@
 
 - [자구](#%EC%9E%90%EA%B5%AC)
 - [자구 종류](#%EC%9E%90%EA%B5%AC-%EC%A2%85%EB%A5%98)
-  * [배열, 스택, 링큐, 덱](#%EB%B0%B0%EC%97%B4-%EC%8A%A4%ED%83%9D-%EB%A7%81%ED%81%90-%EB%8D%B1)
-  * [linked list](#linked-list)
-  * [hash table](#hash-table)
-    + [색인 추출 및 색인 충돌](#%EC%83%89%EC%9D%B8-%EC%B6%94%EC%B6%9C-%EB%B0%8F-%EC%83%89%EC%9D%B8-%EC%B6%A9%EB%8F%8C)
-    + [해시와 해시 충돌](#%ED%95%B4%EC%8B%9C%EC%99%80-%ED%95%B4%EC%8B%9C-%EC%B6%A9%EB%8F%8C)
-  * [tree](#tree)
-  * [graph](#graph)
 
 <!-- tocstop -->
 
