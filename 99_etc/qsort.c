@@ -12,7 +12,7 @@ int cmp(const void* a, const void* b) {
     // 왼쪽(첫인자)이 작으면 음수
     // 왼쪽(첫인자)이 크면 양수
     // 같으면 0
-    return left - right;
+    return left - right; // ascending 가정.
 }
 int main(void) {
     int a, b, c;
