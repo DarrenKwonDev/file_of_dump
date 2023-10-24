@@ -1,4 +1,3 @@
-
 #include <fenv.h>
 #include <float.h>
 #include <math.h>
@@ -10,8 +9,7 @@
     및
     fetestexcept (fe/test/except)
     feraiseexcept (fe/raise/except)
-    fegetround() (fe/getround)
-    fegetenv()
+    fegetround (fe/get/round)
     등 접두사가 fe인 함수들...
 */
 #pragma STDC FENV_ACCESS ON // 해당 pragma를 지정해야만 부동소수점 오류 처리 및 fenv.h

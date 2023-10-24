@@ -22,7 +22,10 @@
         "bitset": "c",
         "unordered_map": "c",
         "float.h": "c",
-        "syscall.h": "c"
+        "syscall.h": "c",
+        "fenv.h": "c",
+        "_types.h": "c",
+        "assert.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

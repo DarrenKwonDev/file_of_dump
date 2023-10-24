@@ -149,6 +149,20 @@ void (*(*f[])())() // f is array of pointer to function () -> pointer to functio
 
 ---
 
+가변인자
+
+```c
+va_list ap;
+va_start(ap)
+{
+    va_arg(ap, int)
+}
+va_end(ap)
+va_copy
+```
+
+---
+
 -   입력 받기의 전략
 
 1. 한 글자씩 읽기
@@ -170,6 +184,8 @@ void (*(*f[])())() // f is array of pointer to function () -> pointer to functio
     - [fread](https://en.cppreference.com/w/c/io/fread)
 
 C로 사용자 입력을 받았을 때 권장되는 방식은 `fgets`와 `sscanf`
+
+---
 
 -   <string.h>
 

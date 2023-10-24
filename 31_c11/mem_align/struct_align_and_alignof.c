@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define alignof _Alignof
-
 // 멤버 변수 모두 정렬
 typedef struct data {
     alignas(4096) int num;
@@ -30,9 +28,5 @@ int main(void) {
     printf("is struct aligned? : %lu\n", (size_t)&data % 4096);
     printf("is num aligned? %lu\n", (size_t)&data.num % 4096);
     printf("is data dummy aligned? %lu\n", (size_t)&data.dummy % 1024);
-
-    printf("struct is align of %lu\n", alignof(data));
-    printf("data num is align of %lu\n", alignof(data.num));
-    printf("data dummy is align of %lu\n", alignof(data.dummy));
     return 0;
 }

@@ -44,8 +44,9 @@
   * [standard](#standard)
     + [C89, ANSI](#c89-ansi)
     + [C99](#c99)
-  * [(type generic math)](#-type-generic-math)
-    + [C11 및 그 후](#c11-%EB%B0%8F-%EA%B7%B8-%ED%9B%84)
+    + [C11](#c11)
+    + [그 후](#%EA%B7%B8-%ED%9B%84)
+  * [다국어, 인코딩, 멀티 바이트 char 등](#%EB%8B%A4%EA%B5%AD%EC%96%B4-%EC%9D%B8%EC%BD%94%EB%94%A9-%EB%A9%80%ED%8B%B0-%EB%B0%94%EC%9D%B4%ED%8A%B8-char-%EB%93%B1)
   * [simple assembly](#simple-assembly)
   * [what to do after basic c](#what-to-do-after-basic-c)
   * [youtube](#youtube)
@@ -72,11 +73,13 @@
 
     -   문자열은 순회하는 등 문자열의 길이에 의존하는 로직을 건드릴 때는 null char가 포함되어 있음을 염두에 두어라.
     -   특정 함수가 마지막에 null char를 넣어주는가를 외우려하지 말고 (매번 문서 보고 확인하는 건 효율이 안 나오니) 방어적으로 buffer[LEN - 1] = '\0'을 넣어주는 것이 좋다.
+    -   가급적 C에서 다국어 대응은 하지 말 것.
 
 -   `ptr`
 
     -   값과 주소를 구별하여 도식 혹은 표를 그려 접근하라.
     -   포인터를 반환하는 함수의 경우 dangling pointer를 조심하라. 함수 내 지역변수를 가리키는 포인터는 함수가 사라지면 stack frame 내에 의도한 값을 가지지 않을 가능성이 높다.
+    -   배열이 함수의 매개변수로 쓰일 때는 포인터가 전달됨. 즉, test(int nums[]) 나 test(int\* nums) 나 같음.
     -   더블 포인터 이상의 경우 헷갈린다면 '변수의 주소를 바꿀 순 없지만 값을 변형할 순 있다'를 염두에 두고 테이블을 그려보라.
 
     <img src="./imgs/multiple_ptr.png">
@@ -106,6 +109,7 @@
     -   모든 함수 및 로직에서 null 체킹을 하는 것은 잘못된 방식이다. 문제의 원인을 찾는 곳은 최소한인 곳이 좋다.
     -   매크로 함수의 구현부에는 괄호()를 칠 것. 의도대로 동작하지 않을 가능성이 높아지고 우선순위가 망가진다.
     -   인라인 함수에 static 넣지 마라. 인라인의 의도인 함수 호출에 대한 오버헤드 제거가 무의미해지고 오히려 코드만 더 생김.
+    -   가급적 static assert를 사용하라. 컴파일 타임에 에러를 잡을 수 있음. C11 이전을 사용한다면 static_assert를 assert로 #define하여 사용할 것.
 
 ## env settings
 
@@ -776,9 +780,11 @@ C의 기본
         4. .c에서 인라인 함수의 선언을 한 후 extern 처리
 
 -   [restrict](https://en.cppreference.com/w/c/language/restrict)
+
     -   restrict 지정된 포인터 변수는 다른 포인터 변수와 메모리 겹침이 일어나지 않는다는 힌트
     -   호출하는 사람이 동일 포인터를 전달하는 등의 고의적인 잘못된 호출은 막을 수 없다. 어디까지나 '힌트'
     -   주로 함수의 매개변수로 전달되는 포인터들 간의 독립성을 강조
+
 -   한 줄 주석 (//)
 -   변수 선언을 블록 상단 외에도 다른 곳에서도 정의 가능
 -   va_copy(dest, src). 가변 인자 복사
@@ -795,9 +801,85 @@ C의 기본
 -   부동소수점 에러처리 개선과 <fenv.h>
     -   [floating-point error, math_errhandling](https://en.cppreference.com/w/c/numeric/math/math_errhandling)
     -   [Floating-point environment, fenv.h](https://en.cppreference.com/w/c/numeric/fenv/FE_exceptions)
--   ## <tgmath.h> (type generic math)
+-   [<tgmath.h> (type generic math)](https://en.cppreference.com/w/c/numeric/tgmath)
+-   가변 길이 배열(VLA, variable length arrays)
+    -   2018, 리눅스 커널에서 VLA을 모두 제거함.
+    -   C11(2011) 에서는 선택으로 강등. 가급적 사용하지 않는 게 관습.
+    -   배열의 길이가 가변적이라는 건 함수 호출시 stack에서 잡히는 메모리 구간 이상으로 배열 공간을 잡아야할 수도 있다는 말인데 득보다 실이 큰 더 복잡한 일이 발생할 것이다. 뿐만 아니라 sizeof 등 런타임 시점에서 얻을 수 있었던 값들이 런타임 중 동작하게 만들어야 하므로 언어의 오버헤드가 발생할 것이고... 그냥 쓰지 말자.
+-   arr[static const i + 2] 와 같이 색인에 static 키워드 사용 가능
+    -   int nums[static 8]: 최소 8개 이상의 원소가 존재함을 hinting
+    -   int dest[const]: 주소를 보호하는 ptr
+-   복합 리터럴(compound literal)
+    -   변수 선언 없이 한 번 쓸 요량으로 만든 것.
+    -   (int[]){1, 2, 3, 4, 5}와 같이 선언하나 사용례가 별로 없음. 그냥 변수 선언하는 걸 선호하는 듯.
+-   \_\_VA_ARGS\_\_
 
-### C11 및 그 후
+### C11
+
+> Apple's macOS (up to and including Ventura 13.3) has neither <uchar.h> nor <threads.h>.
+
+-   <uchar.h>
+    -   char16_t, char32_t
+    -   \_\_STDC_UTF_16\_\_, \_\_STDC_UTF_32\_\_ 매크로 확인.
+    -   char8_t는 C22 제안.
+-   secure 함수 (\_s)
+    -   경계를 점검하는 함수 (bounds-check function)
+    -   \_\_STDC_LIB_EXT1\_\_ 매크로를 통해 지원 여부 확인 가능.
+    -   gcc/clang에서는 제대로 지원하지 않고 있다. 앞으로도 안 할 듯.
+    -   메모리를 보호한단고 반드시 써야 하는가? 오히려 규칙을 복잡하게 만들지 않는가? 어차피 C를 쓴다는 건 안전한 프로그램은 코더의 역할이다. 함수 몇 개가 더 있어서 안전한 프로그램이 되는 것은 아니다.
+-   type generic 함수 (\_Generic 키워드)
+-   static_assert(정적 assert)
+    -   일반 assert는 런타임 중에 돌아서 '동적'임.
+    -   구조체나 데이터의 크기와 같은 컴파일 타임에 알 수 있는 사항들을 검증.
+-   <stdnoreturn.h>
+    -   \_Noreturn
+    -   반환값이 없다기보다는 호출자로 돌아가지 않음으로 이해하는 편.
+-   메모리 정렬
+    -   4바이트로 나눠 떨어지는 주소 = 4바이트로 정렬된 메모리 = 4바이트의 배수로 해당 메모리 주소가 할당됨.
+    -   왜? 메모리 정렬함?
+        -   특정 바이트로 정렬하면 성능이 향상하는 경우
+        -   특정 바이트로 정렬되어 받아들이는 프로그램이나 하드웨어 존재
+    -   [aligned_alloc](https://en.cppreference.com/w/c/memory/aligned_alloc) : 동적으로 정렬된 메모리 할당 (heap)
+    -   <stdlib.h>
+        -   [\_Alignas(alignas)](https://en.cppreference.com/w/c/language/_Alignas) : 정적으로 정렬된 메모리 할당(stack)
+        -   [\_Alignof(alignof)](https://en.cppreference.com/w/c/language/_Alignof) : 몇 바이트 정렬인지 확인하는 함수
+-   멀티 스레딩
+
+### 그 후
+
+...
+
+## 다국어, 인코딩, 멀티 바이트 char 등
+
+-   유니 코드 코드 포인트와 UCN(Universal Character Name)
+
+    -   유니 코드 코드 포인트(U+...) 를 소스 파일에서 사용 가능
+
+        -   즉, 변수 이름, 문자열 등에서 유니 코드 문자를 사용할 수 있다는 것임. 즉, 한국어 변수도 사용이 가능.
+
+    -   u+nnnn (2byte), U+nnnnnnnn (4byte)
+    -   c/cpp에서는 UCN(Universal Character Name)으로 표현됨.
+        -   \uxxxx, \Uxxxxxxxx 꼴
+
+-   멀티바이트(mb) 문자 = 1 byte 이상으로 표현된 문자.
+
+    -   ascii는 1byte내에 다 저장할 수 있으나 non english char들은 저장할 수 없음. -> 멀티 바이트 문자.
+    -   문자가 아닌 문자열로써 다루게 됨.
+    -   C에서 멀티 바이트 문자가 default.
+    -   문자마다 바이트 크기가 다를 수 있음.
+    -   <u>멀티 바이트가 기본형임. 따라서 출력을 위해서 utf16_t나 wchar_t와 같은 다른 형의 데이터를 멀티 바이트로 변환해야 함.</u>
+
+-   `wchar_t` (C89)
+
+    -   과거의 시도. 다국어를 지원하려면 ICU를 사용하는 것이 편하다. 그러나 아직도 사용되고는 있다.
+    -   각 문자가 고정된 바이트 크기를 가짐
+        -   타겟 플랫폼에서 지원하는 인코딩 중 가장 큰 문자를 담을 수 있는 크기로 고정. 현 시점에서는 4byte. 그러나 윈도우에서는 2byte.
+    -   모든 문자의 바이트 크기가 같음(멀티 바이트 문자와 다름!)
+    -   <stdlib.h>의 mbtowc, wctomb를 통해 mb(multibyte)와 wc(wide char) 간 변환 가능.
+    -   이 외에 다양한 wchar 유틸성 함수들 존재.
+
+-   ICU(international components for unicode)
+    -   다국어를 지원하는 C 프로그램은 ICU라는 라이브러리를 사용할 것.
 
 ## simple assembly
 
