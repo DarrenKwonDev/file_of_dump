@@ -832,9 +832,12 @@ C의 기본
     -   일반 assert는 런타임 중에 돌아서 '동적'임.
     -   구조체나 데이터의 크기와 같은 컴파일 타임에 알 수 있는 사항들을 검증.
 -   <stdnoreturn.h>
+
     -   \_Noreturn
     -   반환값이 없다기보다는 호출자로 돌아가지 않음으로 이해하는 편.
+
 -   메모리 정렬
+
     -   4바이트로 나눠 떨어지는 주소 = 4바이트로 정렬된 메모리 = 4바이트의 배수로 해당 메모리 주소가 할당됨.
     -   왜? 메모리 정렬함?
         -   특정 바이트로 정렬하면 성능이 향상하는 경우
@@ -843,7 +846,14 @@ C의 기본
     -   <stdlib.h>
         -   [\_Alignas(alignas)](https://en.cppreference.com/w/c/language/_Alignas) : 정적으로 정렬된 메모리 할당(stack)
         -   [\_Alignof(alignof)](https://en.cppreference.com/w/c/language/_Alignof) : 몇 바이트 정렬인지 확인하는 함수
+
 -   멀티 스레딩
+    -   C11 이전엔 포팅 불가능한 파편화된 os 함수로 멀티 스레딩을 해왔음.
+    -   <threads.h>
+        -   thrd\_\* 함수들
+    -   \_Atomic, atomic 연산
+        -   \_\_STDC_NO_ATOMICS\_\_ 매크로로 사용 여부 확인
+        -   atomic\_\* 꼴의 다양한 함수 존재
 
 ### 그 후
 
