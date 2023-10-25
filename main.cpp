@@ -1,13 +1,16 @@
 #include <iostream>
-#include <string>
-#include <vector>
 
-using namespace std;
+int main(void) {
 
-int main() {
-    vector<string> msg{"Hello", "C++", "World", "from", "VS Code", "and the C++ extension!"};
-    for (const string& word : msg) {
-        cout << word << " ";
+    double a = 0.1 + 0.1 + 0.1;
+    double b = 0.3;
+
+    if (a == b) {
+        std::cout << "same 1" << std::endl;
     }
-    cout << endl;
+    if (abs(a - b) <= 1e-9) {
+        std::cout << "same 2" << std::endl;
+    }
+
+    return 0;
 }

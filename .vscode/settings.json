@@ -28,7 +28,10 @@
         "assert.h": "c",
         "vector": "cpp",
         "iostream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "_osbyteorder.h": "c",
+        "types.h": "c",
+        "algorithm": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
