@@ -12,7 +12,20 @@
             "environment": [],
             "externalConsole": true,
             "MIMode": "lldb",
-            "preLaunchTask": "C/C++: clang build active file" // add taks label
+            "preLaunchTask": "clang build active file" // add taks label
+        },
+        {
+            "name": "Cpp를 빌드하고 디버깅합니다.",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "lldb",
+            "preLaunchTask": "cpp build active file" // add taks label
         }
     ]
 }

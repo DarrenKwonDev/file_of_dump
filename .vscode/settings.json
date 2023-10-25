@@ -25,7 +25,10 @@
         "syscall.h": "c",
         "fenv.h": "c",
         "_types.h": "c",
-        "assert.h": "c"
+        "assert.h": "c",
+        "vector": "cpp",
+        "iostream": "cpp",
+        "string": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

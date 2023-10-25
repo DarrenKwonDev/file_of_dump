@@ -47,7 +47,6 @@
     + [C11](#c11)
     + [그 후](#%EA%B7%B8-%ED%9B%84)
   * [다국어, 인코딩, 멀티 바이트 char 등](#%EB%8B%A4%EA%B5%AD%EC%96%B4-%EC%9D%B8%EC%BD%94%EB%94%A9-%EB%A9%80%ED%8B%B0-%EB%B0%94%EC%9D%B4%ED%8A%B8-char-%EB%93%B1)
-  * [simple assembly](#simple-assembly)
   * [what to do after basic c](#what-to-do-after-basic-c)
   * [youtube](#youtube)
 
@@ -890,22 +889,6 @@ C의 기본
 
 -   ICU(international components for unicode)
     -   다국어를 지원하는 C 프로그램은 ICU라는 라이브러리를 사용할 것.
-
-## simple assembly
-
-cmp: compare  
-je : jump if equal  
-jz : jump if zero  
-jg : jump if greater  
-jl : jump if less  
-xor : exclusive or  
-pop : pop stack  
-push: push stack  
-call: call function  
-ret : return from function  
-mov : move (mov a,b는 b를 a에 대입하라는 의미)  
-dec : decrement  
-inc : increment
 
 ## what to do after basic c
 
