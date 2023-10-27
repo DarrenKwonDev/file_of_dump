@@ -1,10 +1,8 @@
-
-
 <!-- toc -->
 
-- [contents](#contents)
-  * [C](#c)
-  * [Cpp](#cpp)
+-   [contents](#contents)
+    -   [C](#c)
+    -   [Cpp](#cpp)
 
 <!-- tocstop -->
 
@@ -18,3 +16,4 @@
 ## Cpp
 
 [cpp_docs](./cpp_docs.md)
+[algo](./algo.md)

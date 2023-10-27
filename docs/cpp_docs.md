@@ -1,10 +1,8 @@
-
-
 <!-- toc -->
 
-- [cpp_docs](#cpp_docs)
-  * [compiler](#compiler)
-  * [cmd, etc](#cmd-etc)
+-   [cpp_docs](#cpp_docs)
+    -   [compiler](#compiler)
+    -   [cmd, etc](#cmd-etc)
 
 <!-- tocstop -->
 

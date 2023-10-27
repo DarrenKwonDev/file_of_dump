@@ -1,5 +1,18 @@
 # cpp algo note
 
+## gtime
+
+```bash
+nodemon --exec "clang++ -std=c++17 ./*.cpp && gtime -f '\n%P cpu \n%es exeuction time\nmomery %MKB' ./a.out" -e cpp
+\\
+nodemon --exec "clang++ -std=c++17 ./*.cpp && ./a.out" -e cpp
+```
+
+## 자료형
+
+-   int는 약 21억(2,147,483,648)
+-   10^10 까지는 담을 수 있음. 그 이상은 long long int에 담을 것
+
 ## 실수의 동등 비교
 
 float은 상대 오차 10-6까지 안전하고 double은 10-15까지 안전하다는 소리입니다.
@@ -24,4 +37,30 @@ int main(void) {
 
     return 0;
 }
+```
+
+## reference
+
+c/cpp는 다 pass by value이다. 이 과정 때문에 시간 복잡도가 올라가니 값을 넘겨줄 때에도 유의할 것.
+
+```cpp
+// no. every vector is copied
+bool comp1(vector<int> v1, vector<int> v2, int idx) {
+    return v1[idx] > v2[idx];
+}
+
+// yes. only reference is copied
+bool comp2(vector<int>& v1, vector<int>& v2, int idx) {
+    return v1[idx] > v2[idx];
+}
+```
+
+## cpp stream과 c stream의 동기화 끊기 + cout 버퍼 비우지 않기
+
+printf/scanf와 cout/cin의 호출 순서에 따른 입출력을 위해 동기화가 기본적으로 유지 됨.
+그러나 cout/cin만 쓴다면 동기화를 끊는 것이 속도 향상에 유리.
+
+```cpp
+ios::sync_with_stdio(0); // cpp stream와 c stream의 동기화 끊기
+cin.tie(0); // cin 전에 cout 버퍼를 비우지 않도록 함.
 ```
