@@ -714,6 +714,7 @@ indicator를 조정하는 여러 함수들 존재
 
 ### [string.h](https://en.cppreference.com/w/c/string/byte)
 
+-   strcpy, strcmp, strtol, strtok, strlen, strcat
 -   전반적으로 'dest'가 의도보다 크기가 작다면 남의 메모리를 밟거나 컴파일이 되지 않는 등의 문제가 발생합니다.
 -   C11에 `_s` 접미사가 붙은 secure 함수가 추가됨.
 -   strcpy, strcat 등 작업 후 반환되는 문자열에는 무조건 마지막에 null char를 넣어주도록하자. null char가 원래 있었다면 상관 없고, 없었다면 위험한 문자열이기 때문이다.
