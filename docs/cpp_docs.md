@@ -16,8 +16,6 @@ window : msvc
 
 ## cmd, etc
 
--   bits/stdc++.h 는 사용하지 않습니다.
-
 ```bash
 nodemon --exec "clang++ -std=c++11 ./*.cpp && gtime -f '%P cpu \n%es exeuction time\nmomery %MKB' ./a.out" -e cpp
 ```
@@ -48,3 +46,52 @@ goodbit // good()
 eofbit // eof()
 failbit // fail()
 badbit // bad()
+
+## 입력 버리기
+
+[clear](https://en.cppreference.com/w/cpp/io/basic_ios/clear)
+
+```cpp
+cin.clear(); // discard everything
+cin.ignore();         // discard one char
+cin.ignore(10);       // discard 10 char
+cin.ignore(10, '\n'); // discard 10 char but stop when \n
+cin.ignore(LLONG_MAX, '\n');
+```
+
+```cpp
+int main(void) {
+    int a;
+    cin >> a;
+
+    if (cin.fail()) {
+        cout << "invalid input\n";
+        cin.clear();
+        cin.ignore(LLONG_MAX, '\n');
+
+        // retry
+        cin >> a;
+        cout << a;
+    }
+
+    return 0;
+}
+```
+
+## 한 줄 읽기
+
+```cpp
+char buffer[100];
+
+// 9개의 문자 읽어옴. 마지막은 null char(\0)
+// \n는 입력 스트림에 남아 있음.
+// https://en.cppreference.com/w/cpp/io/basic_istream/get
+cin.get(buffer, 10);
+printf("%s\n", buffer);
+
+// 9개의 문자 읽어옴. 마지막은 null char(\0)
+// get과 달리 \n는 입력 스트림에 없음. 그래서 get'line'
+// https://en.cppreference.com/w/cpp/io/basic_istream/getline
+cin.getline(buffer, 10, '!'); // read until met '!'
+printf("%s\n", buffer);
+```

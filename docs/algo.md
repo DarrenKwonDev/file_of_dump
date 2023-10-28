@@ -3,11 +3,11 @@
 ## gtime
 
 ```bash
-nodemon --exec "clang++ -std=c++17 ./*.cpp && gtime -f '\n%P cpu \n%es exeuction time\nmomery %MKB' ./a.out" -e cpp
+nodemon --exec "g++-13 -std=c++17 ./*.cpp && gtime -f '\n%P cpu \n%es exeuction time\nmomery %MKB' ./a.out" -e cpp
 \\
-nodemon --exec "clang++ -std=c++17 ./*.cpp && ./a.out" -e cpp
+nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out" -e cpp
 \\
-nodemon --exec "clang++ -std=c++17 ./*.cpp && ./a.out < ./input" -e cpp
+nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out < ./input" -e cpp
 ```
 
 ## 자료형

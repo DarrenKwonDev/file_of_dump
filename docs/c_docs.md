@@ -140,6 +140,19 @@ Windows 운영 체제에서 GNU 도구 체인과 호환되는 프론트엔드를
 
 ## 명령어 예 clang, lldb, leaks, valgrind...
 
+### if want to use gcc rather than clang
+
+```bash
+brew install gcc
+# gcc-13 (or something)
+gcc-13 -v
+```
+
+now use,
+
+use `gcc-13` instead of `clang`
+use `g++-13` instead of `clang++`
+
 ### clang
 
 [clang docs](https://clang.llvm.org/docs/ClangCommandLineReference.html)
