@@ -1,6 +1,9 @@
 #include <stdio.h>
 
 int main(void) {
-    printf("sdf\n");
+    char buff[100];
+    sprintf(buff, "hello");
+
+    printf("%s", buff);
     return 0;
 }
