@@ -40,3 +40,11 @@ others: 위에 언급된 섹션 이외의 섹션들의 크기를 나타냅니다
 dec: 섹션의 크기를 10진수로 나타낸 값입니다.
 
 hex: 섹션의 크기를 16진수로 나타낸 값입니다.
+
+## stream state
+
+ios_base::
+goodbit // good()
+eofbit // eof()
+failbit // fail()
+badbit // bad()
