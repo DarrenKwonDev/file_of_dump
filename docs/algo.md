@@ -3,7 +3,7 @@
 ## gtime
 
 ```bash
-nodemon --exec "g++-13 -std=c++17 ./*.cpp && gtime -f '\n%P cpu \n%es exeuction time\nmomery %MKB' ./a.out" -e cpp
+nodemon --exec "g++-13 -std=c++17 ./*.cpp && gtime -f '\n%P cpu \n%es exeuction time\nmomery %MKB' ./a.out < ./input" -e cpp
 \\
 nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out" -e cpp
 \\
@@ -14,6 +14,38 @@ nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out < ./input" -e cpp
 
 -   int는 약 21억(2,147,483,648)
 -   10^10 까지는 담을 수 있음. 그 이상은 long long int에 담을 것
+
+-   arr, string
+
+    -   insert, erase: O(N);
+
+-   list(circular doubly linked list)
+    -   list<T>::iterator는 list 메서드에 의해 자동으로 보정되지 않는다.
+        -   list<T>의 iterator는 코더의 의도하지 않은 삭제되거나 이동된 원소를 가리키고 있을 수 있다. 메모리에서 해당 원소 자체가 삭제되는 것이 아니기에. 따라서 대부분의 경우 `iter = list.erase(iter)`, `iter = list.insert(iter)` 와 같이 사용하기를 원할 것이다.
+        -   insert 함수는 insert한 원소를 가리키는 iterator를 반환합니다
+        -   erase 함수는 지워진 원소의 다음 원소를 가리키는 iterator를 반환. 빈 리스트나 마지막 원소를 지우려는 경우 에러 발생
+            -   Thus the end() iterator (which is valid, but is not dereferenceable) cannot be used as a value for pos.
+                -   ```cpp
+                        list<int> l = {1};
+                        list<int>::iterator i = l.end(); // i는 실제 데이터가 아닌 리스트의 끝을 나타내는 특별한 위치.
+                        // 실제 원소 3을 지우기 위하여 --i를 통해서 원소 3을 가리킴.
+                        // 그 결과 l.erase는 3을 지우게 되고 3의 다음 원소를 반환할 것으로 예상됨.
+                        // 그러나 3의 다음 원소는 없음.
+                        // 이 경우 문서를 읽어보면
+                        // If pos refers to the last element, then the end() iterator is returned.
+                        i = l.erase(--i);
+                        // 마지막 원소를 지운 경우 똑같이 마지막을 반환함.
+                        cout << *i << endl; // 2
+                    ```
+-   list.end는 실제 데이터가 아닌 리스트의 끝을 나타내는 특별한 위치를 가리킴. 몇 컴파일러에서는 알아서 보정을 해줍니다만 여기에 의존하지 않는 것이 좋습니다.
+    -   ```cpp
+            int main(void) {
+            list<int> l = {1, 2};
+            list<int>::iterator cur = l.end();
+            cout << *cur << endl;     // 2 (UB)
+            cout << *(--cur) << endl; // 2 (의도된 것)
+        }
+        ```
 
 ## 실수의 동등 비교
 
