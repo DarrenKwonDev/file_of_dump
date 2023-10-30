@@ -1,17 +1,15 @@
-
-
 <!-- toc -->
 
-- [cpp_docs](#cpp_docs)
-  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-  * [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
-  * [string + string slow. why?](#string--string-slow-why)
-  * [compiler](#compiler)
-  * [stream input/output](#stream-inputoutput)
-    + [stream 종류](#stream-%EC%A2%85%EB%A5%98)
-    + [stream state](#stream-state)
-    + [seek, indicator](#seek-indicator)
-  * [class](#class)
+-   [cpp_docs](#cpp_docs)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+    -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
+    -   [string + string slow. why?](#string--string-slow-why)
+    -   [compiler](#compiler)
+    -   [stream input/output](#stream-inputoutput)
+        -   [stream 종류](#stream-%EC%A2%85%EB%A5%98)
+        -   [stream state](#stream-state)
+        -   [seek, indicator](#seek-indicator)
+    -   [class](#class)
 
 <!-- tocstop -->
 
@@ -19,6 +17,8 @@
 
 ## 권고 사항
 
+-   어셈블리 까보면 reference나 pointer나 같다. 다만 언어적 차원에서 reference가 좀 더 안전하게 쓰기 위해 만들어진 것. 많이 쓰자.
+-   new로 객체 선언한 건 반드시 delete할 것. 객체 배열은 delete[]로 삭제.
 -   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
     -   func(int\* a, const int b, const int c)
     -   func(&a, b, c)
@@ -129,3 +129,14 @@ badbit // bad()
     -   기본 modifier는 private. 접근 제어자 작성하지 않으면 private.
     -   private는 해당 클래스 내에서만 접근 가능
     -   protected는 자식 클래스에서도 접근 가능
+-   new로 선언한 건 반드시 delete할 것
+
+```cpp
+// stack에 할당. (빠름)
+Vec a;
+// heap에 할당. (느림)
+Vec* b = new Vec();
+return 0;
+```
+
+## RAII(자원 획득은 초기화, resource acquisition is initialization)
