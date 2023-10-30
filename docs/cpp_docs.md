@@ -1,8 +1,14 @@
 <!-- toc -->
 
 -   [cpp_docs](#cpp_docs)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+    -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
+    -   [string + string slow. why?](#string--string-slow-why)
     -   [compiler](#compiler)
     -   [cmd, etc](#cmd-etc)
+    -   [stream state](#stream-state)
+    -   [입력 버리기](#%EC%9E%85%EB%A0%A5-%EB%B2%84%EB%A6%AC%EA%B8%B0)
+    -   [한 줄 읽기](#%ED%95%9C-%EC%A4%84-%EC%9D%BD%EA%B8%B0)
 
 <!-- tocstop -->
 
@@ -39,84 +45,75 @@ apple : llvm(low level virtual machine) 기반 clang/calng++, lldb
 linux : gcc(GNU compiler collection) 기반 gcc/g++, gdb
 window : msvc
 
-## cmd, etc
+## stream input/output
 
-```bash
-nodemon --exec "clang++ -std=c++11 ./*.cpp && gtime -f '%P cpu \n%es exeuction time\nmomery %MKB' ./a.out" -e cpp
-```
+### stream 종류
 
-```bash
-> size ./a.out
+어떤 규칙성이 보일 것이다.
 
-__TEXT  __DATA  __OBJC  others  dec     hex
-16384   0       0       4295000064      4295016448      10000c000
-```
+file : fstream / ifstream / ofstream  
+string : stringstream / istringstream / ofstringstream  
+console : cin / cout / cerr / clog
 
-\_\_TEXT: 프로그램 코드가 저장된 섹션의 크기를 나타냅니다. 이 섹션에는 프로그램의 실행 코드가 저장됩니다.
+읽기(i) -> get (seekg, tellg)
+쓰기(o) -> put (seekp, tellp)
 
-\_\_DATA: 초기화된 전역 변수 및 정적 변수가 저장된 섹션의 크기를 나타냅니다. 이 섹션에는 프로그램에서 직접 초기화한 변수들이 저장됩니다.
+### stream state
 
-\_\_OBJC: Objective-C 코드 및 데이터가 저장된 섹션의 크기를 나타냅니다. 이 섹션은 Objective-C 프로그램에서 사용되는 클래스 및 객체와 관련된 정보를 저장합니다.
-
-others: 위에 언급된 섹션 이외의 섹션들의 크기를 나타냅니다. 여기에는 BSS 섹션과 같은 초기화되지 않은 전역 변수가 포함될 수 있습니다.
-
-dec: 섹션의 크기를 10진수로 나타낸 값입니다.
-
-hex: 섹션의 크기를 16진수로 나타낸 값입니다.
-
-## stream state
-
-ios_base::
-goodbit // good()
-eofbit // eof()
-failbit // fail()
+goodbit // good()  
+eofbit // eof()  
+failbit // fail()  
 badbit // bad()
 
-## 입력 버리기
+여기서 eof, fail, bad 상태 모두 알아둬야 하고 모두 큰 영향을 미친다.
 
-[clear](https://en.cppreference.com/w/cpp/io/basic_ios/clear)
+-   입출력 연산이 스트림 상태 비트를 변화 시키고, 비트 상태에 따라 연산이 영향을 받는다.
 
-```cpp
-cin.clear(); // discard everything
-cin.ignore();         // discard one char
-cin.ignore(10);       // discard 10 char
-cin.ignore(10, '\n'); // discard 10 char but stop when \n
-cin.ignore(LLONG_MAX, '\n');
-```
+    -   잘못된 자료형을 추출하려하면 fail 상태가 true가 된다.
+        -   ```cpp
+            int num
+            cin >> num; // 입력이 숫자가 아니라면 fail 상태가 true가 된다.
+            ```
+    -   clear는 모든 스트림 상태를 정상으로 되돌린다.
+    -   fail 상태가 true라면 >> 연산자는 아무것도 하지 않는다. (읽으려고 해도 아무 것도 읽지 않는다.) 따라서 무언가 작업을 하려면 clear를 하여 상태를 초기화해야 한다.
+    -   eof를 만나면 eof 상태도 true고 fail상태도 true다.
+    -   eof 처리를 잘못하면 무한 루프에 빠지기 쉽다.
 
-```cpp
-int main(void) {
-    int a;
-    cin >> a;
+-   실수 하기 쉬우니까 각자 stream reader 객체 만들어서 재사용해라.
+    -   stream reader 객체에 필요한 테스트 케이스들에 대해 imgs/private/stream_test_case.png 참고
 
-    if (cin.fail()) {
-        cout << "invalid input\n";
-        cin.clear();
-        cin.ignore(LLONG_MAX, '\n');
+### seek, indicator
 
-        // retry
-        cin >> a;
-        cout << a;
-    }
+-   indicator 위치 파악
 
-    return 0;
-}
-```
+    -   [tellp](https://en.cppreference.com/w/cpp/io/basic_ostream/tellp) : returns the output position indicator
+        -   p = put
+        -   output stream인 경우 존재하는 메서드
+    -   [tellg](https://en.cppreference.com/w/cpp/io/basic_istream/tellg) : returns the input position indicator
+        -   g = get
+        -   input stream인 경우 존재하는 메서드
 
-## 한 줄 읽기
+-   indicator를 이동시키기
 
-```cpp
-char buffer[100];
+    -   [seekp](https://en.cppreference.com/w/cpp/io/basic_ostream/seekp) : p니 출력용
+    -   [seekg](https://en.cppreference.com/w/cpp/io/basic_istream/seekg) : g니 입력용
 
-// 9개의 문자 읽어옴. 마지막은 null char(\0)
-// \n는 입력 스트림에 남아 있음.
-// https://en.cppreference.com/w/cpp/io/basic_istream/get
-cin.get(buffer, 10);
-printf("%s\n", buffer);
+-   이동 방식
 
-// 9개의 문자 읽어옴. 마지막은 null char(\0)
-// get과 달리 \n는 입력 스트림에 없음. 그래서 get'line'
-// https://en.cppreference.com/w/cpp/io/basic_istream/getline
-cin.getline(buffer, 10, '!'); // read until met '!'
-printf("%s\n", buffer);
-```
+    -   절대적 이동
+        -   seekp(0) -> 출력 지시자 처음으로 이동
+        -   seekg(10) -> 입력 지시자 10번째로 이동
+    -   상대적 탐색 방식 ([seekdir](https://en.cppreference.com/w/cpp/io/ios_base/seekdir))
+
+                -   ios::beg
+                    beg the beginning of a stream
+                    indicator를 처음으로 이동
+                    seekp(3, ios::beg). 처음으로부터 3칸 뒤로
+                -   ios::cur
+                    cur the current position of stream position indicator
+                    현재 indicator를 -> 방향(뒤)으로 이동
+                    seekp(3, ios::cur). 현 지시자로부터 3칸 뒤로
+                -   ios::end
+                    end the ending of a stream
+                    indicator를 마지막으로 이동
+                    seekp(-6, ios:end). 마지막으로 부터 앞으로 6칸
