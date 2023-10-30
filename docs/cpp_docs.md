@@ -1,14 +1,17 @@
+
+
 <!-- toc -->
 
--   [cpp_docs](#cpp_docs)
-    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-    -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
-    -   [string + string slow. why?](#string--string-slow-why)
-    -   [compiler](#compiler)
-    -   [cmd, etc](#cmd-etc)
-    -   [stream state](#stream-state)
-    -   [입력 버리기](#%EC%9E%85%EB%A0%A5-%EB%B2%84%EB%A6%AC%EA%B8%B0)
-    -   [한 줄 읽기](#%ED%95%9C-%EC%A4%84-%EC%9D%BD%EA%B8%B0)
+- [cpp_docs](#cpp_docs)
+  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+  * [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
+  * [string + string slow. why?](#string--string-slow-why)
+  * [compiler](#compiler)
+  * [stream input/output](#stream-inputoutput)
+    + [stream 종류](#stream-%EC%A2%85%EB%A5%98)
+    + [stream state](#stream-state)
+    + [seek, indicator](#seek-indicator)
+  * [class](#class)
 
 <!-- tocstop -->
 
@@ -117,3 +120,12 @@ badbit // bad()
                     end the ending of a stream
                     indicator를 마지막으로 이동
                     seekp(-6, ios:end). 마지막으로 부터 앞으로 6칸
+
+## class
+
+-   상태에 대해 멤버 변수 접두사 m을 붙일 것.
+    -   로컬 변수인가 멤버 변수인가 구분이 편해짐
+-   접근 제어자 public, protected, private
+    -   기본 modifier는 private. 접근 제어자 작성하지 않으면 private.
+    -   private는 해당 클래스 내에서만 접근 가능
+    -   protected는 자식 클래스에서도 접근 가능

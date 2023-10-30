@@ -1,53 +1,52 @@
-
-
 <!-- toc -->
 
-- [clang_tutorial](#clang_tutorial)
-  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-  * [env settings](#env-settings)
-  * [compiler frontend, backend](#compiler-frontend-backend)
-  * [MinGW (Minimalist GNU for Windows)](#mingw-minimalist-gnu-for-windows)
-  * [명령어 예 clang, lldb, leaks, valgrind...](#%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%98%88-clang-lldb-leaks-valgrind)
-    + [if want to use gcc rather than clang](#if-want-to-use-gcc-rather-than-clang)
-    + [clang](#clang)
-    + [lldb](#lldb)
-    + [leaks](#leaks)
-    + [기타 도구들](#%EA%B8%B0%ED%83%80-%EB%8F%84%EA%B5%AC%EB%93%A4)
-  * [build process](#build-process)
-    + [module & lib](#module--lib)
-    + [preprocessor(전처리기)](#preprocessor%EC%A0%84%EC%B2%98%EB%A6%AC%EA%B8%B0)
-  * [static, dynamic library](#static-dynamic-library)
-    + [modern CMake](#modern-cmake)
-  * [register](#register)
-    + [registers 종류](#registers-%EC%A2%85%EB%A5%98)
-  * [memory](#memory)
-    + [mem model](#mem-model)
-    + [stack](#stack)
-    + [heap](#heap)
-    + [data, code](#data-code)
-    + [func about mem management](#func-about-mem-management)
-    + [mem issues](#mem-issues)
-  * [ptr, dereference](#ptr-dereference)
-    + [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
-    + [ptr basic](#ptr-basic)
-    + [const ptr](#const-ptr)
-    + [function ptr](#function-ptr)
-  * [Stream](#stream)
-    + [파일 스트림을 다루기](#%ED%8C%8C%EC%9D%BC-%EC%8A%A4%ED%8A%B8%EB%A6%BC%EC%9D%84-%EB%8B%A4%EB%A3%A8%EA%B8%B0)
-    + [io](#io)
-    + [FILE type](#file-type)
-    + [stream indicator](#stream-indicator)
-    + [io redirection](#io-redirection)
-  * [struct](#struct)
-  * [err handing principle](#err-handing-principle)
-  * [stdlib](#stdlib)
-    + [string.h](#stringh)
-  * [standard](#standard)
-    + [C89, ANSI](#c89-ansi)
-    + [C99](#c99)
-    + [C11](#c11)
-    + [그 후](#%EA%B7%B8-%ED%9B%84)
-  * [다국어, 인코딩, 멀티 바이트 char 등](#%EB%8B%A4%EA%B5%AD%EC%96%B4-%EC%9D%B8%EC%BD%94%EB%94%A9-%EB%A9%80%ED%8B%B0-%EB%B0%94%EC%9D%B4%ED%8A%B8-char-%EB%93%B1)
+-   [clang_tutorial](#clang_tutorial)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+    -   [env settings](#env-settings)
+    -   [compiler frontend, backend](#compiler-frontend-backend)
+    -   [MinGW (Minimalist GNU for Windows)](#mingw-minimalist-gnu-for-windows)
+    -   [명령어 예 clang, lldb, leaks, valgrind...](#%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%98%88-clang-lldb-leaks-valgrind)
+        -   [if want to use gcc rather than clang](#if-want-to-use-gcc-rather-than-clang)
+        -   [clang](#clang)
+        -   [lldb](#lldb)
+        -   [leaks](#leaks)
+        -   [기타 도구들](#%EA%B8%B0%ED%83%80-%EB%8F%84%EA%B5%AC%EB%93%A4)
+    -   [build process](#build-process)
+        -   [module & lib](#module--lib)
+        -   [preprocessor(전처리기)](#preprocessor%EC%A0%84%EC%B2%98%EB%A6%AC%EA%B8%B0)
+    -   [static, dynamic library](#static-dynamic-library)
+        -   [modern CMake](#modern-cmake)
+    -   [register](#register)
+        -   [registers 종류](#registers-%EC%A2%85%EB%A5%98)
+    -   [memory](#memory)
+        -   [mem model](#mem-model)
+        -   [stack](#stack)
+            -   [왜 heap 할당은 느리고 stack 할당은 빠릅니까?](#%EC%99%9C-heap-%ED%95%A0%EB%8B%B9%EC%9D%80-%EB%8A%90%EB%A6%AC%EA%B3%A0-stack-%ED%95%A0%EB%8B%B9%EC%9D%80-%EB%B9%A0%EB%A6%85%EB%8B%88%EA%B9%8C)
+        -   [heap](#heap)
+        -   [data, code](#data-code)
+        -   [func about mem management](#func-about-mem-management)
+        -   [mem issues](#mem-issues)
+    -   [ptr, dereference](#ptr-dereference)
+        -   [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
+        -   [ptr basic](#ptr-basic)
+        -   [const ptr](#const-ptr)
+        -   [function ptr](#function-ptr)
+    -   [Stream](#stream)
+        -   [파일 스트림을 다루기](#%ED%8C%8C%EC%9D%BC-%EC%8A%A4%ED%8A%B8%EB%A6%BC%EC%9D%84-%EB%8B%A4%EB%A3%A8%EA%B8%B0)
+        -   [io](#io)
+        -   [FILE type](#file-type)
+        -   [stream indicator](#stream-indicator)
+        -   [io redirection](#io-redirection)
+    -   [struct](#struct)
+    -   [err handing principle](#err-handing-principle)
+    -   [stdlib](#stdlib)
+        -   [string.h](#stringh)
+    -   [standard](#standard)
+        -   [C89, ANSI](#c89-ansi)
+        -   [C99](#c99)
+        -   [C11](#c11)
+        -   [그 후](#%EA%B7%B8-%ED%9B%84)
+    -   [다국어, 인코딩, 멀티 바이트 char 등](#%EB%8B%A4%EA%B5%AD%EC%96%B4-%EC%9D%B8%EC%BD%94%EB%94%A9-%EB%A9%80%ED%8B%B0-%EB%B0%94%EC%9D%B4%ED%8A%B8-char-%EB%93%B1)
 
 <!-- tocstop -->
 
@@ -430,12 +429,18 @@ code : 함수 코드
     -   stack 자료구조의 LIFO 특성이 stack 메모리에도 적용된다. 함수의 특성상 나중에 호출된 함수가 반환되지 않음녀 전에 쌓인 스택은 반환되지 않는다. 이런 특성을 이용해 함수의 호출과 반환을 관리하는 메모리 영역을 call stack이라고 한다.
     -   clang windows 기준 stack은 1MB 정도 된다고 한다. 얼마 되지 않기 때문에 재귀 호출할 때 탈출문을 제대로 작성하지 않으면 call stack 터지곤한다. stack 관점에서 보자면 함수 호출할 때마다 stack frame을 할당하는데 이게 계속 쌓이다보니 stack 메모리가 부족해져서 발생하는 문제다.
 
+#### 왜 heap 할당은 느리고 stack 할당은 빠릅니까?
+
+스택 메모리는 예약된 로컬 메모리 공간으로 컴파일 시간에 크기가 결정되고 함수 호출 시 필요한 메모리가 스택 프레임에 할당됨. 또한 메모리를 적극적으로 지우기보다 스택 포인터를 옮기면서 활용하기 때문에 메모리 할당에 따른 여러 부차 작업들이 없음.
+
+반면 힙은 비어있고 연속된 메모리 공간을 찾아야 하는 등의 작업이 필요. 그래서 stack이 없어서 빠르다고 하는 것.
+
 ### heap
 
 -   stack과 달리 compiler, cpu 등이 메모리 관리를 해주지 않고 코더가 직접 관리하는 영역.
     -   너무 큰 데이터는 stack에 넣으면 안된다. (비디오 처리와 같은 경우) 이럴 때는 heap을 활용해 ‘동적 메모리 할당'하는게 좋다.
     -   DMA(dynamic memory allocation)
--   용량 제한이 없다 (컴퓨터에 남은 메모리 만큼 사용 가능)
+-   용량 제한이 없다 (컴퓨터에 남은 메모리 만큼 사용 가능). stack보다 용량이 크다고 생각하면 됨.
 -   코더가 데이터 수명을 직접 제어. stack의 경우 함수 호출이 끝나면 해당 영역은 방치된다.
 
 -   stack과의 비교
@@ -449,6 +454,8 @@ code : 함수 코드
         -   만약 heap을 빌려간 측에서 메모리 주소를 해제하지 않는다면 메모리 누수가 발생한다.
     -   stack에 비해 할당, 해제 속도가 느리다.
         -   offset 기반으로 움직이는 stack과 달리 할당하고자 하는 메모리 공간을 찾아야 하므로(메모리 조각화) 속도가 느리다.
+
+#### 동적 메모리 할당
 
 -   `동적 메모리 할당`
 
