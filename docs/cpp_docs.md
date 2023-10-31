@@ -19,6 +19,9 @@
 
 -   어셈블리 까보면 reference나 pointer나 같다. 다만 언어적 차원에서 reference가 좀 더 안전하게 쓰기 위해 만들어진 것. 많이 쓰자.
 -   new로 객체 선언한 건 반드시 delete할 것. 객체 배열은 delete[]로 삭제.
+-   struct는 C처럼 쓰기를 권장한다. (plain old data).
+    struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
+    순수하게 데이터만을 담아두자. 이래야 memcpy() 등 메모리 조작이 편안해진다.
 -   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
     -   func(int\* a, const int b, const int c)
     -   func(&a, b, c)
@@ -144,5 +147,17 @@ new/delete는 할당/해제 + 생성자 및 소멸자를 호출.
 python으로 치면 `__new__`와 `__del__`이 호출됨.
 
 malloc과 free는 오로지 메모리만을 할당/해제.
+
+### struct와 class의 차이?
+
+'차이 없음'
+
+1. 있따면, 기본 멤버가 public(struct)인가 private(class)인가
+2. 어셈블리로 까봐도 차이가 없다.
+3. cpp에서 생성, 소멸자, 메서드 등은 class 고유한 것이 아닌 struct도 가지고 있는 기능.
+
+그러나, struct는 C처럼 쓰기를 권장한다. (plain old data).
+struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
+순수하게 데이터만을 담아두자. 이래야 memcpy() 등 메모리 조작이 편안해진다.
 
 ## RAII(자원 획득은 초기화, resource acquisition is initialization)
