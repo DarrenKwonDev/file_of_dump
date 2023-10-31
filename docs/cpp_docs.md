@@ -129,14 +129,20 @@ badbit // bad()
     -   기본 modifier는 private. 접근 제어자 작성하지 않으면 private.
     -   private는 해당 클래스 내에서만 접근 가능
     -   protected는 자식 클래스에서도 접근 가능
--   new로 선언한 건 반드시 delete할 것
+-   cpp 에선 stack, heap 어디든 인스턴스를 생성할 수 있지만 타 언어에선 일반적인 휴리스틱으로, 클래스를 통해 인스턴스를 생성하면 그것이 heap에 할당될 것이라고 여겨짐.
+-   인스턴스 생성시 대입 말고 초기화 리스트(initializer list)를 사용하라.
+-   소멸자
+    -   heap에 할당된 객체를 삭제해야 함. stack에 생성된 객체는 해당 스코프 벗어날 때 자동으로 소멸함.
+    -   new로 선언한 건 heap에 할당되므로 반드시 delete할 것
+    -   특히, 클래스 내부에서 동적 메모리 할당이 일어났으면 같이 소멸자에서 해제해줘야 함.
+-   const method
+    해당 클래스로 생성된 인스턴스 내의 멤버 변수를 바꾸지 않음을 의미.
 
-```cpp
-// stack에 할당. (빠름)
-Vec a;
-// heap에 할당. (느림)
-Vec* b = new Vec();
-return 0;
-```
+### new/delete와 malloc()/free()의 차이?
+
+new/delete는 할당/해제 + 생성자 및 소멸자를 호출.  
+python으로 치면 `__new__`와 `__del__`이 호출됨.
+
+malloc과 free는 오로지 메모리만을 할당/해제.
 
 ## RAII(자원 획득은 초기화, resource acquisition is initialization)
