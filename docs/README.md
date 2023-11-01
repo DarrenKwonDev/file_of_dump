@@ -1,11 +1,13 @@
+
+
 <!-- toc -->
 
--   [contents](#contents)
-    -   [C](#c)
-    -   [Cpp](#cpp)
-    -   [cheat sheet](#cheat-sheet)
-    -   [study materials](#study-materials)
-    -   [youtube](#youtube)
+- [contents](#contents)
+  * [C](#c)
+  * [Cpp](#cpp)
+  * [cheat sheet](#cheat-sheet)
+  * [study materials](#study-materials)
+  * [youtube](#youtube)
 
 <!-- tocstop -->
 

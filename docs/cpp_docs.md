@@ -15,6 +15,7 @@
     + [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
     + [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
   * [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
+  * [The rule of three/five/zero](#the-rule-of-threefivezero)
 
 <!-- tocstop -->
 
@@ -177,6 +178,7 @@ badbit // bad()
     -   python에서 \_\_eq\_\_, \_\_add\_\_ 등의 메서드를 오버로딩하는 것과 비슷한 개념.
     -   unary, binary operator 모두 가능
     -   정의한 class 내 지원하지 않는 operator(예를 들면 operator<<)는 전역 함수로 overload한 다음에 friend 선언을 통해 작업해야 함.
+    -   복사생성자를 구현했다면 operator= overload도 해야 한다 (하단 rule of three 참고)
 
 -   friend
     -   클래스 정의 안에 friend 키워드를 사용 가능
@@ -203,3 +205,20 @@ struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
 순수하게 데이터만을 담아두자. 이래야 memcpy() 등 메모리 조작이 편안해진다.
 
 ## RAII(자원 획득은 초기화, resource acquisition is initialization)
+
+## The rule of three/five/zero
+
+[The rule of three/five/zero](https://en.cppreference.com/w/cpp/language/rule_of_three)
+
+-   rule of three
+
+    -   [destructor](https://en.cppreference.com/w/cpp/language/destructor)(소멸자), [copy constructor](https://en.cppreference.com/w/cpp/language/copy_constructor)(복사 생성자), [copy assignment operator](https://en.cppreference.com/w/cpp/language/copy_assignment)(대입 연산자 오버로드) 3개 중 하나를 구현했다면 보통 다른 2개도 같이 구현해야 한다.
+
+-   rule of five(C+11)
+
+    -   위의 rule of three에 얹어서 2개 더 구현해야 함
+    -   [move constructor](https://en.cppreference.com/w/cpp/language/move_constructor)
+    -   [move assignment operator](https://en.cppreference.com/w/cpp/language/move_assignment)
+
+-   rule fo zero
+    -   힘들지? 객체가 자원을 직접 관리하지 않고, 대신에 자원 관리를 스마트 포인터, 표준 라이브러리의 컨테이너, RAII(Resource Acquisition Is Initialization) 등을 통해 자동으로 처리하도록 .
