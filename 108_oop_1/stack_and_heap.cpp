@@ -21,6 +21,8 @@ int main(void) {
     Vec a;
 
     // heap에 할당. (느림)
+    // 정확히는 Vec* 즉, 포인터 변수 b는 stack에 존재하지만
+    // 실제 데이터(int 2개인 mX, mY 각 4byte)는 heap에 존재함.
     Vec* b = new Vec();
 
     // heap 할당된 메모리를 해제하기.

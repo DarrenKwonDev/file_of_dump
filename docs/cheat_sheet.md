@@ -212,7 +212,11 @@ C로 사용자 입력을 받았을 때 권장되는 방식은 `fgets`와 `sscanf
 
 ## cpp
 
+delete로 지울 수 있는 건 heap 할당된 객체 뿐임.
+
 reference는 ptr와 같으나 ptr 연산이 불가능하여 좀 더 안전하게 사용 가능함.
+
+---
 
 class reference를 매개변수로 넘길 때 const 쓰느냐 마느냐 차이
 

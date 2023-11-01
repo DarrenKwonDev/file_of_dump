@@ -12,8 +12,12 @@
     + [stream state](#stream-state)
     + [seek, indicator](#seek-indicator)
   * [class](#class)
-    + [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-    + [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+    + [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
+    + [상속](#%EC%83%81%EC%86%8D)
+      - [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
+      - [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
+      - [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+      - [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
   * [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
   * [The rule of three/five/zero](#the-rule-of-threefivezero)
 
@@ -24,10 +28,13 @@
 ## 권고 사항
 
 -   어셈블리 까보면 reference나 pointer나 같다. 다만 언어적 차원에서 reference가 좀 더 안전하게 쓰기 위해 만들어진 것. 많이 쓰자.
--   new로 객체 선언한 건 반드시 delete할 것. 객체 배열은 delete[]로 삭제.
+-   delete
+    -   delete로 지울 수 있는 건 heap 할당된 객체 뿐임.
+    -   new로 객체 선언한 건 heap에 할당되니 반드시 delete할 것. 배열은 delete[]로 삭제.
 -   struct는 C처럼 쓰기를 권장한다. (plain old data).
     struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
     순수하게 데이터만을 담아두자. 이래야 memcpy() 등 메모리 조작이 편안해진다.
+-   rule of three(five) / zero
 -   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
     -   func(int\* a, const int b, const int c)
     -   func(&a, b, c)
@@ -144,6 +151,7 @@ badbit // bad()
 -   `소멸자`
 
     -   heap에 할당된 객체 삭제해야 함. stack에 생성된 객체는 해당 스코프 벗어날 때 자동으로 소멸함.
+    -
     -   new로 선언한 건 heap에 할당되므로 반드시 delete할 것
 
 -   `const method`
@@ -185,14 +193,64 @@ badbit // bad()
     -   다른 클래스나 함수가 private, protected 멤버에 접근할 수 있게 됨.
     -   friend는 함수도, 객체도 가능함.
 
-### new/delete와 malloc()/free()의 차이?
+### class에 암시적으로 정의되는 것들
+
+-   매개변수 없는 constructor(default constructor)
+    -   커스텀 constructor 정의시 암시적으로 정의되지 않음.
+-   copy constructor (class(const class& other))
+    -   암시적 copy constructor는 shallow copy만 함.
+-   destructor (~class)
+    -   heap 할당 객체 메모리 정리에 유의.
+-   대입 연산자 = (copy assignment operator)
+
+보통 하나를 정의하면 나머지도 다 정의해야 함(하단 rule of three 참고)
+
+### 상속
+
+부모(베이스) - 자식(파생) 관계
+is a 관계
+Animal - Dog (Dog is a Animal)
+
+파생 클래스는 베이스 클래스의 멤버 변수, 멤버 메서드를 가짐.
+
+#### 생성자, 소멸자 호출 순서
+
+-   명시적이든 암시적이든 베이스 클래스의 생성자가 먼저 호출. 그 다음에 자식 클래스의 생성자 호출.
+    -   따라서 상속시 메모리에서 부모 클래스가 먼저 초기화됨.
+-   소멸자는 반대로 자식 소멸자가 먼저 호출한 후 베이스 클래스의 소멸자 자동 호출.
+
+#### 접근 제어 상속
+
+파생 클래스는 상속시 베이스 클래스의 멤버에 대한 최저 접근 수준을 제어할 수 있음. 다만 public 상속이 대부분임.
+
+```cpp
+// public 상속. 베이스 클래스의 접근 제어가 그대로 유지됨.
+// base : public -> derived : public
+// base : protected -> derived : protected
+// base : private -> derived : private
+class Cat : public Animal {};
+
+// protected 상속. public 접근이 불가해짐.
+// base : public -> derived : protected
+// base : protected -> derived : protected
+// base : private -> derived : private
+class Linux : protected OS {};
+
+// private 상속. 모든 접근이 private이 됨.
+// base : public -> derived : private
+// base : protected -> derived : private
+// base : private -> derived : private
+class Honda : private Car {};
+```
+
+#### new/delete와 malloc()/free()의 차이?
 
 new/delete는 할당/해제 + 생성자 및 소멸자를 호출.  
 python으로 치면 `__new__`와 `__del__`이 호출됨.
 
 malloc과 free는 오로지 메모리만을 할당/해제.
 
-### struct와 class의 차이?
+#### struct와 class의 차이?
 
 '차이 없음'
 
@@ -208,11 +266,14 @@ struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
 
 ## The rule of three/five/zero
 
+cpp에서 class에 암시적으로 만들어주는게 많다보니...
+
 [The rule of three/five/zero](https://en.cppreference.com/w/cpp/language/rule_of_three)
 
 -   rule of three
 
     -   [destructor](https://en.cppreference.com/w/cpp/language/destructor)(소멸자), [copy constructor](https://en.cppreference.com/w/cpp/language/copy_constructor)(복사 생성자), [copy assignment operator](https://en.cppreference.com/w/cpp/language/copy_assignment)(대입 연산자 오버로드) 3개 중 하나를 구현했다면 보통 다른 2개도 같이 구현해야 한다.
+    -   [예시](../109_oop_2/rule_of_three.cpp)
 
 -   rule of five(C+11)
 
