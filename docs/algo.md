@@ -19,6 +19,18 @@ nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out < ./input" -e cpp
 
     -   insert, erase: O(N);
 
+-   stack
+
+    -   스택이 비어있는데 top, pop을 호출하면 런타임 에러
+    -   [a, b, c, ...] <- push
+    -   pop은 가장 뒤 (push 되는 쪽) 원소 제거. top은 최후방 원소 반환
+
+-   queue
+
+    -   큐가 비었는데 front나 back이나 pop을 호출하면 런타임 에러
+    -   front [a, b, c, ...] <- push back
+    -   pop은 가장 앞 (front) 원소 제거(즉, pop 메서드가 stack과 다르다. 그것이 queue니까...)
+
 -   list(circular doubly linked list)
     -   list<T>::iterator는 list 메서드에 의해 자동으로 보정되지 않는다.
         -   list<T>의 iterator는 코더의 의도하지 않은 삭제되거나 이동된 원소를 가리키고 있을 수 있다. 메모리에서 해당 원소 자체가 삭제되는 것이 아니기에. 따라서 대부분의 경우 `iter = list.erase(iter)`, `iter = list.insert(iter)` 와 같이 사용하기를 원할 것이다.
