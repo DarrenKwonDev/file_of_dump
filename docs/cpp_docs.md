@@ -10,6 +10,9 @@
         -   [stream state](#stream-state)
         -   [seek, indicator](#seek-indicator)
     -   [class](#class)
+        -   [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+        -   [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+    -   [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
 
 <!-- tocstop -->
 
@@ -134,12 +137,29 @@ badbit // bad()
     -   protected는 자식 클래스에서도 접근 가능
 -   cpp 에선 stack, heap 어디든 인스턴스를 생성할 수 있지만 타 언어에선 일반적인 휴리스틱으로, 클래스를 통해 인스턴스를 생성하면 그것이 heap에 할당될 것이라고 여겨짐.
 -   인스턴스 생성시 대입 말고 초기화 리스트(initializer list)를 사용하라.
--   소멸자
+
+-   `소멸자`
+
     -   heap에 할당된 객체를 삭제해야 함. stack에 생성된 객체는 해당 스코프 벗어날 때 자동으로 소멸함.
     -   new로 선언한 건 heap에 할당되므로 반드시 delete할 것
     -   특히, 클래스 내부에서 동적 메모리 할당이 일어났으면 같이 소멸자에서 해제해줘야 함.
--   const method
+
+-   `const method`
     해당 클래스로 생성된 인스턴스 내의 멤버 변수를 바꾸지 않음을 의미.
+
+-   `복사 생성자`
+
+    -   타 언어에서의 clone, .copy와 같은 작업을 생성자 단에서 지원.
+    -   class (const class&); 꼴.
+    -   같은 클래스에 속한 객체를 활용해 새로운 객체를 생성하기.
+    -   해당 복사 생성자가 없어도 컴파일러에서 그대로 넣어줌. (암시적 복사 생성자)
+
+-   `암시적 복사 생성자`
+    -   코드에 복사 생성자가 없으면 컴파일러가 알아서 넣어줌. 단 세부 멤버 변수 조작은 못하고 그대로 copy되는 동작만 함.
+    -   암시적 복사 생성자는 `얕은 복사(shallow copy)`만 함.
+        -   얕은 복사이므로 포인터형 변수들은 주소가 복사되어 mutate가 원본에도 영향을 미치게 되며
+        -   원본 혹은 복사본이 삭제되고 메모리 정리를 하면 같은 메모리를 가리키고 있던 곳들은 전부 사용 불가능이 됨.
+        -   여러모로 포인터 변수를 클래스가 가지고 있다면 `복사 생성자에서 깊은 복사를 직접 구현하는 것이 안전함.`
 
 ### new/delete와 malloc()/free()의 차이?
 
