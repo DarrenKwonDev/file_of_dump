@@ -1,12 +1,11 @@
-
-
 <!-- toc -->
 
-- [contents](#contents)
-  * [C](#c)
-  * [Cpp](#cpp)
-  * [study materials](#study-materials)
-  * [youtube](#youtube)
+-   [contents](#contents)
+    -   [C](#c)
+    -   [Cpp](#cpp)
+    -   [cheat sheet](#cheat-sheet)
+    -   [study materials](#study-materials)
+    -   [youtube](#youtube)
 
 <!-- tocstop -->
 
@@ -14,13 +13,16 @@
 
 ## C
 
-[c_docs](./c_docs.md)  
-[c_cheat_sheet](./c_cheat_sheet.md)
+[c_docs](./c_docs.md)
 
 ## Cpp
 
 [cpp_docs](./cpp_docs.md)
 [algo](./algo.md)
+
+## cheat sheet
+
+[cheat_sheet](./cheat_sheet.md)
 
 ## study materials
 

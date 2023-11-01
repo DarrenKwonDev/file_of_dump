@@ -1,18 +1,20 @@
+
+
 <!-- toc -->
 
--   [cpp_docs](#cpp_docs)
-    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-    -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
-    -   [string + string slow. why?](#string--string-slow-why)
-    -   [compiler](#compiler)
-    -   [stream input/output](#stream-inputoutput)
-        -   [stream 종류](#stream-%EC%A2%85%EB%A5%98)
-        -   [stream state](#stream-state)
-        -   [seek, indicator](#seek-indicator)
-    -   [class](#class)
-        -   [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-        -   [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-    -   [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
+- [cpp_docs](#cpp_docs)
+  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+  * [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
+  * [string + string slow. why?](#string--string-slow-why)
+  * [compiler](#compiler)
+  * [stream input/output](#stream-inputoutput)
+    + [stream 종류](#stream-%EC%A2%85%EB%A5%98)
+    + [stream state](#stream-state)
+    + [seek, indicator](#seek-indicator)
+  * [class](#class)
+    + [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+    + [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+  * [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
 
 <!-- tocstop -->
 
@@ -140,9 +142,8 @@ badbit // bad()
 
 -   `소멸자`
 
-    -   heap에 할당된 객체를 삭제해야 함. stack에 생성된 객체는 해당 스코프 벗어날 때 자동으로 소멸함.
+    -   heap에 할당된 객체 삭제해야 함. stack에 생성된 객체는 해당 스코프 벗어날 때 자동으로 소멸함.
     -   new로 선언한 건 heap에 할당되므로 반드시 delete할 것
-    -   특히, 클래스 내부에서 동적 메모리 할당이 일어났으면 같이 소멸자에서 해제해줘야 함.
 
 -   `const method`
     해당 클래스로 생성된 인스턴스 내의 멤버 변수를 바꾸지 않음을 의미.
@@ -155,11 +156,32 @@ badbit // bad()
     -   해당 복사 생성자가 없어도 컴파일러에서 그대로 넣어줌. (암시적 복사 생성자)
 
 -   `암시적 복사 생성자`
+
     -   코드에 복사 생성자가 없으면 컴파일러가 알아서 넣어줌. 단 세부 멤버 변수 조작은 못하고 그대로 copy되는 동작만 함.
     -   암시적 복사 생성자는 `얕은 복사(shallow copy)`만 함.
         -   얕은 복사이므로 포인터형 변수들은 주소가 복사되어 mutate가 원본에도 영향을 미치게 되며
         -   원본 혹은 복사본이 삭제되고 메모리 정리를 하면 같은 메모리를 가리키고 있던 곳들은 전부 사용 불가능이 됨.
         -   여러모로 포인터 변수를 클래스가 가지고 있다면 `복사 생성자에서 깊은 복사를 직접 구현하는 것이 안전함.`
+
+-   overloading
+
+    -   이름과 반환형이 같고 매개변수가 다른 함수들.
+    -   이름이 같은데 반환형이 다르면 컴파일 에러
+        -   functions that differ only in their return type cannot be overloaded
+    -   가장 적합한 함수를 찾아 호출하게 되는데, 이 과정을 `overload resolution`이라고 함.
+        -   알아서 캐스팅 하는 등 없으면 알아서 찾으려고 하긴 하는데 처음부터 매개변수 잘 넣어 모호한 호출을 피하는게 좋다.
+        -   어... 굳이 막 외울 필요는 없을 듯.
+
+-   operator overloading
+
+    -   python에서 \_\_eq\_\_, \_\_add\_\_ 등의 메서드를 오버로딩하는 것과 비슷한 개념.
+    -   unary, binary operator 모두 가능
+    -   정의한 class 내 지원하지 않는 operator(예를 들면 operator<<)는 전역 함수로 overload한 다음에 friend 선언을 통해 작업해야 함.
+
+-   friend
+    -   클래스 정의 안에 friend 키워드를 사용 가능
+    -   다른 클래스나 함수가 private, protected 멤버에 접근할 수 있게 됨.
+    -   friend는 함수도, 객체도 가능함.
 
 ### new/delete와 malloc()/free()의 차이?
 

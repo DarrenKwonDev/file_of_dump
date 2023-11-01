@@ -1,3 +1,14 @@
+
+
+<!-- toc -->
+
+- [c](#c)
+- [cpp](#cpp)
+
+<!-- tocstop -->
+
+## c
+
 char
 int | -2,147,483,648 ~ +2,147,483,647 %d
 unsigned int | 0 ~ 4294967295 %u size_t (1 << 32)
@@ -198,3 +209,19 @@ C로 사용자 입력을 받았을 때 권장되는 방식은 `fgets`와 `sscanf
     -   [memcmp](https://en.cppreference.com/w/c/string/byte/memcmp)
         -   int memcmp( const void* lhs, const void* rhs, size_t count );
         -   count만큼 메모리를 비교. \0을 만나도 비교를 진행함.
+
+## cpp
+
+reference는 ptr와 같으나 ptr 연산이 불가능하여 좀 더 안전하게 사용 가능함.
+
+class reference를 매개변수로 넘길 때 const 쓰느냐 마느냐 차이
+
+```cpp
+void func(const Vector& v) {
+    // v의 멤버 변수를 읽기만 할 수 있음
+}
+
+void func(Vector& v) {
+    // v의 멤버 변수를 읽고 수정할 수 있음
+}
+```
