@@ -1,25 +1,27 @@
-
-
 <!-- toc -->
 
-- [cpp_docs](#cpp_docs)
-  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-  * [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
-  * [string + string slow. why?](#string--string-slow-why)
-  * [compiler](#compiler)
-  * [stream input/output](#stream-inputoutput)
-    + [stream 종류](#stream-%EC%A2%85%EB%A5%98)
-    + [stream state](#stream-state)
-    + [seek, indicator](#seek-indicator)
-  * [class](#class)
-    + [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
-    + [상속](#%EC%83%81%EC%86%8D)
-      - [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
-      - [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
-      - [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-      - [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-  * [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
-  * [The rule of three/five/zero](#the-rule-of-threefivezero)
+-   [cpp_docs](#cpp_docs)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+    -   [compiler](#compiler)
+    -   [stream input/output](#stream-inputoutput)
+        -   [stream 종류](#stream-%EC%A2%85%EB%A5%98)
+        -   [stream state](#stream-state)
+        -   [seek, indicator](#seek-indicator)
+    -   [class](#class)
+        -   [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
+            -   [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+            -   [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+    -   [class 상속](#class-%EC%83%81%EC%86%8D)
+        -   [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
+        -   [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
+        -   [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
+    -   [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
+        -   [정적 바인딩과 동적 바인딩(가상함수)](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EA%B3%BC-%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EA%B0%80%EC%83%81%ED%95%A8%EC%88%98)
+    -   [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
+    -   [The rule of three/five/zero](#the-rule-of-threefivezero)
+    -   [etc](#etc)
+        -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
+        -   [string + string slow. why?](#string--string-slow-why)
 
 <!-- tocstop -->
 
@@ -35,28 +37,10 @@
     struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
     순수하게 데이터만을 담아두자. 이래야 memcpy() 등 메모리 조작이 편안해진다.
 -   rule of three(five) / zero
+-   `클래스의  멤버 함수는 컴파일시 딱 한 번만 메모리에 할당됨`. 저수준에서 전역 함수와 그다지 다르지 않음. 개체마다 멤버 함수가 메모리에 위치한다면 상당한 공간 낭비.
 -   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
     -   func(int\* a, const int b, const int c)
     -   func(&a, b, c)
-
-## c의 헤더를 써도 되나?
-
-된다. 하지 말라는 사람도 있는데 성능 상 이유로 c 헤더 그냥 쓰는 곳도 많다.
-
-<string.h> -> <cstring>
-<stdio.h> -> <cstdio>
-<ctype.h> -> <cctype>
-<math.h> -> <cmath>
-
-## string + string slow. why?
-
-동적인 길이를 가진 string이라면
-특정 길이보다 넘어간다면 malloc 새로 해줘야할텐데
-heap에 데이터 할당하는 작업이 overhead로 들어갈 수밖에 없음. 애초에 힙 할당이 느림. 즉, stack에 정적으로 문자 배열 100개 깔아 놓고 시작하는 것에 비해 느림.
-길이가 가변되는 동적 문자열의 string + string은 느릴 수 밖에 없다.
-또한, 내부 버퍼 증가는 멀티 스레드 환경에서 안전하지 않을 수도 있다.
-그 결과,
-아직도 정해진 길이의 문자 배열 선언한 다음에 sprintf로 쓰는 작업을 C++에서도 자주함.
 
 ## compiler
 
@@ -205,7 +189,26 @@ badbit // bad()
 
 보통 하나를 정의하면 나머지도 다 정의해야 함(하단 rule of three 참고)
 
-### 상속
+#### new/delete와 malloc()/free()의 차이?
+
+new/delete는 할당/해제 + 생성자 및 소멸자를 호출.  
+python으로 치면 `__new__`와 `__del__`이 호출됨.
+
+malloc과 free는 오로지 메모리만을 할당/해제.
+
+#### struct와 class의 차이?
+
+'차이 없음'
+
+1. 있따면, 기본 멤버가 public(struct)인가 private(class)인가
+2. 어셈블리로 까봐도 차이가 없다.
+3. cpp에서 생성, 소멸자, 메서드 등은 class 고유한 것이 아닌 struct도 가지고 있는 기능.
+
+그러나, struct는 C처럼 쓰기를 권장한다. (plain old data).
+struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
+순수하게 데이터만을 담아두자. 이래야 memcpy() 등 메모리 조작이 편안해진다.
+
+## class 상속
 
 부모(베이스) - 자식(파생) 관계
 is a 관계
@@ -213,13 +216,26 @@ Animal - Dog (Dog is a Animal)
 
 파생 클래스는 베이스 클래스의 멤버 변수, 멤버 메서드를 가짐.
 
-#### 생성자, 소멸자 호출 순서
+### 생성자, 소멸자 호출 순서
 
 -   명시적이든 암시적이든 베이스 클래스의 생성자가 먼저 호출. 그 다음에 자식 클래스의 생성자 호출.
     -   따라서 상속시 메모리에서 부모 클래스가 먼저 초기화됨.
 -   소멸자는 반대로 자식 소멸자가 먼저 호출한 후 베이스 클래스의 소멸자 자동 호출.
 
-#### 접근 제어 상속
+### 클래스와 메모리 레이아웃
+
+-   기본적인 클래스의 메모리 레이아웃
+    [image](../imgs/private/클래스의메모리레이아웃.png)
+
+-   베이스 클래스와 자식 클래스의 멤버 변수들의 메모리 레이아웃
+    [images](../imgs/private/상속의메모리레이아웃.png)
+
+-   클래스의 멤버 함수들은 메모리 어디에?
+    -   각 개체마다 잡히지 않음. 함수 동작은 어차피 똑같으므로 그런 방식은 메모리 낭비임.
+    -   대신, `멤버 함수는 컴파일시 딱 한 번만 메모리에 할당됨`
+    -   저수준에서 전역 함수와 그다지 다르지 않음
+
+### 접근 제어 상속
 
 파생 클래스는 상속시 베이스 클래스의 멤버에 대한 최저 접근 수준을 제어할 수 있음. 다만 public 상속이 대부분임.
 
@@ -243,24 +259,35 @@ class Linux : protected OS {};
 class Honda : private Car {};
 ```
 
-#### new/delete와 malloc()/free()의 차이?
+## 다형성
 
-new/delete는 할당/해제 + 생성자 및 소멸자를 호출.  
-python으로 치면 `__new__`와 `__del__`이 호출됨.
+### 정적 바인딩과 동적 바인딩. 가상함수.
 
-malloc과 free는 오로지 메모리만을 할당/해제.
+-   정적 바인딩(컴파일 바인딩) : 컴파일 시간에 결정되는 바인딩. '무늬를 따라감'
 
-#### struct와 class의 차이?
+```cpp
+Cat* cat = new Cat(5, "pepe");
+Animal* yourCat = new Cat(7, "juju");
 
-'차이 없음'
+cat->Speak();     // cat의 Speak이 호출됨
+yourCat->Speak(); // animal의 Speak이 호출됨.
+```
 
-1. 있따면, 기본 멤버가 public(struct)인가 private(class)인가
-2. 어셈블리로 까봐도 차이가 없다.
-3. cpp에서 생성, 소멸자, 메서드 등은 class 고유한 것이 아닌 struct도 가지고 있는 기능.
+-   동적 바인딩(런타임 바인딩) = 가상 함수(virtual) 작성.
+    -   실행 중에 어떤 함수를 호출할 것인지 결정됨. 따라서 컴파일 바인딩
+    -   베이스 클래스에 가상 함수를 선언하면 자식 클래스의 가상 함수가 호출됨.
+    -   이를 위해 `가상 테이블`이 생성됨.
+        -   함수가 한 번만 메모리에 할당되어 사용되는 것 처럼 가상 함수를 찾기 위한 가상 테이블 또한 개체마다 생성되는 것이 아니라 클래스마다 하나씩 생성됨.
+    -   가상 함수는 느림. 왜? 가상 테이블 가서 찾아야 하거든.
 
-그러나, struct는 C처럼 쓰기를 권장한다. (plain old data).
-struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
-순수하게 데이터만을 담아두자. 이래야 memcpy() 등 메모리 조작이 편안해진다.
+```cpp
+class Animal {
+public:
+    // 실제 함수가 아님. 자식 함수에 의해 override됨.
+    // 런타임에 실체를 찾아 실행되게끔 하라.
+    virtual void Speak() { cout << "Animal" << endl; }
+};
+```
 
 ## RAII(자원 획득은 초기화, resource acquisition is initialization)
 
@@ -283,3 +310,24 @@ cpp에서 class에 암시적으로 만들어주는게 많다보니...
 
 -   rule fo zero
     -   힘들지? 객체가 자원을 직접 관리하지 않고, 대신에 자원 관리를 스마트 포인터, 표준 라이브러리의 컨테이너, RAII(Resource Acquisition Is Initialization) 등을 통해 자동으로 처리하도록 .
+
+## etc
+
+### c의 헤더를 써도 되나?
+
+된다. 하지 말라는 사람도 있는데 성능 상 이유로 c 헤더 그냥 쓰는 곳도 많다.
+
+<string.h> -> <cstring>
+<stdio.h> -> <cstdio>
+<ctype.h> -> <cctype>
+<math.h> -> <cmath>
+
+### string + string slow. why?
+
+동적인 길이를 가진 string이라면
+특정 길이보다 넘어간다면 malloc 새로 해줘야할텐데
+heap에 데이터 할당하는 작업이 overhead로 들어갈 수밖에 없음. 애초에 힙 할당이 느림. 즉, stack에 정적으로 문자 배열 100개 깔아 놓고 시작하는 것에 비해 느림.
+길이가 가변되는 동적 문자열의 string + string은 느릴 수 밖에 없다.
+또한, 내부 버퍼 증가는 멀티 스레드 환경에서 안전하지 않을 수도 있다.
+그 결과,
+아직도 정해진 길이의 문자 배열 선언한 다음에 sprintf로 쓰는 작업을 C++에서도 자주함.
