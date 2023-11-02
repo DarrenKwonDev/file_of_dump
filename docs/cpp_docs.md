@@ -18,7 +18,8 @@
     + [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
     + [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
     + [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
-    + [추상 클래스](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4)
+    + [추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4abstract-class%EC%99%80-%EC%88%9C%EC%88%98-%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98pure-virtual-function)
+    + [interface](#interface)
   * [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
     + [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
     + [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
@@ -291,7 +292,20 @@ class Cat: virtual public Animal;
 class Dog: virtual public Animal;
 ```
 
-### 추상 클래스
+### 추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)
+
+abstract 키워드 같은게 없다.  
+`순수 가상 함수를 가지고 있는 base 클래스가 곧 추상 클래스다.`  
+순수 가상 함수 = 구현이 없는 virtual 함수
+
+추상 클래스로는 개체를 만들 수 없음.
+
+### interface
+
+c++에서 인터페이스 없음. 순수 가상 함수를 통해 흉내만 낼 수 있음.
+
+만약 상속 받았음에도 구현하지 않으면
+unimplemented pure virtual method 에러를 받는 등 interface의 의도된 동작은 하는 편.
 
 ## 다형성
 
@@ -359,6 +373,20 @@ cpp에서 class에 암시적으로 만들어주는게 많다보니...
     -   위의 rule of three에 얹어서 2개 더 구현해야 함
     -   [move constructor](https://en.cppreference.com/w/cpp/language/move_constructor)
     -   [move assignment operator](https://en.cppreference.com/w/cpp/language/move_assignment)
+
+```cpp
+class MyClass {
+public:
+    MyClass(); // constructor
+    ~MyClass(); // destructor
+
+    MyClass(const MyClass&) = default; // 복사 생성자 (copy constructor)
+    MyClass& operator=(const MyClass&) = default; // 복사 대입 연산자 (Copy Assignment Operator)
+
+    MyClass& operator=(MyClass&&) = default; // 이동 대입 연산자(move assignment operator)
+    MyClass(MyClass&&) = default; // 이동 생성자(move constructor)
+};
+```
 
 -   rule fo zero
     -   힘들지? 객체가 자원을 직접 관리하지 않고, 대신에 자원 관리를 스마트 포인터, 표준 라이브러리의 컨테이너, RAII(Resource Acquisition Is Initialization) 등을 통해 자동으로 처리하도록 .
