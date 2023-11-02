@@ -25,9 +25,13 @@ int main(void) {
     // 실제 데이터(int 2개인 mX, mY 각 4byte)는 heap에 존재함.
     Vec* b = new Vec();
 
+    // 우리가 아는 기본 데이터 타입 또한 new로 선언하여 heap에 할당 가능.
+    int* in = new int(30); // heap에 저장
+
     // heap 할당된 메모리를 해제하기.
     // stack은 scope 벗어나면 자동 소멸하므로 delete할 수도 없고 필요도 없음.
     delete b;
+    delete in;
 
     return 0;
 }
