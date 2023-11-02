@@ -50,6 +50,7 @@ nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out < ./input" -e cpp
                         cout << *i << endl; // 2
                     ```
 -   list.end는 실제 데이터가 아닌 리스트의 끝을 나타내는 특별한 위치를 가리킴. 몇 컴파일러에서는 알아서 보정을 해줍니다만 여기에 의존하지 않는 것이 좋습니다.
+
     -   ```cpp
             int main(void) {
             list<int> l = {1, 2};
@@ -58,6 +59,12 @@ nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out < ./input" -e cpp
             cout << *(--cur) << endl; // 2 (의도된 것)
         }
         ```
+
+-   deque
+    -   double ended queue
+    -   front [a, b, ...] back
+    -   vector와 deque와의 큰 차이점 : 연속의 유무.
+        -   vector의 경우 공간이 부족하면, memory reallocate 과정을 거쳐야 하는데 deque의 경우 연속되지 않으니, 그냥 새로운 memory block 을 하나 할당하면 되니 평균적인 성능을 보장할 수 있음.
 
 ## 실수의 동등 비교
 

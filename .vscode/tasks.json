@@ -32,7 +32,9 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "<",
+                "input"
             ],
             "options": {
                 "cwd": "${fileDirname}"
