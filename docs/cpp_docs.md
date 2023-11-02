@@ -1,27 +1,33 @@
+
+
 <!-- toc -->
 
--   [cpp_docs](#cpp_docs)
-    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-    -   [compiler](#compiler)
-    -   [stream input/output](#stream-inputoutput)
-        -   [stream 종류](#stream-%EC%A2%85%EB%A5%98)
-        -   [stream state](#stream-state)
-        -   [seek, indicator](#seek-indicator)
-    -   [class](#class)
-        -   [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
-            -   [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-            -   [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-    -   [class 상속](#class-%EC%83%81%EC%86%8D)
-        -   [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
-        -   [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
-        -   [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
-    -   [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
-        -   [정적 바인딩과 동적 바인딩(가상함수)](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EA%B3%BC-%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EA%B0%80%EC%83%81%ED%95%A8%EC%88%98)
-    -   [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
-    -   [The rule of three/five/zero](#the-rule-of-threefivezero)
-    -   [etc](#etc)
-        -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
-        -   [string + string slow. why?](#string--string-slow-why)
+- [cpp_docs](#cpp_docs)
+  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+  * [compiler](#compiler)
+  * [stream input/output](#stream-inputoutput)
+    + [stream 종류](#stream-%EC%A2%85%EB%A5%98)
+    + [stream state](#stream-state)
+    + [seek, indicator](#seek-indicator)
+  * [class](#class)
+    + [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
+      - [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+      - [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+  * [class 상속](#class-%EC%83%81%EC%86%8D)
+    + [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
+    + [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
+    + [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
+    + [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
+    + [추상 클래스](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4)
+  * [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
+    + [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
+    + [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
+    + [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
+  * [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
+  * [The rule of three/five/zero](#the-rule-of-threefivezero)
+  * [etc](#etc)
+    + [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
+    + [string + string slow. why?](#string--string-slow-why)
 
 <!-- tocstop -->
 
@@ -30,14 +36,24 @@
 ## 권고 사항
 
 -   어셈블리 까보면 reference나 pointer나 같다. 다만 언어적 차원에서 reference가 좀 더 안전하게 쓰기 위해 만들어진 것. 많이 쓰자.
+
 -   delete
+
     -   delete로 지울 수 있는 건 heap 할당된 객체 뿐임.
     -   new로 객체 선언한 건 heap에 할당되니 반드시 delete할 것. 배열은 delete[]로 삭제.
--   struct는 C처럼 쓰기를 권장한다. (plain old data).
-    struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
-    순수하게 데이터만을 담아두자. 이래야 memcpy() 등 메모리 조작이 편안해진다.
--   rule of three(five) / zero
--   `클래스의  멤버 함수는 컴파일시 딱 한 번만 메모리에 할당됨`. 저수준에서 전역 함수와 그다지 다르지 않음. 개체마다 멤버 함수가 메모리에 위치한다면 상당한 공간 낭비.
+
+-   class
+
+    -   모든 소멸자는 가상 소멸자로 작성하는 것이 좋다
+    -   rule of three(five) / zero
+    -   `클래스의  멤버 함수는 컴파일시 딱 한 번만 메모리에 할당됨`. 저수준에서 전역 함수와 그다지 다르지 않음. 개체마다 멤버 함수가 메모리에 위치한다면 상당한 공간 낭비.
+
+-   struct
+
+    -   struct는 C처럼 쓰기를 권장한다. (plain old data).
+        struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
+        순수하게 데이터만을 담아두자. 이래야 memcpy() 등 메모리 조작이 편안해진다.
+
 -   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
     -   func(int\* a, const int b, const int c)
     -   func(&a, b, c)
@@ -259,19 +275,41 @@ class Linux : protected OS {};
 class Honda : private Car {};
 ```
 
+### 다중 상속은 안티패턴.
+
+java, c#은 다중 상속을 금지함.
+c++, python , scala는 다중 상속을 허용함.
+
+python은 다이아몬드 문제 때문에 MRO 개념도 생기고 여러 문제점이 생기는 고로 추천하지 않는 패턴.
+
+c++에선 다이아몬드 문제를 가상 베이스 클래스를 통해 해결하고자 함.
+상속 받을 때 virtual을 명시하는 것임.
+어... 굳이 기억할 필요가 있을까?
+
+```cpp
+class Cat: virtual public Animal;
+class Dog: virtual public Animal;
+```
+
+### 추상 클래스
+
 ## 다형성
 
-### 정적 바인딩과 동적 바인딩. 가상함수.
+`동일한 메서드를 사용했을 때 객체의 타입에 따라 다르게 응답할 수 있는 능력`
+
+### 정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.
 
 -   정적 바인딩(컴파일 바인딩) : 컴파일 시간에 결정되는 바인딩. '무늬를 따라감'
 
 ```cpp
-Cat* cat = new Cat(5, "pepe");
-Animal* yourCat = new Cat(7, "juju");
+Base* cat = new Derived(5, "pepe");
+Base* yourCat = new Derived(7, "juju");
 
 cat->Speak();     // cat의 Speak이 호출됨
 yourCat->Speak(); // animal의 Speak이 호출됨.
 ```
+
+### 동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.
 
 -   동적 바인딩(런타임 바인딩) = 가상 함수(virtual) 작성.
     -   실행 중에 어떤 함수를 호출할 것인지 결정됨. 따라서 런타임 바인딩.
@@ -288,6 +326,20 @@ public:
     virtual void Speak() { cout << "Animal" << endl; }
 };
 ```
+
+### 가상 소멸자
+
+`모든 소멸자는 가상 소멸자로 작성하는 것이 좋다`  
+`모든 소멸자에 virtual을 붙일 것`
+
+```cpp
+Base* a = new Derived(); // 정적 바인딩에 따르면 Base의 멤버 함수와 소멸자만 호출됨.
+```
+
+정적 바인딩에 따라 소멸자가 호출될 때 Derived의 소멸자가 호출되지 않음. -> 메모리 누수 발생.
+
+따라서 소멸자에는 가급적 `virtual` 키워드를 명시하는 것이 좋음.
+설사 Base 클래스가 아니더라도 해당 클래스가 이후에 Base 클래스가 될 경우도 고려하여 virtual 명시할 것.
 
 ## RAII(자원 획득은 초기화, resource acquisition is initialization)
 
