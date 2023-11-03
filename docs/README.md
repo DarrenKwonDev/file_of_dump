@@ -1,13 +1,11 @@
-
-
 <!-- toc -->
 
-- [contents](#contents)
-  * [C](#c)
-  * [Cpp](#cpp)
-  * [cheat sheet](#cheat-sheet)
-  * [study materials](#study-materials)
-  * [youtube](#youtube)
+-   [contents](#contents)
+    -   [C](#c)
+    -   [Cpp](#cpp)
+    -   [cheat sheet](#cheat-sheet)
+    -   [study materials](#study-materials)
+    -   [youtube](#youtube)
 
 <!-- tocstop -->
 
@@ -28,6 +26,7 @@
 
 ## study materials
 
+-   [smallchat](https://github.com/antirez/smallchat)
 -   [pintOS](https://casys-kaist.github.io/pintos-kaist/introduction/getting_started.html)
     -   https://github.com/casys-kaist/pintos-kaist
 -   build-your-own-x
