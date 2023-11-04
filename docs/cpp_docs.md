@@ -451,10 +451,12 @@ inline 함수를 선언하면 컴파일러가 함수 호출이 아닌 복붙으�
 
 ## exceptions
 
-### cpp에서의 exception의 특이점
+### cpp에서의 exception
 
 > 결론부터 말하자면 감당할 수 없는 예외는 함부러 잡지말고 그냥 죽게 내버려두자.
 > 출처 : https://medium.com/@jngbng/c-%EC%98%88%EC%99%B8-%EC%9E%A1%EC%95%84%EC%95%BC%ED%95%98%EB%82%98-%EB%A7%90%EC%95%84%EC%95%BC-%ED%95%98%EB%82%98-a2637169a5d4
+
+1. exception 남용 금지
 
 내가 대응할 수 없는 사실에 대해서만 exception 처리해야 함.
 exception을 던지지 않아도 해결가능함에도 exception을 남용하는 경우가 많음
@@ -464,12 +466,25 @@ out of range는 길이는 직접 검사하거나
 null pointer exception은 포인터가 null인지 검사하거나
 0으로 나누는 예외는 예외를 던지기보다 미리 검사하는 방식으로 해결 가능하다.
 
+2. try/catch의 오버헤드
+
 try/catch 구문의 disassembly를 살펴보면, 양이 꽤 많음. exception handling은 무료가 아님. (https://godbolt.org/) 와 같은 사이트에서 disassembly를 살펴보면 알 수 있음. exception은 부하가 있다고 생각하자.
 
-단, 생성자 예외는 exception으로 처리하는 것이 바람직하다.
-(custom_exception.cpp 참고) 다만 이 경우에도 생성자에서 예외를 발생시키는 경우면 보통 할당 실패인데 이 경우에는 차라리 프로그램을 종료하는게 낫다.
+3. 예외 처리 할 거면 왜 성능 중요한 cpp을 쓰는가.
 
-exception이 필요한 레벨이면 굳이 Cpp을 쓸 필요가 없다. 여러모로 cpp에서는 exception이 잘 쓰이지 않음.
+cpp 쓴다면 perf가 critical 한 분야일텐데 왜 쓰는가.
+
+(단, 생성자 예외는 exception으로 처리하는 것이 바람직하다.)
+(custom_exception.cpp 참고) 다만 이 경우에도 생성자에서 예외를 발생시키는 경우면 보통 할당 실패인데 이 경우에는 차라리 프로그램을 종료하는게 낫다. exception이 필요한 레벨이면 굳이 Cpp을 쓸 필요가 없다. 여러모로 cpp에서는 exception이 잘 쓰이지 않음.
+
+4. 함수가 발생시키는 exception을 알기 힘들고 제대로 다루기도 힘듦.
+
+코드를 직접 읽어보는 방법 뿐.
+그리고 함수 내부에 함수를 호출하는 경우 콜스택을 거슬러 올라가서 찾아야 함.
+문제가 복잡해질 수 있음.
+(java는 예외. 헤더에 예외 종류가 보임.)
+
+타 언어 쓸 때도 알겠지만 특정한 exception을 잡기보다 catch문에서 발생할 수 있는 모든 종류의 exception을 잡아버리는 코딩 스타일을 쓰는데 이는 제대로 exception 처리하기가 빡셈을 의미함.
 
 ### os exception != cpp exception
 
@@ -485,6 +500,13 @@ exception이 필요한 레벨이면 굳이 Cpp을 쓸 필요가 없다. 여러�
     -   C++ STL
     -   플랫폼에 상관없이 동일한 동작
     -   오버헤드가 비교적 적음
+
+### 예외 안전성(exception-safety)
+
+-   [예외 안전성](https://en.wikipedia.org/wiki/Exception_safety)
+    -   exception이 throw되었을 때 정상적으로 코드가 동작함을 의미.
+    -   exception safety의 단계 및 exception unsafe는 문서 참고 요망.
+    -   일종의 transaction과 같이 예외 발생 전으로 복구하는 등의 기능이 필요한데 언어 레벨에서는 이런 개념이 없다. 그래서 알아서 코드를 예외 안전성을 가지도록 짜야 한다.
 
 ## etc
 
