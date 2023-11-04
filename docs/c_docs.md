@@ -162,7 +162,8 @@ use `g++-13` instead of `clang++`
 
 ### clang
 
-[clang docs](https://clang.llvm.org/docs/ClangCommandLineReference.html)
+[clang docs](https://clang.llvm.org/docs/ClangCommandLineReference.html)  
+[gcc docs](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html)
 
 ```bash
 clang -std=c89 -W -Wall -pedantic-errors $file
@@ -170,9 +171,14 @@ clang -std=c89 -W -Wall -pedantic-errors $file
 clang -E $file # preprocessor output (translation unit)
 clang -S $file # assembly output
 clang -c $file # object output
+clang -save-temps $file # 컴파일 과정 중에 생성되는 임시 파일들을 보존. 위 명령어들 귀찮아서 보통 다 저장할 때 사용함.
 
 # for your convenience
 nodemon --exec "clang $file && ./a.out" -e c
+
+nodemon --exec "gcc-13 ./*.cpp && ./a.out < ./input" -e cpp
+
+
 ```
 
 ### lldb
@@ -216,12 +222,17 @@ D -- linker --> E(machine code, 실행 코드, 라이브러리)
     -   전처리기라는 별도의 프로그램이 담당하곤 함.
     -   주석 제거, 매크로 확장, include한 내용을 붙여 넣기 등.
     -   위 과정을 거쳐 만들어진 것이 확장된 소스 코드 = translation unit
+    -   `.ii (Intermediate Preprocessed 파일)` 이 생성되며, 전처리기가 복붙한 내용물을 확인할 수 있습니다.
 -   compile
     -   assembly 언어를 뱉음. 특정 target platform에 종속적임.
+    -   `.s (Assembly 파일)`: .ii 파일이 컴파일되어 어셈블리 코드로 변환됩니다. 즉, 어셈블리 코드를 보고 싶다면 .s 파일을 열면 됩니다.
 -   assemble
     -   0과 1로 이루어진 기계어이긴 하지만 아직 linking을 거치지 않아 기계가 실행할 순 없음.
+    -   `.o (Object 파일)`: 어셈블리 코드가 컴파일러에 의해 오브젝트 파일로 변환됩니다. 여기서부터는 hex editor를 통해서 읽어야 하는 기계어가 나옵니다.
 -   linker
     -   obj 코드를 모아 linking. 여러 obj 파일을 하나의 실행 파일로 만듦.
+
+이 과정에서 발생되는 코드들은 -save-temps 옵션을 통해 가시적으로 확인할 수 있음.
 
 ### module & lib
 
@@ -809,7 +820,7 @@ C의 기본
 
 ### C99
 
--   인라인함수
+-   인라인함수 (inline function)
 
     -   "인라인이 실패할 경우를 대비하여 함수 심볼도 만들어야 함"
         1. .h에 inline 함수 구현

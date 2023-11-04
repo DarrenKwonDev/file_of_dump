@@ -1,10 +1,7 @@
-#include "vector.h"
 #include <stdio.h>
 
 int main(void) {
-    char buff[100];
-    sprintf(buff, "hello");
+    puts("wow");
 
-    printf("%s", buff);
     return 0;
 }

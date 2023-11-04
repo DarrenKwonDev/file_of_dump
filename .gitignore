@@ -1,5 +1,5 @@
 ## custom
-./a.out
+a.out
 ./.vscode/
 main
 imgs/private/*
@@ -10,6 +10,11 @@ main
 input
 test.txt
 hello.txt
+*.s
+*.ii
+*.i
+*.bc
+*.o
 
 # Created by https://www.toptal.com/developers/gitignore/api/c
 # Edit at https://www.toptal.com/developers/gitignore?templates=c
@@ -69,3 +74,8 @@ Mkfile.old
 dkms.conf
 
 # End of https://www.toptal.com/developers/gitignore/api/c
+main.ii
+.gitignore
+.gitignore
+main.bc
+main.s

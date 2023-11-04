@@ -25,6 +25,8 @@
         -   [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
         -   [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
     -   [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
+    -   [inline function](#inline-function)
+    -   [static = 범위의 제한을 받는 전역 변수](#static--%EB%B2%94%EC%9C%84%EC%9D%98-%EC%A0%9C%ED%95%9C%EC%9D%84-%EB%B0%9B%EB%8A%94-%EC%A0%84%EC%97%AD-%EB%B3%80%EC%88%98)
     -   [etc](#etc)
         -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
         -   [string + string slow. why?](#string--string-slow-why)
@@ -417,8 +419,6 @@ Base* a = new Derived(); // 정적 바인딩에 따르면 Base의 멤버 함수�
 따라서 소멸자에는 가급적 `virtual` 키워드를 명시하는 것이 좋음.
 설사 Base 클래스가 아니더라도 해당 클래스가 이후에 Base 클래스가 될 경우도 고려하여 virtual 명시할 것.
 
-## RAII(자원 획득은 초기화, resource acquisition is initialization)
-
 ## inline function
 
 단순한데 함수 호출에 의한 오버헤드를 가져가기 싫을 때.
@@ -449,7 +449,18 @@ inline 함수를 선언하면 컴파일러가 함수 호출이 아닌 복붙으�
     -   타 언어와 마찬가지로 클래스에서 호출 가능한 정적 함수. 메모리에서 한 번만 할당되어 클래스의 모든 개체가 공유함.
     -   정적 함수는 해당 클래스의 정적 멤버 변수만 접근 가능함. 당연함. 전 클래스가 공유하고 있으므로.
 
+## exceptions
+
+cpp에서 exception은 지원하지만 잘 쓰이지 않음.  
+cpp에서 exception은 언어가 던져쥐 않고 코더가 만드는 것.
+
+exception을 던지지 않아도 해결가능함에도 exception을 남용하는 경우가 많음
+
+try/catch 구문의 disassembly를 살펴보면, 양이 꽤 많음. exception handling은 무료가 아님. (https://godbolt.org/) 와 같은 사이트에서 disassembly를 살펴보면 알 수 있음.
+
 ## etc
+
+### RAII(자원 획득은 초기화, resource acquisition is initialization)
 
 ### c의 헤더를 써도 되나?
 
