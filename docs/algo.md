@@ -3,7 +3,7 @@
 ## gtime
 
 ```bash
-nodemon --exec "g++-13 -std=c++17 ./*.cpp && gtime -f '\n%P cpu \n%es exeuction time\nmomery %MKB' ./a.out < ./input" -e cpp
+nodemon --exec "g++-13 -std=c++17 ./*.cpp && gtime -f '\n%P cpu \n%es exeuction time\nmomery %MKB' ./a.out < ./input" -e cpp c
 \\
 nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out" -e cpp
 \\

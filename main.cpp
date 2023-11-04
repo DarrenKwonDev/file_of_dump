@@ -1,7 +1,7 @@
 #include <iostream>
 
-int main(void) {
-    std::cout << "simple output";
+using namespace std;
 
+int main(void) {
     return 0;
 }

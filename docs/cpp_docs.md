@@ -451,12 +451,40 @@ inline 함수를 선언하면 컴파일러가 함수 호출이 아닌 복붙으�
 
 ## exceptions
 
-cpp에서 exception은 지원하지만 잘 쓰이지 않음.  
-cpp에서 exception은 언어가 던져쥐 않고 코더가 만드는 것.
+### cpp에서의 exception의 특이점
 
+> 결론부터 말하자면 감당할 수 없는 예외는 함부러 잡지말고 그냥 죽게 내버려두자.
+> 출처 : https://medium.com/@jngbng/c-%EC%98%88%EC%99%B8-%EC%9E%A1%EC%95%84%EC%95%BC%ED%95%98%EB%82%98-%EB%A7%90%EC%95%84%EC%95%BC-%ED%95%98%EB%82%98-a2637169a5d4
+
+내가 대응할 수 없는 사실에 대해서만 exception 처리해야 함.
 exception을 던지지 않아도 해결가능함에도 exception을 남용하는 경우가 많음
 
-try/catch 구문의 disassembly를 살펴보면, 양이 꽤 많음. exception handling은 무료가 아님. (https://godbolt.org/) 와 같은 사이트에서 disassembly를 살펴보면 알 수 있음.
+예를 들어,
+out of range는 길이는 직접 검사하거나
+null pointer exception은 포인터가 null인지 검사하거나
+0으로 나누는 예외는 예외를 던지기보다 미리 검사하는 방식으로 해결 가능하다.
+
+try/catch 구문의 disassembly를 살펴보면, 양이 꽤 많음. exception handling은 무료가 아님. (https://godbolt.org/) 와 같은 사이트에서 disassembly를 살펴보면 알 수 있음. exception은 부하가 있다고 생각하자.
+
+단, 생성자 예외는 exception으로 처리하는 것이 바람직하다.
+(custom_exception.cpp 참고) 다만 이 경우에도 생성자에서 예외를 발생시키는 경우면 보통 할당 실패인데 이 경우에는 차라리 프로그램을 종료하는게 낫다.
+
+exception이 필요한 레벨이면 굳이 Cpp을 쓸 필요가 없다. 여러모로 cpp에서는 exception이 잘 쓰이지 않음.
+
+### os exception != cpp exception
+
+-   os exception
+
+    -   비동기적 (언어 내에서 os에서 exception을 받아야 하므로 비동기적 동작)
+    -   POSIX signal, faults, traps, aborts
+    -   플랫폼마다 다름
+    -   오버헤드가 비교적 큼
+
+-   cpp exception
+    -   동기적 (언어 내부에서 처리)
+    -   C++ STL
+    -   플랫폼에 상관없이 동일한 동작
+    -   오버헤드가 비교적 적음
 
 ## etc
 
