@@ -1,5 +1,15 @@
 # cpp algo note
 
+## mental model
+
+h
+자료구조 보듯 insert, search, delete의 시간 및 공간 복잡도를 고려.
+
+각 세부 동작이 존재하는 것도 살펴볼 것.
+search: linear, binary, hash table(occur array), ...
+sort : quick, bubble, merge, eap, ...
+reverse
+
 ## gtime
 
 ```bash
@@ -14,57 +24,8 @@ nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out < ./input" -e cpp
 
 -   int는 약 21억(2,147,483,648)
 -   10^10 까지는 담을 수 있음. 그 이상은 long long int에 담을 것
-
 -   arr, string
-
     -   insert, erase: O(N);
-
--   stack
-
-    -   스택이 비어있는데 top, pop을 호출하면 런타임 에러
-    -   [a, b, c, ...] <- push
-    -   pop은 가장 뒤 (push 되는 쪽) 원소 제거. top은 최후방 원소 반환
-
--   queue
-
-    -   큐가 비었는데 front나 back이나 pop을 호출하면 런타임 에러
-    -   front [a, b, c, ...] <- push back
-    -   pop은 가장 앞 (front) 원소 제거(즉, pop 메서드가 stack과 다르다. 그것이 queue니까...)
-
--   list(circular doubly linked list)
-    -   list<T>::iterator는 list 메서드에 의해 자동으로 보정되지 않는다.
-        -   list<T>의 iterator는 코더의 의도하지 않은 삭제되거나 이동된 원소를 가리키고 있을 수 있다. 메모리에서 해당 원소 자체가 삭제되는 것이 아니기에. 따라서 대부분의 경우 `iter = list.erase(iter)`, `iter = list.insert(iter)` 와 같이 사용하기를 원할 것이다.
-        -   insert 함수는 insert한 원소를 가리키는 iterator를 반환합니다
-        -   erase 함수는 지워진 원소의 다음 원소를 가리키는 iterator를 반환. 빈 리스트나 마지막 원소를 지우려는 경우 에러 발생
-            -   Thus the end() iterator (which is valid, but is not dereferenceable) cannot be used as a value for pos.
-                -   ```cpp
-                        list<int> l = {1};
-                        list<int>::iterator i = l.end(); // i는 실제 데이터가 아닌 리스트의 끝을 나타내는 특별한 위치.
-                        // 실제 원소 3을 지우기 위하여 --i를 통해서 원소 3을 가리킴.
-                        // 그 결과 l.erase는 3을 지우게 되고 3의 다음 원소를 반환할 것으로 예상됨.
-                        // 그러나 3의 다음 원소는 없음.
-                        // 이 경우 문서를 읽어보면
-                        // If pos refers to the last element, then the end() iterator is returned.
-                        i = l.erase(--i);
-                        // 마지막 원소를 지운 경우 똑같이 마지막을 반환함.
-                        cout << *i << endl; // 2
-                    ```
--   list.end는 실제 데이터가 아닌 리스트의 끝을 나타내는 특별한 위치를 가리킴. 몇 컴파일러에서는 알아서 보정을 해줍니다만 여기에 의존하지 않는 것이 좋습니다.
-
-    -   ```cpp
-            int main(void) {
-            list<int> l = {1, 2};
-            list<int>::iterator cur = l.end();
-            cout << *cur << endl;     // 2 (UB)
-            cout << *(--cur) << endl; // 2 (의도된 것)
-        }
-        ```
-
--   deque
-    -   double ended queue
-    -   front [a, b, ...] back
-    -   vector와 deque와의 큰 차이점 : 연속의 유무.
-        -   vector의 경우 공간이 부족하면, memory reallocate 과정을 거쳐야 하는데 deque의 경우 연속되지 않으니, 그냥 새로운 memory block 을 하나 할당하면 되니 평균적인 성능을 보장할 수 있음.
 
 ## 실수의 동등 비교
 

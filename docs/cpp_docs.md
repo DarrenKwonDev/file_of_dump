@@ -464,7 +464,10 @@ inline 함수를 선언하면 컴파일러가 함수 호출이 아닌 복붙으�
 
 1. exception 남용 금지
 
-내가 대응할 수 없는 사실에 대해서만 exception 처리해야 함.
+내가 대응할 수 없는 사실에 대해서만 exception 처리해야 함.  
+경계에서 외부 데이터와 통신할 때  
+파일을 읽어올 때 등 보통 외부 시스템과의 경계에서 exception이 발생할 수 있음.
+
 exception을 던지지 않아도 해결가능함에도 exception을 남용하는 경우가 많음
 
 예를 들어,
@@ -510,9 +513,13 @@ cpp 쓴다면 perf가 critical 한 분야일텐데 왜 쓰는가.
 ### 예외 안전성(exception-safety)
 
 -   [예외 안전성](https://en.wikipedia.org/wiki/Exception_safety)
+
     -   exception이 throw되었을 때 정상적으로 코드가 동작함을 의미.
     -   exception safety의 단계 및 exception unsafe는 문서 참고 요망.
     -   일종의 transaction과 같이 예외 발생 전으로 복구하는 등의 기능이 필요한데 언어 레벨에서는 이런 개념이 없다. 그래서 알아서 코드를 예외 안전성을 가지도록 짜야 한다.
+
+-   exception이 발생한 operation은 그대로 망가뜨리고, 대신 로깅 잘 찍고 (메모리 덤핑 떠서 송신하게끔 만드는 등) 다음 리퀘스트에 대해서는 정상적인 처리를 할 수 있는 정도로는 해둬야 한다.
+-   결국, exception이 발생하면 이후의 작동을 보장할 수 없으니 여기서 프로그램이 멈추는게 맞다.
 
 ## etc
 
