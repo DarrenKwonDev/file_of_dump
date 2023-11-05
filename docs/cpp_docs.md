@@ -1,41 +1,39 @@
-
-
 <!-- toc -->
 
-- [cpp_docs](#cpp_docs)
-  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-  * [compiler](#compiler)
-  * [stream input/output](#stream-inputoutput)
-    + [stream 종류](#stream-%EC%A2%85%EB%A5%98)
-    + [stream state](#stream-state)
-    + [seek, indicator](#seek-indicator)
-  * [explicit casting (명시적 캐스팅)](#explicit-casting-%EB%AA%85%EC%8B%9C%EC%A0%81-%EC%BA%90%EC%8A%A4%ED%8C%85)
-  * [class](#class)
-    + [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
-    + [The rule of three/five/zero](#the-rule-of-threefivezero)
-      - [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-      - [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-  * [class 상속](#class-%EC%83%81%EC%86%8D)
-    + [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
-    + [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
-    + [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
-    + [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
-    + [추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4abstract-class%EC%99%80-%EC%88%9C%EC%88%98-%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98pure-virtual-function)
-    + [interface](#interface)
-  * [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
-    + [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
-    + [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
-    + [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
-  * [inline function](#inline-function)
-  * [static = 범위의 제한을 받는 전역 변수](#static--%EB%B2%94%EC%9C%84%EC%9D%98-%EC%A0%9C%ED%95%9C%EC%9D%84-%EB%B0%9B%EB%8A%94-%EC%A0%84%EC%97%AD-%EB%B3%80%EC%88%98)
-  * [exceptions](#exceptions)
-    + [cpp에서의 exception](#cpp%EC%97%90%EC%84%9C%EC%9D%98-exception)
-    + [os exception != cpp exception](#os-exception--cpp-exception)
-    + [예외 안전성(exception-safety)](#%EC%98%88%EC%99%B8-%EC%95%88%EC%A0%84%EC%84%B1exception-safety)
-  * [etc](#etc)
-    + [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
-    + [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
-    + [string + string slow. why?](#string--string-slow-why)
+-   [cpp_docs](#cpp_docs)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+    -   [compiler](#compiler)
+    -   [stream input/output](#stream-inputoutput)
+        -   [stream 종류](#stream-%EC%A2%85%EB%A5%98)
+        -   [stream state](#stream-state)
+        -   [seek, indicator](#seek-indicator)
+    -   [explicit casting (명시적 캐스팅)](#explicit-casting-%EB%AA%85%EC%8B%9C%EC%A0%81-%EC%BA%90%EC%8A%A4%ED%8C%85)
+    -   [class](#class)
+        -   [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
+        -   [The rule of three/five/zero](#the-rule-of-threefivezero)
+            -   [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+            -   [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+    -   [class 상속](#class-%EC%83%81%EC%86%8D)
+        -   [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
+        -   [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
+        -   [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
+        -   [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
+        -   [추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4abstract-class%EC%99%80-%EC%88%9C%EC%88%98-%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98pure-virtual-function)
+        -   [interface](#interface)
+    -   [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
+        -   [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
+        -   [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
+        -   [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
+    -   [inline function](#inline-function)
+    -   [static = 범위의 제한을 받는 전역 변수](#static--%EB%B2%94%EC%9C%84%EC%9D%98-%EC%A0%9C%ED%95%9C%EC%9D%84-%EB%B0%9B%EB%8A%94-%EC%A0%84%EC%97%AD-%EB%B3%80%EC%88%98)
+    -   [exceptions](#exceptions)
+        -   [cpp에서의 exception](#cpp%EC%97%90%EC%84%9C%EC%9D%98-exception)
+        -   [os exception != cpp exception](#os-exception--cpp-exception)
+        -   [예외 안전성(exception-safety)](#%EC%98%88%EC%99%B8-%EC%95%88%EC%A0%84%EC%84%B1exception-safety)
+    -   [etc](#etc)
+        -   [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
+        -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
+        -   [string + string slow. why?](#string--string-slow-why)
 
 <!-- tocstop -->
 
@@ -63,6 +61,7 @@
 -   어셈블리 까보면 reference나 pointer나 같다. 다만 언어적 차원에서 reference가 좀 더 안전하게 쓰기 위해 만들어진 것. 많이 쓰자.
 
 -   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
+
     -   func(int\* a, const int b, const int c)
     -   func(&a, b, c)
 
@@ -184,6 +183,21 @@ badbit // bad()
     -   protected는 자식 클래스에서도 접근 가능
 -   cpp 에선 stack, heap 어디든 인스턴스를 생성할 수 있지만 타 언어에선 일반적인 휴리스틱으로, 클래스를 통해 인스턴스를 생성하면 그것이 heap에 할당될 것이라고 여겨짐.
 -   인스턴스 생성시 대입 말고 초기화 리스트(initializer list)를 사용하라.
+
+-   `생성자`
+
+    ```cpp
+    // stack에 할당. (빠름)
+    Vec a;          // 직접 Vec 객체 생성 (복사를 하지 않으므로 이 방법이 권장됨
+    Vec aa = Vec(); // Vec 객체를 생성 후 복사함. (비추천. 굳이 복사 한 번 더 해야 함.)
+
+    // heap에 할당. (느림)
+    // 정확히는 Vec* 즉, 포인터 변수 b는 stack에 존재하지만
+    // 실제 데이터(int 2개인 mX, mY 각 4byte)는 heap에 존재함.
+    Vec* b = new Vec();
+
+    delete b; // heap에 할당된 객체는 반드시 delete 해야 함.
+    ```
 
 -   `소멸자`
 

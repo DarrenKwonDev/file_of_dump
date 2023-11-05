@@ -1,16 +1,14 @@
-
-
 <!-- toc -->
 
-- [STL(standard template library)](#stlstandard-template-library)
-  * [STL container](#stl-container)
-    + [vector. 동적 배열](#vector-%EB%8F%99%EC%A0%81-%EB%B0%B0%EC%97%B4)
-    + [map](#map)
-    + [set](#set)
-    + [queue](#queue)
-    + [stack](#stack)
-    + [deque](#deque)
-    + [list](#list)
+-   [STL(standard template library)](#stlstandard-template-library)
+    -   [STL container](#stl-container)
+        -   [vector. 동적 배열](#vector-%EB%8F%99%EC%A0%81-%EB%B0%B0%EC%97%B4)
+        -   [map](#map)
+        -   [set](#set)
+        -   [queue](#queue)
+        -   [stack](#stack)
+        -   [deque](#deque)
+        -   [list](#list)
 
 <!-- tocstop -->
 
@@ -64,7 +62,9 @@ https://en.cppreference.com/w/cpp/container/vector
         -   예외: 마지막 원소를 지우는 경우, 마지막 원소를 가리키는 반복자가 아닌 v.end()를 반환함.
 
 -   tips
-    vector 생성하고 바로 reserve로 cap 잡아라.
+    1. vector 생성하고 바로 reserve로 cap 잡아라. 쓸만큼 선언하고, 재할당이 일어나지 않도록 넉넉해야 한다.
+    2. 객체를 직접 보관하는 벡터는 재할당 시에 재할당 및 원소 복사가 일어나는데 객체가 클수록 부하가 크다. 객체의 포인터를 지정하는 것이 경제적이다.
+    3. 객체의 포인터를 저장하는 벡터의 원소가 사용하고 있는 heap 데이터를 정리하고 싶다면 수동으로 삭제해야 한다. vector.clear()는 원소를 삭제하지만 heap 데이터는 삭제하지 않는다. (114_stl_1/vector/ptr_vector_heap_cleanup.cpp 참고)
 
 ### map
 

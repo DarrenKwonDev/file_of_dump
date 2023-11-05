@@ -18,7 +18,8 @@ void printVec(const Vec& a, const Vec& b) {
 
 int main(void) {
     // stack에 할당. (빠름)
-    Vec a;
+    Vec a;          // 직접 Vec 객체 생성 (복사를 하지 않으므로 이 방법이 권장됨
+    Vec aa = Vec(); // Vec 객체를 생성 후 복사함. (비추천. 굳이 복사 한 번 더 해야 함.)
 
     // heap에 할당. (느림)
     // 정확히는 Vec* 즉, 포인터 변수 b는 stack에 존재하지만
