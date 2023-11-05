@@ -20,6 +20,8 @@
 
 https://en.cppreference.com/w/cpp/container
 
+map, set, vector 정도가 자주 쓰이는 편.
+
 ### vector. 동적 배열
 
 https://en.cppreference.com/w/cpp/container/vector
@@ -68,10 +70,6 @@ https://en.cppreference.com/w/cpp/container/vector
     2. 객체를 직접 보관하는 벡터는 재할당 시에 재할당 및 원소 복사가 일어나는데 객체가 클수록 부하가 크다. 객체의 포인터를 지정하는 것이 경제적이다.
     3. 객체의 포인터를 저장하는 벡터의 원소가 사용하고 있는 heap 데이터를 정리하고 싶다면 수동으로 삭제해야 한다. vector.clear()는 원소를 삭제하지만 heap 데이터는 삭제하지 않는다. (114_stl_1/vector/ptr_vector_heap_cleanup.cpp 참고)
 
-### tuple
-
-https://en.cppreference.com/w/cpp/utility/tuple
-
 ### map
 
 https://en.cppreference.com/w/cpp/container/map
@@ -94,6 +92,9 @@ https://en.cppreference.com/w/cpp/container/map
     std::map은 해시맵이 아님. 정렬 로직에 의하여 O(logN)이다.
     Search, removal, and insertion operations have logarithmic complexity
 
+-   multi map
+    -   중복 키 허용
+
 ### set
 
 -   정렬되는 컨테이너
@@ -102,61 +103,65 @@ https://en.cppreference.com/w/cpp/container/map
 
 -   집합의 특성상 중복 원소가 존재하지 않음.
 
+-   multi set
+    -   중복키를 허용하는 set
+
+### tuple
+
+https://en.cppreference.com/w/cpp/utility/tuple
+
 ### unordered_map
 
 -   해시맵
 
-### queue
-
--   queue
-
-    -   큐가 비었는데 front나 back이나 pop을 호출하면 런타임 에러
-    -   front [a, b, c, ...] <- push back
-    -   pop은 가장 앞 (front) 원소 제거(즉, pop 메서드가 stack과 다르다. 그것이 queue니까...)
-
 ### stack
 
--   stack
+https://en.cppreference.com/w/cpp/container/stack
 
-    -   스택이 비어있는데 top, pop을 호출하면 런타임 에러
-    -   [a, b, c, ...] <- push
-    -   pop은 가장 뒤 (push 되는 쪽) 원소 제거. top은 최후방 원소 반환
+-   스택이 비어있는데 top, pop을 호출하면 런타임 에러
+-   [a, b, c, ...] <- push
+-   pop은 가장 뒤 (push 되는 쪽) 원소 제거. top은 최후방 원소 반환
+
+### queue
+
+https://en.cppreference.com/w/cpp/container/queue
+
+-   큐가 비었는데 front나 back이나 pop을 호출하면 런타임 에러
+-   front [a, b, c, ...] <- push back
+-   pop은 가장 앞 (front) 원소 제거(즉, pop 메서드가 stack과 다르다. 그것이 queue니까...)
 
 ### deque
 
--   deque
-    -   double ended queue
-    -   front [a, b, ...] back
-    -   vector와 deque와의 큰 차이점 : 연속의 유무.
-        -   vector의 경우 공간이 부족하면, memory reallocate 과정을 거쳐야 하는데 deque의 경우 연속되지 않으니, 그냥 새로운 memory block 을 하나 할당하면 되니 평균적인 성능을 보장할 수 있음.
+-   double ended queue
+-   front [a, b, ...] back
+-   vector와 deque와의 큰 차이점 : 연속의 유무.
+    -   vector의 경우 공간이 부족하면, memory reallocate 과정을 거쳐야 하는데 deque의 경우 연속되지 않으니, 그냥 새로운 memory block 을 하나 할당하면 되니 평균적인 성능을 보장할 수 있음.
 
-### list
+### priority_queue
 
--   list(circular doubly linked list)
-    -   list<T>::iterator는 list 메서드에 의해 자동으로 보정되지 않는다.
-        -   list<T>의 iterator는 코더의 의도하지 않은 삭제되거나 이동된 원소를 가리키고 있을 수 있다. 메모리에서 해당 원소 자체가 삭제되는 것이 아니기에. 따라서 대부분의 경우 `iter = list.erase(iter)`, `iter = list.insert(iter)` 와 같이 사용하기를 원할 것이다.
-        -   insert 함수는 insert한 원소를 가리키는 iterator를 반환합니다
-        -   erase 함수는 지워진 원소의 다음 원소를 가리키는 iterator를 반환. 빈 리스트나 마지막 원소를 지우려는 경우 에러 발생
-            -   Thus the end() iterator (which is valid, but is not dereferenceable) cannot be used as a value for pos.
-                -   ```cpp
-                        list<int> l = {1};
-                        list<int>::iterator i = l.end(); // i는 실제 데이터가 아닌 리스트의 끝을 나타내는 특별한 위치.
-                        // 실제 원소 3을 지우기 위하여 --i를 통해서 원소 3을 가리킴.
-                        // 그 결과 l.erase는 3을 지우게 되고 3의 다음 원소를 반환할 것으로 예상됨.
-                        // 그러나 3의 다음 원소는 없음.
-                        // 이 경우 문서를 읽어보면
-                        // If pos refers to the last element, then the end() iterator is returned.
-                        i = l.erase(--i);
-                        // 마지막 원소를 지운 경우 똑같이 마지막을 반환함.
-                        cout << *i << endl; // 2
-                    ```
--   list.end는 실제 데이터가 아닌 리스트의 끝을 나타내는 특별한 위치를 가리킴. 몇 컴파일러에서는 알아서 보정을 해줍니다만 여기에 의존하지 않는 것이 좋습니다.
+https://en.cppreference.com/w/cpp/container/priority_queue
 
-    -   ```cpp
-            int main(void) {
-            list<int> l = {1, 2};
-            list<int>::iterator cur = l.end();
-            cout << *cur << endl;     // 2 (UB)
-            cout << *(--cur) << endl; // 2 (의도된 것)
-        }
-        ```
+### list(circular doubly linked list)
+
+https://en.cppreference.com/w/cpp/container/list
+
+-   double linked list
+    메모리 상 불연속적으로 존재. cache에 불리.
+
+-   complexity
+    삽입, 삭제에 O(1). 원소 탐색에 O(N)
+
+-   erase
+    -   the end() iterator (which is valid, but is not dereferenceable) cannot be used as a value for pos.
+-   ```cpp
+        list<int> l = {1};
+        list<int>::iterator i = l.end(); // i는 실제 데이터가 아닌 리스트의 끝을 나타내는 특별한 위치.
+        // 실제 원소 3을 지우기 위하여 --i를 통해서 원소 3을 가리킴.
+        // 그 결과 l.erase는 3을 지우게 되고 3의 다음 원소를 반환할 것으로 예상됨.
+        // 그러나 3의 다음 원소는 없음.
+        // 이 경우 문서를 읽어보면
+        // If pos refers to the last element, then the end() iterator is returned.
+        i = l.erase(--i);
+        // 마지막 원소를 지운 경우 똑같이 마지막을 반환함.
+        cout << *i << endl; // 2
+    ```
