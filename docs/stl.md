@@ -22,6 +22,9 @@ https://en.cppreference.com/w/cpp/container
 
 map, set, vector 정도가 자주 쓰이는 편.
 
+-   타 회사들이 자체적으로 제작한 STL 개선 버전
+    -   [EA STL](https://github.com/electronicarts/EASTL)
+
 ### vector. 동적 배열
 
 https://en.cppreference.com/w/cpp/container/vector
