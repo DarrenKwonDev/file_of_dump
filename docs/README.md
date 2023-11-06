@@ -6,6 +6,7 @@
   * [C](#c)
   * [Cpp](#cpp)
   * [cheat sheet](#cheat-sheet)
+  * [cmake and tools](#cmake-and-tools)
   * [study materials](#study-materials)
   * [youtube](#youtube)
 
@@ -26,6 +27,10 @@
 ## cheat sheet
 
 [cheat_sheet](./cheat_sheet.md)
+
+## cmake and tools
+
+[cmake](./cmake.md)
 
 ## study materials
 
