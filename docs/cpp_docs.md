@@ -1,43 +1,41 @@
-
-
 <!-- toc -->
 
-- [cpp_docs](#cpp_docs)
-  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-  * [compiler](#compiler)
-  * [stream input/output](#stream-inputoutput)
-    + [stream 종류](#stream-%EC%A2%85%EB%A5%98)
-    + [stream state](#stream-state)
-    + [seek, indicator](#seek-indicator)
-  * [explicit casting (명시적 캐스팅)](#explicit-casting-%EB%AA%85%EC%8B%9C%EC%A0%81-%EC%BA%90%EC%8A%A4%ED%8C%85)
-  * [class](#class)
-    + [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
-    + [The rule of three/five/zero](#the-rule-of-threefivezero)
-      - [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-      - [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-  * [class 상속](#class-%EC%83%81%EC%86%8D)
-    + [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
-    + [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
-    + [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
-    + [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
-    + [추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4abstract-class%EC%99%80-%EC%88%9C%EC%88%98-%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98pure-virtual-function)
-    + [interface](#interface)
-  * [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
-    + [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
-    + [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
-    + [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
-  * [inline function](#inline-function)
-  * [static = 범위의 제한을 받는 전역 변수](#static--%EB%B2%94%EC%9C%84%EC%9D%98-%EC%A0%9C%ED%95%9C%EC%9D%84-%EB%B0%9B%EB%8A%94-%EC%A0%84%EC%97%AD-%EB%B3%80%EC%88%98)
-  * [exceptions](#exceptions)
-    + [cpp에서의 exception](#cpp%EC%97%90%EC%84%9C%EC%9D%98-exception)
-    + [os exception != cpp exception](#os-exception--cpp-exception)
-    + [예외 안전성(exception-safety)](#%EC%98%88%EC%99%B8-%EC%95%88%EC%A0%84%EC%84%B1exception-safety)
-  * [template programming](#template-programming)
-    + [generic과 무슨 차이가 있나요](#generic%EA%B3%BC-%EB%AC%B4%EC%8A%A8-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94)
-  * [etc](#etc)
-    + [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
-    + [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
-    + [string + string slow. why?](#string--string-slow-why)
+-   [cpp_docs](#cpp_docs)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+    -   [compiler](#compiler)
+    -   [stream input/output](#stream-inputoutput)
+        -   [stream 종류](#stream-%EC%A2%85%EB%A5%98)
+        -   [stream state](#stream-state)
+        -   [seek, indicator](#seek-indicator)
+    -   [explicit casting (명시적 캐스팅)](#explicit-casting-%EB%AA%85%EC%8B%9C%EC%A0%81-%EC%BA%90%EC%8A%A4%ED%8C%85)
+    -   [class](#class)
+        -   [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
+        -   [The rule of three/five/zero](#the-rule-of-threefivezero)
+            -   [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+            -   [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+    -   [class 상속](#class-%EC%83%81%EC%86%8D)
+        -   [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
+        -   [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
+        -   [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
+        -   [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
+        -   [추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4abstract-class%EC%99%80-%EC%88%9C%EC%88%98-%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98pure-virtual-function)
+        -   [interface](#interface)
+    -   [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
+        -   [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
+        -   [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
+        -   [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
+    -   [inline function](#inline-function)
+    -   [static = 범위의 제한을 받는 전역 변수](#static--%EB%B2%94%EC%9C%84%EC%9D%98-%EC%A0%9C%ED%95%9C%EC%9D%84-%EB%B0%9B%EB%8A%94-%EC%A0%84%EC%97%AD-%EB%B3%80%EC%88%98)
+    -   [exceptions](#exceptions)
+        -   [cpp에서의 exception](#cpp%EC%97%90%EC%84%9C%EC%9D%98-exception)
+        -   [os exception != cpp exception](#os-exception--cpp-exception)
+        -   [예외 안전성(exception-safety)](#%EC%98%88%EC%99%B8-%EC%95%88%EC%A0%84%EC%84%B1exception-safety)
+    -   [template programming](#template-programming)
+        -   [generic과 무슨 차이가 있나요](#generic%EA%B3%BC-%EB%AC%B4%EC%8A%A8-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94)
+    -   [etc](#etc)
+        -   [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
+        -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
+        -   [string + string slow. why?](#string--string-slow-why)
 
 <!-- tocstop -->
 
@@ -62,6 +60,24 @@
         struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
         순수하게 데이터만을 담아두자. 이래야 memcpy() 등 메모리 조작이 편안해진다.
 
+-   enum
+    컴파일러는 열거형 상수를 정수 값으로 대체하여 컴파일된 코드에 포함시킵니다. 일종의 #define과 같이 작동하는 것.
+
+        ```cpp
+        class MyIntArray {
+            public:
+            bool Add(int data);
+            MyIntArray(){};
+
+        private:
+        // 1이 선호되는 편.
+        // case 1. enum { MAX = 3 };
+        // case 2. static const int MAX = 3;
+            int mSize;
+            int mArray[MAX];
+        };
+        ```
+
 -   어셈블리 까보면 reference나 pointer나 같다. 다만 언어적 차원에서 reference가 좀 더 안전하게 쓰기 위해 만들어진 것. 많이 쓰자.
 
 -   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
@@ -81,8 +97,8 @@ window : msvc
 
 어떤 규칙성이 보일 것이다.
 
-file : fstream / ifstream / ofstream  
-string : stringstream / istringstream / ofstringstream  
+file : fstream / ifstream / ofstream
+string : stringstream / istringstream / ofstringstream
 console : cin / cout / cerr / clog
 
 읽기(i) -> get (seekg, tellg)
@@ -90,9 +106,9 @@ console : cin / cout / cerr / clog
 
 ### stream state
 
-goodbit // good()  
-eofbit // eof()  
-failbit // fail()  
+goodbit // good()
+eofbit // eof()
+failbit // fail()
 badbit // bad()
 
 여기서 eof, fail, bad 상태 모두 알아둬야 하고 모두 큰 영향을 미친다.
@@ -541,10 +557,33 @@ cpp 쓴다면 perf가 critical 한 분야일텐데 왜 쓰는가.
 
 ## template programming
 
-### generic과 무슨 차이가 있나요
+compile time polymorphism을 구현할 수 있긴 하나 남용하면 가독성과 디버깅이 매우 힘들어짐.
+
+## template class linking error
+
+`C++에서 템플릿 클래스를 사용할 때, 템플릿 클래스의 선언과 정의를 분리하려면 일반적으로 템플릿 클래스의 정의를 헤더 파일에 넣어야 함.`
+
+template class를 별도의 header, cpp 파일로 분리할 경우 컴파일 도중 cpp 파일을 알 수가 없음. (linking 과정 전이므로). inline 함수와 마찬가지로 template class의 구현을 header에 넣어야 함.
+
+어.. 살펴보니 header만 정의하는 경우도 꽤 있는 듯?
+
+### 언제 template을 사용하면 좋나요
+
+container형 구조에는 적합.  
+각기 다른 타입 3개 이상을 다뤄야 한다면 template 적합.
+
+2개 정도만 다룬다면 함수, 클래스를 따로 만드는 등의 중복 코드를 작성하는게 나음.
+
+### generic과 무슨 차이가 있나요 = compile time polymorphism
 
 template은 실제 타입이 컴파일 시 결정됩니다.
-반면 generic은 실제 데이터 타입이 런타임에 결정됩니다
+정확히는, template을 인스턴스화할 때마다 컴파일러가 내부적으로 코드를 생성합니다.
+
+반면 generic은 실제 데이터 타입이 런타임에 결정됩니다.
+
+compile time에 코드를 생성하는 template의 특성으로 컴파일 시간이 늘어날 것입니다.
+
+또한, template에 넣는 자료형 가짓수에 비례하여 실행 파일의 크기가 증가할 것입니다.
 
 ## etc
 

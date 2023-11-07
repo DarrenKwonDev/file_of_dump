@@ -112,7 +112,9 @@
         "valarray": "cpp",
         "variant": "cpp",
         "filesystem": "cpp",
-        "iterator": "cpp"
+        "iterator": "cpp",
+        "functional": "cpp",
+        "version": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

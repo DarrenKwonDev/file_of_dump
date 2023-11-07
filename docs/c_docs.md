@@ -814,9 +814,9 @@ C의 기본
 -   인라인함수 (inline function)
 
     -   "인라인이 실패할 경우를 대비하여 함수 심볼도 만들어야 함"
-        1. .h에 inline 함수 구현
-        2. 그에 대응하는 .c 파일 만듦
-        3. .c에서 .h을 include
+        1. .h에 inline 함수 구현 (이게 핵심)
+        2. 그에 대응하는 .c 파일 만듦 (본래 해야될 일)
+        3. .c에서 .h을 include (본래 해야될 일)
         4. .c에서 인라인 함수의 선언을 한 후 extern 처리
 
 -   [restrict](https://en.cppreference.com/w/c/language/restrict)
