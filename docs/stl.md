@@ -14,6 +14,7 @@
     + [deque](#deque)
     + [priority_queue](#priority_queue)
     + [list(circular doubly linked list)](#listcircular-doubly-linked-list)
+  * [STL algorithm](#stl-algorithm)
 
 <!-- tocstop -->
 
@@ -171,3 +172,14 @@ https://en.cppreference.com/w/cpp/container/list
         // 마지막 원소를 지운 경우 똑같이 마지막을 반환함.
         cout << *i << endl; // 2
     ```
+
+## STL algorithm
+
+https://en.cppreference.com/w/cpp/algorithm
+
+stl container에서 `[first, last)` 범위에 대하여 다양한 알고리즘을 적용할 수 있음.
+
+컨테이너의 크기를 변경하지 않음.
+
+`<algorithm>`, `<numeric>` 등의 헤더에 정의되어 있음.
+종류가 다양하니 cppreference를 참고하자.
