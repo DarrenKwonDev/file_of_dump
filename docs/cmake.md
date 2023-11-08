@@ -258,15 +258,22 @@ As the code is connected at compile time there are not any additional run-time l
 
 ## external lib
 
+https://cmake.org/cmake/help/v3.27/guide/using-dependencies/index.html#guide:Using%20Dependencies%20Guide
+
 ### option 1. git submodule
 
 ```bash
 git submodule add https://github.com/nlohmann/json ./external/json # this should create .gitmodules file.
 ```
 
-### option 2. fetch contents
+### option 2. FetchContent (+ CMake 3.11)
 
-oh...
+https://cmake.org/cmake/help/v3.27/module/FetchContent.html
+
+솔직히 이게 편하긴함.
+
+단, 외부 라이브러리가 프로젝트의 빌드 디렉토리 내에 저장되므로, 프로젝트의 전체 크기가 증가할 수 있습니다.
+(build/\_deps 내에 저장됨.)
 
 ## 전체적인 그림
 

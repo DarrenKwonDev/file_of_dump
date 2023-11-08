@@ -32,6 +32,37 @@ include(AddGitSubmodule)
 # call custom cmake function
 add_git_submodule(external/json)
 
+# fetch content
+# https://cmake.org/cmake/help/v3.27/module/FetchContent.html
+include(FetchContent)
+FetchContent_Declare(
+    FMT # https://github.com/fmtlib/fmt/blob/master/CMakeLists.txt#L137C9-L137C12
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git # 여기 적은 곳을 clone함.
+    GIT_TAG 10.1.1 # https://github.com/fmtlib/fmt/releases/tag/10.1.1
+    GIT_SHALLOW TRUE # git clone operation will be given the --depth 1 option
+)
+FetchContent_Declare(
+    spdlog # https://github.com/gabime/spdlog/blob/v1.x/CMakeLists.txt#L13C9-L13C15
+    GIT_REPOSITORY https://github.com/gabime/spdlog
+    GIT_TAG v1.12.0 
+    GIT_SHALLOW TRUE 
+)
+FetchContent_Declare(
+    cxxopts # https://github.com/jarro2783/cxxopts/blob/master/CMakeLists.txt#L30
+    GIT_REPOSITORY https://github.com/jarro2783/cxxopts
+    GIT_TAG v3.1.1 
+    GIT_SHALLOW TRUE 
+)
+FetchContent_Declare(
+    Catch2 # https://github.com/catchorg/Catch2/blob/devel/CMakeLists.txt#L34C9-L34C15
+    GIT_REPOSITORY https://github.com/catchorg/Catch2
+    GIT_TAG v3.4.0
+    GIT_SHALLOW TRUE 
+)
+FetchContent_MakeAvailable(FMT spdlog cxxopts Catch2)
+
+
+
 # cmake .. -DCOMPILE_EXECUTABLE=ON
 option(COMPILE_EXECUTABLE "where to compile executable" ON)
 
