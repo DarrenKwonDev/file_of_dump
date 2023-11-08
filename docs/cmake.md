@@ -88,6 +88,10 @@ https://cmake.org/cmake/help/v3.27/manual/cmake-variables.7.html
 
 https://cmake.org/cmake/help/latest/command/configure_file.html
 
+-   cmake function
+
+https://cmake.org/cmake/help/latest/command/function.html
+
 ## tips
 
 -   소스 코드가 든 폴더마다 CMakeLists.txt를 만들어야 함.
@@ -251,3 +255,25 @@ As the code is connected at compile time there are not any additional run-time l
 ## external lib
 
 ### option 1. git submodule
+
+```bash
+git submodule add https://github.com/nlohmann/json ./external/json # this should create .gitmodules file.
+```
+
+### option 2.
+
+## 전체적인 그림
+
+1. root dir에 root CMakeLists.txt를 선언한다.
+2. root CMakeLists.txt에서 다음 작업을 진행한다.
+   2.1. CMAKE\_ 변수를 세팅한다.
+   2.2. add_subdirectory로 이해 dir를 작성한다
+   2.3. 외부 의존성을 fetching한다
+   2.4. 각종 option 설정을 필요에 따라 정의한다.
+3. lib 들의 폴더에 CMakeLists.txt를 생성하고 다음 작업
+   3.1. add_subdirectory로 이하 폴더들을 모두 연결한다
+   3.2. add_library로 라이브러리를 생성한다. (STATIC | SHARED | MODULE)
+   3.3. target_include_directories 에서 해당 라이브러리를 c/cpp에서 찾을 수 있도록 경로를 지정한다 (INTERFACE|PUBLIC|PRIVATE)
+4. 진입점의 폴더에 CMakeLists.txt에서는 다음 작업
+   4.1. add_executable을 통해 실행 파일 경로 작성
+   4.2. target_link_libraries를 통해 실행 파일에 링킹할 라이브러리들을 적는다. 여기에는 프로그램 내에서 사용하는 서드 파티 툴도 포함한다.
