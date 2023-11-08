@@ -35,6 +35,7 @@ add_git_submodule(external/json)
 # cmake .. -DCOMPILE_EXECUTABLE=ON
 option(COMPILE_EXECUTABLE "where to compile executable" ON)
 
+
 add_subdirectory(src)
 add_subdirectory(configured)
 add_subdirectory(external)
@@ -44,3 +45,4 @@ if (COMPILE_EXECUTABLE)
 else()
     message("w/o exe. compiling")
 endif()
+

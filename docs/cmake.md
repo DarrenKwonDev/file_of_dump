@@ -64,9 +64,17 @@ brew install doxygen
 brew install lcov
 brew install gcovr
 brew install ccache
+brew install graphviz # for dependency graph
 ```
 
 ## keywords
+
+-S : source file dir
+-B : build output dir
+-G : generator(Unix Makefiles, Visual Studio 16 2019, ..., 즉 어떤 종류의 빌드 파일을 생성할 것인지)
+-D : options
+
+target : executable, library, ...
 
 ```bash
 cmake_minimum_required
@@ -91,10 +99,6 @@ https://cmake.org/cmake/help/latest/command/configure_file.html
 -   cmake function
 
 https://cmake.org/cmake/help/latest/command/function.html
-
-## tips
-
--   소스 코드가 든 폴더마다 CMakeLists.txt를 만들어야 함.
 
 ---
 
@@ -260,7 +264,9 @@ As the code is connected at compile time there are not any additional run-time l
 git submodule add https://github.com/nlohmann/json ./external/json # this should create .gitmodules file.
 ```
 
-### option 2.
+### option 2. fetch contents
+
+oh...
 
 ## 전체적인 그림
 
@@ -272,7 +278,7 @@ git submodule add https://github.com/nlohmann/json ./external/json # this should
    2.4. 각종 option 설정을 필요에 따라 정의한다.
 3. lib 들의 폴더에 CMakeLists.txt를 생성하고 다음 작업
    3.1. add_subdirectory로 이하 폴더들을 모두 연결한다
-   3.2. add_library로 라이브러리를 생성한다. (STATIC | SHARED | MODULE)
+   3.2. add_library로 라이브러리를 생성한다. (lib type: STATIC | SHARED | MODULE)
    3.3. target_include_directories 에서 해당 라이브러리를 c/cpp에서 찾을 수 있도록 경로를 지정한다 (INTERFACE|PUBLIC|PRIVATE)
 4. 진입점의 폴더에 CMakeLists.txt에서는 다음 작업
    4.1. add_executable을 통해 실행 파일 경로 작성
