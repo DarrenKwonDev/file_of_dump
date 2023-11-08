@@ -1,27 +1,25 @@
-
-
 <!-- toc -->
 
-- [docs](#docs)
-- [installation](#installation)
-- [keywords](#keywords)
-- [tips](#tips)
-- [Generating a Project](#generating-a-project)
-- [Generator for GCC and Clang](#generator-for-gcc-and-clang)
-- [Generator for MSVC](#generator-for-msvc)
-- [Specify the Build Type](#specify-the-build-type)
-- [Passing Options](#passing-options)
-- [Specify the Build Target (Option 1)](#specify-the-build-target-option-1)
-- [Specify the Build Target (Option 2)](#specify-the-build-target-option-2)
-- [Run the Executable](#run-the-executable)
-- [Different Linking Types](#different-linking-types)
-  * [PUBLIC](#public)
-  * [PRIVATE](#private)
-  * [INTERFACE](#interface)
-- [Different Library Types](#different-library-types)
-  * [Library](#library)
-  * [Shared (동적 라이브러리)](#shared-%EB%8F%99%EC%A0%81-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC)
-  * [Static (정적 라이브러리)](#static-%EC%A0%95%EC%A0%81-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC)
+-   [docs](#docs)
+-   [installation](#installation)
+-   [keywords](#keywords)
+-   [tips](#tips)
+-   [Generating a Project](#generating-a-project)
+-   [Generator for GCC and Clang](#generator-for-gcc-and-clang)
+-   [Generator for MSVC](#generator-for-msvc)
+-   [Specify the Build Type](#specify-the-build-type)
+-   [Passing Options](#passing-options)
+-   [Specify the Build Target (Option 1)](#specify-the-build-target-option-1)
+-   [Specify the Build Target (Option 2)](#specify-the-build-target-option-2)
+-   [Run the Executable](#run-the-executable)
+-   [Different Linking Types](#different-linking-types)
+    -   [PUBLIC](#public)
+    -   [PRIVATE](#private)
+    -   [INTERFACE](#interface)
+-   [Different Library Types](#different-library-types)
+    -   [Library](#library)
+    -   [Shared (동적 라이브러리)](#shared-%EB%8F%99%EC%A0%81-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC)
+    -   [Static (정적 라이브러리)](#static-%EC%A0%95%EC%A0%81-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC)
 
 <!-- tocstop -->
 
@@ -82,9 +80,19 @@ target_link_libraries # executable에 library를 링크
 target_include_directories # Add include directories to a target.
 ```
 
+-   cmake variables
+
+https://cmake.org/cmake/help/v3.27/manual/cmake-variables.7.html
+
+-   configure files
+
+https://cmake.org/cmake/help/latest/command/configure_file.html
+
 ## tips
 
 -   소스 코드가 든 폴더마다 CMakeLists.txt를 만들어야 함.
+
+---
 
 ## Generating a Project
 
@@ -108,7 +116,7 @@ cd build
 cmake .
 ```
 
-## Generator for GCC and Clang
+## Generator for GCC and Clang (-G)
 
 ```bash
 cd build
@@ -116,7 +124,7 @@ cmake -S .. -B . -G "Unix Makefiles" # Option 1
 cmake .. -G "Unix Makefiles" # Option 2
 ```
 
-## Generator for MSVC
+## Generator for MSVC (-G)
 
 ```bash
 cd build
@@ -124,7 +132,7 @@ cmake -S .. -B . -G "Visual Studio 16 2019" # Option 1
 cmake .. -G "Visual Studio 16 2019" # Option 2
 ```
 
-## Specify the Build Type
+## Specify the Build Type (debug or release)
 
 Per default, the standard type is in most cases the debug type.
 If you want to generate the project, for example, in release mode you have to set the build type.
@@ -134,7 +142,7 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 
-## Passing Options
+## Passing Options (-D)
 
 If you have set some options in the CMakeLists, you can pass values in the command line.
 

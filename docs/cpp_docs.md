@@ -1,46 +1,48 @@
-
-
 <!-- toc -->
 
-- [cpp_docs](#cpp_docs)
-  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-  * [version](#version)
-  * [compiler](#compiler)
-  * [stream input/output](#stream-inputoutput)
-    + [stream 종류](#stream-%EC%A2%85%EB%A5%98)
-    + [stream state](#stream-state)
-    + [seek, indicator](#seek-indicator)
-  * [explicit casting (명시적 캐스팅)](#explicit-casting-%EB%AA%85%EC%8B%9C%EC%A0%81-%EC%BA%90%EC%8A%A4%ED%8C%85)
-  * [class](#class)
-    + [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
-    + [The rule of three/five/zero](#the-rule-of-threefivezero)
-      - [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-      - [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-  * [class 상속](#class-%EC%83%81%EC%86%8D)
-    + [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
-    + [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
-    + [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
-    + [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
-    + [추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4abstract-class%EC%99%80-%EC%88%9C%EC%88%98-%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98pure-virtual-function)
-    + [interface](#interface)
-  * [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
-    + [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
-    + [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
-    + [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
-  * [inline function](#inline-function)
-  * [static = 범위의 제한을 받는 전역 변수](#static--%EB%B2%94%EC%9C%84%EC%9D%98-%EC%A0%9C%ED%95%9C%EC%9D%84-%EB%B0%9B%EB%8A%94-%EC%A0%84%EC%97%AD-%EB%B3%80%EC%88%98)
-  * [exceptions](#exceptions)
-    + [cpp에서의 exception](#cpp%EC%97%90%EC%84%9C%EC%9D%98-exception)
-    + [os exception != cpp exception](#os-exception--cpp-exception)
-    + [예외 안전성(exception-safety)](#%EC%98%88%EC%99%B8-%EC%95%88%EC%A0%84%EC%84%B1exception-safety)
-  * [template programming](#template-programming)
-  * [template class linking error](#template-class-linking-error)
-    + [언제 template을 사용하면 좋나요](#%EC%96%B8%EC%A0%9C-template%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4-%EC%A2%8B%EB%82%98%EC%9A%94)
-    + [generic과 무슨 차이가 있나요 = compile time polymorphism](#generic%EA%B3%BC-%EB%AC%B4%EC%8A%A8-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94--compile-time-polymorphism)
-  * [etc](#etc)
-    + [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
-    + [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
-    + [string + string slow. why?](#string--string-slow-why)
+-   [cpp_docs](#cpp_docs)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+    -   [version](#version)
+    -   [compiler](#compiler)
+    -   [stream input/output](#stream-inputoutput)
+        -   [stream 종류](#stream-%EC%A2%85%EB%A5%98)
+        -   [stream state](#stream-state)
+        -   [seek, indicator](#seek-indicator)
+    -   [explicit casting (명시적 캐스팅)](#explicit-casting-%EB%AA%85%EC%8B%9C%EC%A0%81-%EC%BA%90%EC%8A%A4%ED%8C%85)
+    -   [class](#class)
+        -   [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
+        -   [The rule of three/five/zero](#the-rule-of-threefivezero)
+            -   [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+            -   [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+    -   [class 상속](#class-%EC%83%81%EC%86%8D)
+        -   [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
+        -   [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
+        -   [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
+        -   [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
+        -   [추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4abstract-class%EC%99%80-%EC%88%9C%EC%88%98-%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98pure-virtual-function)
+        -   [interface](#interface)
+    -   [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
+        -   [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
+        -   [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
+        -   [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
+    -   [inline function](#inline-function)
+    -   [static = 범위의 제한을 받는 전역 변수](#static--%EB%B2%94%EC%9C%84%EC%9D%98-%EC%A0%9C%ED%95%9C%EC%9D%84-%EB%B0%9B%EB%8A%94-%EC%A0%84%EC%97%AD-%EB%B3%80%EC%88%98)
+    -   [exceptions](#exceptions)
+        -   [cpp에서의 exception](#cpp%EC%97%90%EC%84%9C%EC%9D%98-exception)
+        -   [os exception != cpp exception](#os-exception--cpp-exception)
+        -   [예외 안전성(exception-safety)](#%EC%98%88%EC%99%B8-%EC%95%88%EC%A0%84%EC%84%B1exception-safety)
+    -   [template programming](#template-programming)
+    -   [template class linking error](#template-class-linking-error)
+        -   [언제 template을 사용하면 좋나요](#%EC%96%B8%EC%A0%9C-template%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4-%EC%A2%8B%EB%82%98%EC%9A%94)
+        -   [generic과 무슨 차이가 있나요 = compile time polymorphism](#generic%EA%B3%BC-%EB%AC%B4%EC%8A%A8-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94--compile-time-polymorphism)
+    -   [auto (C+11)](#auto-c11)
+    -   [static_assert (C+11)](#static_assert-c11)
+    -   [default/delete (C+11)](#defaultdelete-c11)
+    -   [final/override (C+11)](#finaloverride-c11)
+    -   [etc](#etc)
+        -   [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
+        -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
+        -   [string + string slow. why?](#string--string-slow-why)
 
 <!-- tocstop -->
 
@@ -85,6 +87,11 @@
 
 -   어셈블리 까보면 reference나 pointer나 같다. 다만 언어적 차원에서 reference가 좀 더 안전하게 쓰기 위해 만들어진 것. 많이 쓰자.
 
+-   auto
+
+    -   최대한 가독성 있게 적자. auto, auto\*, auto&를 구분하여 해당 변수가 값인지, 포인터인지, 참조인지를 구분할 수 있도록 하자.
+    -   ::iterator, 이름이 긴 클래스 생성자 등을 auto로 선언하면 편리하다.
+
 -   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
 
     -   func(int\* a, const int b, const int c)
@@ -96,6 +103,8 @@ C++98 (최초 표준 버전)
 C++03
 
 이후 8년만에 새 버전이 등장하고 매 3년마다 갱신됨.  
+특히 C++11에 도입된 기능은 현재까지도 유의미하게 사용되는 것이 많음.
+
 C++11/14/17/20...
 
 ## compiler
@@ -309,8 +318,8 @@ cpp에서 class에 암시적으로 만들어주는게 많다보니...
 ```cpp
 class MyClass {
 public:
-    MyClass(); // constructor
-    ~MyClass(); // destructor
+    MyClass() = default; // constructor
+    ~MyClass() = default; // destructor
 
     MyClass(const MyClass&) = default; // 복사 생성자 (copy constructor)
     MyClass& operator=(const MyClass&) = default; // 복사 대입 연산자 (Copy Assignment Operator)
@@ -325,7 +334,7 @@ public:
 
 #### new/delete와 malloc()/free()의 차이?
 
-new/delete는 할당/해제 + 생성자 및 소멸자를 호출.  
+new/delete는 할당/해제 + 생성자 및 소멸자를 호출.
 python으로 치면 `__new__`와 `__del__`이 호출됨.
 
 malloc과 free는 오로지 메모리만을 할당/해제.
@@ -597,6 +606,65 @@ template은 실제 타입이 컴파일 시 결정됩니다.
 compile time에 코드를 생성하는 template의 특성으로 컴파일 시간이 늘어날 것입니다.
 
 또한, template에 넣는 자료형 가짓수에 비례하여 실행 파일의 크기가 증가할 것입니다.
+
+## auto (C++11)
+
+https://en.cppreference.com/w/cpp/language/auto
+
+-   strong type 언어에서의 auto
+
+    동적 타입이라고해서 js의 var, let 같이 런타임에 타입이 변경되는 것이 아니다.  
+    C/Cpp는 컴파일 타임시에 타입이 정해져야 하는 strong type 언어이다. cpp의 auto는 단순히 컴파일 시점의 타입을 추론해주는 것이다.
+
+-   auto에서의 포인터와 참조
+
+    -   포인터형 : auto, auto\* (그러나 가독성을 위해 auto\* 권고)
+    -   참조형 : auto& (&를 적지 않으면 참조형으로 받지 않는다. 반드시 적을 것.)
+    -   const : const를 적지 않아도 이어 받으나 가독성을 위해 const auto, const auto\*, const auto& 사용 권고.
+    -   결론적으로, 가급적 명시적으로 적어야 한다! const, \*, & 다 적자.
+
+-   모든 것을 auto로 바르면 가독성이 안 좋아진다. auto를 쓰면 몇가지 좋은 경우에서만 쓰자.
+
+    -   1. 반복자. 솔직히 ::iterator 손 아프자나
+    -   2. 이름 긴 클래스의 인스턴스. auto로 쓰면 편함.
+
+-   auto를 써도 런타임 성능은 동일함. 걱정 ㄴㄴ
+
+## static_assert (C++11)
+
+컴파일 시점에 assert가 가능하다.  
+C11에서 사용하던 그것이 맞다.
+
+## default/delete (C++11)
+
+class에서 암시적 생성자 때문에 골치 아팠다.
+
+-   매개변수 없는 constructor(default constructor)
+-   copy constructor (class(const class& other))
+-   destructor (~class)
+-   대입 연산자 = (copy assignment operator)
+
+default는 '컴파일러가 생성해준 기본 생성자, 소멸자, 연산자들을 사용하겠다'를 명시적으로 표현하는 것이다.
+
+delete는 '컴파일러가 자동으로 만들어주지 않길 원한다'는 것을 명시적으로 표현하는 것이다.
+
+default/delete 등장 전에는 수작업으로 다 구현하던가, 가구현하여 private으로 만들어 호출 자체를 숨겼었다.
+
+```cpp
+class MyClass {
+public:
+    MyClass() = default; // constructor
+    ~MyClass() = default; // destructor
+
+    MyClass(const MyClass&) = default; // 복사 생성자 (copy constructor)
+    MyClass& operator=(const MyClass&) = default; // 복사 대입 연산자 (Copy Assignment Operator)
+
+    MyClass& operator=(MyClass&&) = default; // 이동 대입 연산자(move assignment operator)
+    MyClass(MyClass&&) = default; // 이동 생성자(move constructor)
+};
+```
+
+## final/override (C++11)
 
 ## etc
 
