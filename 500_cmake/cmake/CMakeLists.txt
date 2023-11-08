@@ -27,14 +27,17 @@ set(EXECUTABLE_NAME executable)
 # cmake function
 # https://cmake.org/cmake/help/latest/command/function.html
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
-include(AddGitSubmodule)
+
+include(AddGitSubmodule) # include : https://cmake.org/cmake/help/v3.27/command/include.html#include
+include(FetchContent)
+include(Docs)
 
 # call custom cmake function
+# cmake/AddGItSubmodule.cmake
 add_git_submodule(external/json)
 
 # fetch content
 # https://cmake.org/cmake/help/v3.27/module/FetchContent.html
-include(FetchContent)
 FetchContent_Declare(
     FMT # https://github.com/fmtlib/fmt/blob/master/CMakeLists.txt#L137C9-L137C12
     GIT_REPOSITORY https://github.com/fmtlib/fmt.git # 여기 적은 곳을 clone함.

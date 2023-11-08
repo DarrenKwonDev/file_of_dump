@@ -84,8 +84,17 @@ add_subdirectory
 add_library
 add_executable
 
-target_link_libraries # executable에 library를 링크
+target_link_libraries # 링커에게 빌드 타임에 이러한 라이브러리들을 링크하도록 지시
+- PRIVATE: 라이브러리는 해당 타겟에만 링크되고, 타겟이 다른 타겟에 링크될 때는 포함되지 않습니다.
+- PUBLIC: 라이브러리는 해당 타겟에 링크되며, 이 타겟을 링크하는 다른 타겟에도 링크됩니다.
+- INTERFACE: 라이브러리는 해당 타겟에서는 링크되지 않고, 이 타겟을 링크하는 다른 타겟에서만 링크됩니다.
+
+
 target_include_directories # Add include directories to a target.
+- PRIVATE: 이 디렉토리는 해당 타겟을 빌드할 때만 사용되고, 타겟이 다른 타겟에 링크될 때는 포함되지 않습니다.
+- PUBLIC: 이 디렉토리는 해당 타겟 뿐만 아니라, 이 타겟을 링크하는 다른 타겟에도 포함됩니다.
+- INTERFACE: 이 디렉토리는 해당 타겟 자체에서는 사용되지 않고, 이 타겟을 링크하는 다른 타겟에서만 사용됩니다.
+
 ```
 
 -   cmake variables
@@ -264,13 +273,19 @@ https://cmake.org/cmake/help/v3.27/guide/using-dependencies/index.html#guide:Usi
 
 ```bash
 git submodule add https://github.com/nlohmann/json ./external/json # this should create .gitmodules file.
+
+# 이하 평소 submodule 사용법과 동일
 ```
+
+CMake가 아닌 타 외부 라이브러리는 FetchContent가 불가능하므로 submodule을 사용해야 함.
 
 ### option 2. FetchContent (+ CMake 3.11)
 
 https://cmake.org/cmake/help/v3.27/module/FetchContent.html
 
 솔직히 이게 편하긴함.
+
+상용 git server에 CMake로 작성된 외부 라이브러리는 FetchContent가 용이.
 
 단, 외부 라이브러리가 프로젝트의 빌드 디렉토리 내에 저장되므로, 프로젝트의 전체 크기가 증가할 수 있습니다.
 (build/\_deps 내에 저장됨.)
