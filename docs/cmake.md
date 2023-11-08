@@ -247,3 +247,7 @@ In general the shared library is in the same directory as the executable.
 
 Static libraries increase the overall size of the binary, but it means that you don't need to carry along a copy of the library that is being used.
 As the code is connected at compile time there are not any additional run-time loading costs.
+
+## external lib
+
+### option 1. git submodule
