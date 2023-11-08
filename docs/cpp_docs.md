@@ -97,6 +97,16 @@
     -   func(int\* a, const int b, const int c)
     -   func(&a, b, c)
 
+-   C와 Cpp간의 확장자는 분리하여 적을 것
+
+    -   c : `*.c`
+    -   cpp: `*.cpp`, `*.cc`, `*.cxx`
+    -   `*.h` vs`*.hpp`
+        -   https://stackoverflow.com/questions/152555/h-or-hpp-for-your-class-definitions
+        -   .h : C/C++ compatible or pure C Headers
+        -   .hpp : C++ Headers
+    -   `.inl`: 인라인 함수를 포함하는 C++ 헤더 파일을 위한 확장자, 주로 템플릿 구현에 사용됩니다.
+
 ## version
 
 C++98 (최초 표준 버전)  
