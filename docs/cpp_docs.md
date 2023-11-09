@@ -60,6 +60,7 @@
     -   모든 소멸자는 가상 소멸자로 작성하는 것이 좋다
     -   rule of three(five) / zero
     -   `클래스의  멤버 함수는 컴파일시 딱 한 번만 메모리에 할당됨`. 저수준에서 전역 함수와 그다지 다르지 않음. 개체마다 멤버 함수가 메모리에 위치한다면 상당한 공간 낭비.
+    -   c++11의 override는 부모가 가상함수라는점 + 가상 함수를 바르게 오버라이드했다라는 것을 보장하는 효과가 있기 때문에 가능하면 사용하자.
 
 -   struct
 
@@ -432,7 +433,8 @@ class Dog: virtual public Animal;
 
 abstract 키워드 같은게 없다.  
 `순수 가상 함수를 가지고 있는 base 클래스가 곧 추상 클래스다.`  
-순수 가상 함수 = 구현이 없는 virtual 함수
+순수 가상 함수 = 구현이 없는 virtual 함수  
+`virtual (return) func(param) = 0` 꼴의 형태.
 
 추상 클래스로는 개체를 만들 수 없음.
 
@@ -476,6 +478,11 @@ public:
     virtual void Speak() { cout << "Animal" << endl; }
 };
 ```
+
+### 그래서 virtual을 왜 쓰냐?
+
+일반함수의 override는 정적 바인딩(선언을 따라감)
+virtual 함수의 override는 동적 바인딩(실질을 따라감)
 
 ### 가상 소멸자
 
@@ -675,6 +682,21 @@ public:
 ```
 
 ## final/override (C++11)
+
+해당 선언자들은 virtual function에서만 사용 가능하다.
+final은 virtual function에서만 선언 가능하며
+override는 override할 대상이 virtual function일 경우에만 가능하다.
+
+final : 상속 안 할거야. 날 부모로 쓰지마.
+
+    -   final class
+    -   final function.
+
+override : override 할거야.
+
+    - 해당 함수가 부모의 virtual function을 override하는지 검사. 아니면 컴파일 에러.
+    - 부모의 virtual function이 아닌 함수를 override 하려할 때도 에러.
+    - 부모가 가상함수라는점 + 가상 함수를 바르게 오버라이드했다라는 것을 보장하는 효과가 있기 때문에 가능하면 사용하자.
 
 ## etc
 
