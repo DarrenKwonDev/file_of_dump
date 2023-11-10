@@ -1,61 +1,61 @@
+
+
 <!-- toc -->
 
--   [cpp_docs](#cpp_docs)
-    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-    -   [version](#version)
-    -   [compiler](#compiler)
-    -   [stream input/output](#stream-inputoutput)
-        -   [stream 종류](#stream-%EC%A2%85%EB%A5%98)
-        -   [stream state](#stream-state)
-        -   [seek, indicator](#seek-indicator)
-    -   [explicit casting (명시적 캐스팅)](#explicit-casting-%EB%AA%85%EC%8B%9C%EC%A0%81-%EC%BA%90%EC%8A%A4%ED%8C%85)
-    -   [class](#class)
-        -   [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
-        -   [The rule of three/five/zero](#the-rule-of-threefivezero)
-            -   [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-            -   [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-    -   [class 상속](#class-%EC%83%81%EC%86%8D)
-        -   [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
-        -   [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
-        -   [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
-        -   [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
-        -   [추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4abstract-class%EC%99%80-%EC%88%9C%EC%88%98-%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98pure-virtual-function)
-        -   [interface](#interface)
-    -   [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
-        -   [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
-        -   [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
-        -   [그래서 virtual을 왜 쓰냐?](#%EA%B7%B8%EB%9E%98%EC%84%9C-virtual%EC%9D%84-%EC%99%9C-%EC%93%B0%EB%83%90)
-        -   [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
-    -   [inline function](#inline-function)
-    -   [static = 범위의 제한을 받는 전역 변수](#static--%EB%B2%94%EC%9C%84%EC%9D%98-%EC%A0%9C%ED%95%9C%EC%9D%84-%EB%B0%9B%EB%8A%94-%EC%A0%84%EC%97%AD-%EB%B3%80%EC%88%98)
-    -   [exceptions](#exceptions)
-        -   [cpp에서의 exception](#cpp%EC%97%90%EC%84%9C%EC%9D%98-exception)
-        -   [os exception != cpp exception](#os-exception--cpp-exception)
-        -   [예외 안전성(exception-safety)](#%EC%98%88%EC%99%B8-%EC%95%88%EC%A0%84%EC%84%B1exception-safety)
-    -   [template programming](#template-programming)
-    -   [template class linking error](#template-class-linking-error)
-        -   [언제 template을 사용하면 좋나요](#%EC%96%B8%EC%A0%9C-template%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4-%EC%A2%8B%EB%82%98%EC%9A%94)
-        -   [generic과 무슨 차이가 있나요 = compile time polymorphism](#generic%EA%B3%BC-%EB%AC%B4%EC%8A%A8-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94--compile-time-polymorphism)
-    -   [C++11](#c11)
-        -   [auto (C++11)](#auto-c11)
-        -   [static_assert (C++11)](#static_assert-c11)
-        -   [default/delete (C++11)](#defaultdelete-c11)
-        -   [final/override (C++11)](#finaloverride-c11)
-        -   [nullptr (C++11)](#nullptr-c11)
-        -   [fixed width integer type (C++11)](#fixed-width-integer-type-c11)
-        -   [enum class (C++11)](#enum-class-c11)
-        -   [범위 기반 for문 (C+11)](#%EB%B2%94%EC%9C%84-%EA%B8%B0%EB%B0%98-for%EB%AC%B8-c11)
-    -   [smart pointer (C+11)](#smart-pointer-c11)
-        -   [unique_ptr (C++11)](#unique_ptr-c11)
-            -   [make_unique (C++14)](#make_unique-c14)
-        -   [shared_ptr (C++11)](#shared_ptr-c11)
-            -   [자동 메모리 관리](#%EC%9E%90%EB%8F%99-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC)
-        -   [weak_ptr (C++11)](#weak_ptr-c11)
-            -   [강한 참조와 약한 참조](#%EA%B0%95%ED%95%9C-%EC%B0%B8%EC%A1%B0%EC%99%80-%EC%95%BD%ED%95%9C-%EC%B0%B8%EC%A1%B0)
-    -   [etc](#etc)
-        -   [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
-        -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
-        -   [string + string slow. why?](#string--string-slow-why)
+- [cpp_docs](#cpp_docs)
+  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+  * [version](#version)
+  * [compiler](#compiler)
+  * [stream input/output](#stream-inputoutput)
+    + [stream 종류](#stream-%EC%A2%85%EB%A5%98)
+    + [stream state](#stream-state)
+    + [seek, indicator](#seek-indicator)
+  * [explicit casting (명시적 캐스팅)](#explicit-casting-%EB%AA%85%EC%8B%9C%EC%A0%81-%EC%BA%90%EC%8A%A4%ED%8C%85)
+  * [class](#class)
+    + [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
+    + [The rule of three/five/zero](#the-rule-of-threefivezero)
+      - [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+      - [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+  * [class 상속](#class-%EC%83%81%EC%86%8D)
+    + [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
+    + [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
+    + [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
+    + [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
+    + [추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4abstract-class%EC%99%80-%EC%88%9C%EC%88%98-%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98pure-virtual-function)
+    + [interface](#interface)
+  * [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
+    + [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
+    + [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
+    + [그래서 virtual을 왜 쓰냐?](#%EA%B7%B8%EB%9E%98%EC%84%9C-virtual%EC%9D%84-%EC%99%9C-%EC%93%B0%EB%83%90)
+    + [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
+  * [inline function](#inline-function)
+  * [static = 범위의 제한을 받는 전역 변수](#static--%EB%B2%94%EC%9C%84%EC%9D%98-%EC%A0%9C%ED%95%9C%EC%9D%84-%EB%B0%9B%EB%8A%94-%EC%A0%84%EC%97%AD-%EB%B3%80%EC%88%98)
+  * [exceptions](#exceptions)
+    + [cpp에서의 exception](#cpp%EC%97%90%EC%84%9C%EC%9D%98-exception)
+    + [os exception != cpp exception](#os-exception--cpp-exception)
+    + [예외 안전성(exception-safety)](#%EC%98%88%EC%99%B8-%EC%95%88%EC%A0%84%EC%84%B1exception-safety)
+  * [template programming](#template-programming)
+  * [template class linking error](#template-class-linking-error)
+    + [언제 template을 사용하면 좋나요](#%EC%96%B8%EC%A0%9C-template%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4-%EC%A2%8B%EB%82%98%EC%9A%94)
+    + [generic과 무슨 차이가 있나요 = compile time polymorphism](#generic%EA%B3%BC-%EB%AC%B4%EC%8A%A8-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94--compile-time-polymorphism)
+  * [C++11](#c11)
+    + [auto (C++11)](#auto-c11)
+    + [static_assert (C++11)](#static_assert-c11)
+    + [default/delete (C++11)](#defaultdelete-c11)
+    + [final/override (C++11)](#finaloverride-c11)
+    + [nullptr (C++11)](#nullptr-c11)
+    + [fixed width integer type (C++11)](#fixed-width-integer-type-c11)
+    + [enum class (C++11)](#enum-class-c11)
+    + [범위 기반 for문 (C+11)](#%EB%B2%94%EC%9C%84-%EA%B8%B0%EB%B0%98-for%EB%AC%B8-c11)
+  * [smart pointer (C+11)](#smart-pointer-c11)
+    + [unique_ptr (C++11), make_unique (C++14)](#unique_ptr-c11-make_unique-c14)
+    + [shared_ptr (C++11), make_shared (C++11)](#shared_ptr-c11-make_shared-c11)
+      - [자동 메모리 관리](#%EC%9E%90%EB%8F%99-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC)
+    + [weak_ptr (C++11)](#weak_ptr-c11)
+  * [etc](#etc)
+    + [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
+    + [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
+    + [string + string slow. why?](#string--string-slow-why)
 
 <!-- tocstop -->
 
@@ -735,10 +735,13 @@ https://en.cppreference.com/w/cpp/types/integer
 
 ## smart pointer (C+11)
 
--   원시 포인터를 wrapping하여 원시 포인터의 소유권과 참조 횟수 기반으로 관리.
+-   원시 포인터를 wrapping하여 원시 포인터의 소유권과 참조 횟수 기반으로 관리하는 class임. 즉, 객체임.
+
 -   객체의 수명에 따라 메모리 관리를 자동으로 하는 효과. 스마트 포인터를 사용하면 delete를 직접 호출할 필요가 없다. GC보다도 빠르다.
 
-### unique_ptr (C++11)
+-   unique_ptr / shared_ptr & weak_ptr 로 묶여 사용되는 편.
+
+### unique_ptr (C++11), make_unique (C++14)
 
 https://en.cppreference.com/w/cpp/memory/unique_ptr
 
@@ -753,21 +756,33 @@ https://en.cppreference.com/w/cpp/memory/unique_ptr
 
 -   언제 사용하면 좋나?
     (125_unique_ptr/unique_ptr_use_case.cpp 참고)
+
     1. 클래스 내 개체 선언. 개체 메모리 정리를 할 필요가 없어지므로.
     2. heap에 객체 할당할 때. delete로 지우는 것을 잊어도 안전함.
     3. 객체의 포인터를 담은 container 내부를 순회하며 정리하기 번거로울 때.
 
-#### make_unique (C++14)
+-   make_unique (C++14)
+    https://en.cppreference.com/w/cpp/memory/unique_ptr/make_unique
 
-https://en.cppreference.com/w/cpp/memory/unique_ptr/make_unique
+    `make_unique<Class>(param)`
 
-`make_unique<Class>(param)`
+    주어진 Class를 param과 함께 new 키워드로 호출 (즉, heap 할당됨)
+    make_unique는 C++11이 아닌 C++14에서 도입됨.
 
-주어진 Class를 param과 함께 new 키워드로 호출 (즉, heap 할당됨)
-
-### shared_ptr (C++11)
+### shared_ptr (C++11), make_shared (C++11)
 
 https://en.cppreference.com/w/cpp/memory/shared_ptr
+
+-   특징
+    두 개의 포인터를 소유함.
+    데이터 ptr : 데이터
+    제어 블록 ptr : 강한 참조 횟수, 약한 참조 횟수
+
+    다른 shared_ptr과 공유 가능함.  
+    unique_ptr와 다르게 복사나 대입이 가능함.
+
+-   make_shared (C++11)
+    `make_shared<Class>(param)`
 
 #### 자동 메모리 관리
 
@@ -791,14 +806,33 @@ https://en.cppreference.com/w/cpp/memory/shared_ptr
 
 ### weak_ptr (C++11)
 
-#### 강한 참조와 약한 참조
+https://en.cppreference.com/w/cpp/memory/weak_ptr
 
-약한 참조는 refCnt를 증가시키지 않음.
+-   특징
+    원시 포인터에 대한 소유권이 없음.
+    약한 참조로 참조되는 개체의 강한 참조 cnt가 0이 될 때 사라짐.
+    순환 참조의 해결책
+    원시 포인터 해제에 영향을 미치지 않음. 단순히 참조만 함.
+    약한 참조는 refCnt를 증가시키지 않음.
 
-왜 약한 참조가 필요한가?
+    shared_ptr와 control block을 공유.
 
-1. 참조 카운트는 너무 자주 바뀜. multi thread에서는 atomic 하지 않음.
-2. 강한 참조만으로 순환 참조가 발생했을 때 refCnt가 0이 되지 않음.
+    weak_ptr를 사용하기 위해서는 실제로 해당 포인터의 유효성을 확인한 후 shared_ptr로 변환해서 써야 함 (lock)
+    결과적으로, shared_ptr를 생성해서 strong ref cnt를 증가시켜 referenced object가 지워지지 않았으므로 lock이란 메서드명이 붙음.
+
+-   reference object가 아직 유효한가 검증하기
+    expired() 메서드는 신뢰할 수 없음.
+    multi threading 환경에서 expired()가 false를 반환했는데도 그 사이 다른 스레드에서 referenced object를 지웠을 수 있음.
+
+    사용할 때는 반드시 lock()으로 shared ptr를 얻은 후에 진행해야 함.
+
+-   왜 약한 참조가 필요한가?
+
+    1. 참조 카운트는 너무 자주 바뀜. multi thread에서는 atomic 하지 않음.
+    2. 강한 참조만으로 순환 참조가 발생했을 때 refCnt가 0이 되지 않음.
+
+-   사용하기 좋은 경우
+    순환 참조 해결 (객체가 소유한 다른 객체를 weak_ptr로 참조하게 하면 순환 참조가 발생하지 않음)
 
 ## etc
 
