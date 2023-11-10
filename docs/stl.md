@@ -14,6 +14,11 @@
     + [deque](#deque)
     + [priority_queue](#priority_queue)
     + [list(circular doubly linked list)](#listcircular-doubly-linked-list)
+  * [STL container(C+11)](#stl-containerc11)
+    + [unordered_map(C++11)](#unordered_mapc11)
+    + [unordered_set(C++11)](#unordered_setc11)
+    + [array(C++11)](#arrayc11)
+  * [범위 기반 for문 (C+11)](#%EB%B2%94%EC%9C%84-%EA%B8%B0%EB%B0%98-for%EB%AC%B8-c11)
   * [STL algorithm](#stl-algorithm)
 
 <!-- tocstop -->
@@ -106,7 +111,7 @@ https://en.cppreference.com/w/cpp/container/map
 
 -   정렬되는 컨테이너
     std::map과 같이 binary search tree기반으로 오름차순 키 정렬이 이뤄짐.
-    맵과 거의 같으며 complexity도 같음.
+    맵과 거의 같으며 complexity도 같음. O(logN)이다.
 
 -   집합의 특성상 중복 원소가 존재하지 않음.
 
@@ -172,6 +177,52 @@ https://en.cppreference.com/w/cpp/container/list
         // 마지막 원소를 지운 경우 똑같이 마지막을 반환함.
         cout << *i << endl; // 2
     ```
+
+## STL container(C+11)
+
+map, set은 키를 binary search tree로 관리하여 insert에 O(logN)이 걸린다.
+unordered는 다 hash table 기반으로 돌기에 hash collision만 없으면 O(1)이다.
+
+### unordered_map(C++11)
+
+https://en.cppreference.com/w/cpp/container/unordered_map
+
+-   특징
+    map은 키를 정렬하였음. unordered_map을 통해
+    index 기반 bucket.
+
+-   bucket count
+    가급적 소수로 설정하는 것이 좋음. hash collision을 줄일 수 있다는 이야기가 있음.
+    reserve로 지정할 것.
+
+    -   hash table이란게 사실상 key가 hash를 거친 것 array일 뿐이니 vector에서 하듯, reserve를 잡아놔야 한다.
+
+-   complexity
+    키 기반 탐색 O(1).
+    hash collision이 발생하면 해당 bucket의 동일한 idx를 가진 원소를 전부 탐색해야 하므로 O(N)이 됨.
+
+-   unordered_multimap : 중복 키 허용
+
+### unordered_set(C++11)
+
+-   특징
+    unordered_map과 같이 hash table 기반.
+
+-   bucket count
+    reserve로 지정할 것.
+
+-   complexity
+    키 기반 탐색. 정렬하지 않기 때문에 O(1).
+    hash collision 발생시 O(N).
+
+-   unordered_multiset : 중복 키 허용
+
+### array(C++11)
+
+c style array를 추상화 한 것.
+어... 장점을 모르겠음. 그냥 c style array쓸 것 같음.
+
+## 범위 기반 for문 (C+11)
 
 ## STL algorithm
 
