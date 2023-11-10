@@ -18,7 +18,6 @@
     + [unordered_map(C++11)](#unordered_mapc11)
     + [unordered_set(C++11)](#unordered_setc11)
     + [array(C++11)](#arrayc11)
-  * [범위 기반 for문 (C+11)](#%EB%B2%94%EC%9C%84-%EA%B8%B0%EB%B0%98-for%EB%AC%B8-c11)
   * [STL algorithm](#stl-algorithm)
 
 <!-- tocstop -->
@@ -221,8 +220,6 @@ https://en.cppreference.com/w/cpp/container/unordered_map
 
 c style array를 추상화 한 것.
 어... 장점을 모르겠음. 그냥 c style array쓸 것 같음.
-
-## 범위 기반 for문 (C+11)
 
 ## STL algorithm
 

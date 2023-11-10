@@ -22,5 +22,12 @@ private:
 };
 
 int main(void) {
+    // [Vector, Vector, Vector ... Vector] 생성하기.
+    // C+11 에서 unique_ptr만 존재할 때
+    unique_ptr<Vector[]> vectors(new Vector[20]);
+
+    // C++14 이후 make_unique 사용
+    unique_ptr<Vector[]> vectors2 = make_unique<Vector[]>(20);
+
     return 0;
 }

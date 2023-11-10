@@ -38,13 +38,20 @@
   * [template class linking error](#template-class-linking-error)
     + [언제 template을 사용하면 좋나요](#%EC%96%B8%EC%A0%9C-template%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4-%EC%A2%8B%EB%82%98%EC%9A%94)
     + [generic과 무슨 차이가 있나요 = compile time polymorphism](#generic%EA%B3%BC-%EB%AC%B4%EC%8A%A8-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94--compile-time-polymorphism)
-  * [auto (C++11)](#auto-c11)
-  * [static_assert (C++11)](#static_assert-c11)
-  * [default/delete (C++11)](#defaultdelete-c11)
-  * [final/override (C++11)](#finaloverride-c11)
-  * [nullptr (C++11)](#nullptr-c11)
-  * [fixed width integer type (C++11)](#fixed-width-integer-type-c11)
-  * [enum class (C++11)](#enum-class-c11)
+  * [C++11](#c11)
+    + [auto (C++11)](#auto-c11)
+    + [static_assert (C++11)](#static_assert-c11)
+    + [default/delete (C++11)](#defaultdelete-c11)
+    + [final/override (C++11)](#finaloverride-c11)
+    + [nullptr (C++11)](#nullptr-c11)
+    + [fixed width integer type (C++11)](#fixed-width-integer-type-c11)
+    + [enum class (C++11)](#enum-class-c11)
+    + [범위 기반 for문 (C+11)](#%EB%B2%94%EC%9C%84-%EA%B8%B0%EB%B0%98-for%EB%AC%B8-c11)
+  * [smart pointer (C+11)](#smart-pointer-c11)
+    + [unique_ptr (C++11)](#unique_ptr-c11)
+      - [make_unique (C++14)](#make_unique-c14)
+    + [shared_ptr (C++11)](#shared_ptr-c11)
+    + [weak_ptr (C++11)](#weak_ptr-c11)
   * [etc](#etc)
     + [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
     + [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
@@ -60,6 +67,7 @@
 
     -   delete로 지울 수 있는 건 heap 할당된 객체 뿐임.
     -   new로 객체 선언한 건 heap에 할당되니 반드시 delete할 것. 배열은 delete[]로 삭제.
+    -   stl container 등에 객체의 포인터형을 저장했다면, 해당 container를 사용 후에는 모든 원소에 대해서 메모리 정리를 해주어야 함. (114_stl_container/vector/ptr_vector_heap_cleanup.cpp) 참고
 
 -   class
 
@@ -630,7 +638,9 @@ compile time에 코드를 생성하는 template의 특성으로 컴파일 시간
 
 또한, template에 넣는 자료형 가짓수에 비례하여 실행 파일의 크기가 증가할 것입니다.
 
-## auto (C++11)
+## C++11
+
+### auto (C++11)
 
 https://en.cppreference.com/w/cpp/language/auto
 
@@ -653,12 +663,12 @@ https://en.cppreference.com/w/cpp/language/auto
 
 -   auto를 써도 런타임 성능은 동일함. 걱정 ㄴㄴ
 
-## static_assert (C++11)
+### static_assert (C++11)
 
 컴파일 시점에 assert가 가능하다.  
 C11에서 사용하던 그것이 맞다.
 
-## default/delete (C++11)
+### default/delete (C++11)
 
 class에서 암시적 생성자 때문에 골치 아팠다.
 
@@ -687,7 +697,7 @@ public:
 };
 ```
 
-## final/override (C++11)
+### final/override (C++11)
 
 해당 선언자들은 virtual function에서만 사용 가능하다.
 final은 virtual function에서만 선언 가능하며
@@ -704,22 +714,60 @@ override : override 할거야.
     - 부모의 virtual function이 아닌 함수를 override 하려할 때도 에러.
     - 부모가 가상함수라는점 + 가상 함수를 바르게 오버라이드했다라는 것을 보장하는 효과가 있기 때문에 가능하면 사용하자.
 
-## nullptr (C++11)
+### nullptr (C++11)
 
 https://en.cppreference.com/w/cpp/language/nullptr
 
 null ptr를 표현하는 자료형.
 
-## fixed width integer type (C++11)
+### fixed width integer type (C++11)
 
 https://en.cppreference.com/w/cpp/types/integer
 
 가급적 C+11 이상이 보장된다면 사용하자.
 
-## enum class (C++11)
+### enum class (C++11)
 
 -   정수형으로의 암시적 캐스팅이 없음
 -   enum의 원소에 할당할 바이트 지정.
+
+### 범위 기반 for문 (C+11)
+
+## smart pointer (C+11)
+
+-   원시 포인터를 wrapping하여 원시 포인터의 소유권과 참조 횟수를 기반으로 관리.
+-   객체의 수명에 따라 메모리 관리를 자동으로 하는 효과. 스마트 포인터를 사용하면 delete를 직접 호출할 필요가 없다. GC보다도 빠르다.
+
+### unique_ptr (C++11)
+
+https://en.cppreference.com/w/cpp/memory/unique_ptr
+
+-   특징
+    원시 포인터 하나를 소유하고, 다른 것과 공유하지 않음.
+    따라서 `복사나 대입이 불가능함.`
+
+    unique_ptr를 사용할 경우 그 속에 있는 원시 포인터를 다른 unique_ptr에 넣을 수 없다.
+
+-   언제 수거되나?
+    scope를 벗어날 때 자동으로 지워짐.
+
+-   언제 사용하면 좋나?
+    (125_unique_ptr/unique_ptr_use_case.cpp 참고)
+    1. 클래스 내 개체 선언. 개체 메모리 정리를 할 필요가 없어지므로.
+    2. heap에 객체 할당할 때. delete로 지우는 것을 잊어도 안전함.
+    3. 객체의 포인터를 담은 container 내부를 순회하며 정리하기 번거로울 때.
+
+#### make_unique (C++14)
+
+https://en.cppreference.com/w/cpp/memory/unique_ptr/make_unique
+
+`make_unique<Class>(param)`
+
+주어진 Class를 param과 함께 new 키워드로 호출 (즉, heap 할당됨)
+
+### shared_ptr (C++11)
+
+### weak_ptr (C++11)
 
 ## etc
 
