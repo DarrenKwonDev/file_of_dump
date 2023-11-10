@@ -51,7 +51,9 @@
     + [unique_ptr (C++11)](#unique_ptr-c11)
       - [make_unique (C++14)](#make_unique-c14)
     + [shared_ptr (C++11)](#shared_ptr-c11)
+      - [자동 메모리 관리](#%EC%9E%90%EB%8F%99-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC)
     + [weak_ptr (C++11)](#weak_ptr-c11)
+      - [강한 참조와 약한 참조](#%EA%B0%95%ED%95%9C-%EC%B0%B8%EC%A1%B0%EC%99%80-%EC%95%BD%ED%95%9C-%EC%B0%B8%EC%A1%B0)
   * [etc](#etc)
     + [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
     + [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
@@ -735,7 +737,7 @@ https://en.cppreference.com/w/cpp/types/integer
 
 ## smart pointer (C+11)
 
--   원시 포인터를 wrapping하여 원시 포인터의 소유권과 참조 횟수를 기반으로 관리.
+-   원시 포인터를 wrapping하여 원시 포인터의 소유권과 참조 횟수 기반으로 관리.
 -   객체의 수명에 따라 메모리 관리를 자동으로 하는 효과. 스마트 포인터를 사용하면 delete를 직접 호출할 필요가 없다. GC보다도 빠르다.
 
 ### unique_ptr (C++11)
@@ -767,7 +769,33 @@ https://en.cppreference.com/w/cpp/memory/unique_ptr/make_unique
 
 ### shared_ptr (C++11)
 
+https://en.cppreference.com/w/cpp/memory/shared_ptr
+
+#### 자동 메모리 관리
+
+-   GC 방식
+    Java, C#, Python, JavaScript (V8 엔진 등)  
+    GC도 여러 종류가 존재하며 장단점이 있음.  
+    [Java Garbage Collection의 종류](https://d2.naver.com/helloworld/1329)  
+    [GC 일반](https://learn.microsoft.com/ko-kr/dotnet/standard/garbage-collection/fundamentals)  
+    memory leak을 막기 위해 주기적으로 메모리 검사를 함. 따라서 GC가 돌 때 애플리케이션이 버벅일 수 있음. 이런 현상은 stop-the-world 문제로 발생한다. 어떤 GC 알고리즘을 사용하더라도 stop-the-world는 발생한다.
+
+-   ref count 방식
+    Objective-C, Swift, COM(DirectX)  
+    주로 C++의 std::shared_ptr와 같은 스마트 포인터를 통해 구현.
+
+-   delete를 잊어버리는 등의 메모리 누수는 발생하지 않으나 stop-the-world 문제는 피할 수 없고, 순환 참조와 같은 상황에서는 메모리 누수가 여전히 발생할 수 있음. 여튼 완벽한 건 없음.
+
 ### weak_ptr (C++11)
+
+#### 강한 참조와 약한 참조
+
+약한 참조는 refCnt를 증가시키지 않음.
+
+왜 약한 참조가 필요한가?
+
+1. 참조 카운트는 너무 자주 바뀜. multi thread에서는 atomic 하지 않음.
+2. 강한 참조만으로 순환 참조가 발생했을 때 refCnt가 0이 되지 않음.
 
 ## etc
 
