@@ -933,6 +933,28 @@ constexpr 붙으면 자동으로 const 됨.
 const는 상수로 한 번 초기화 이후에 변경이 불가능하다는 정의상 그러함.  
 컴파일 시에 확정이 되는 값이니까.
 
+## lambda expression (C++11)
+
+https://en.cppreference.com/w/cpp/language/lambda
+
+파이썬에서 쓰던 그거 맞다.
+
+```text
+[captures](params) <specifier> -> <return_type> {
+    body
+}
+```
+
+디버깅하기 힘드니까 한 줄 짜리 간단한 경우에서만 사용하길 권장.
+
+### capture block
+
+https://en.cppreference.com/w/cpp/language/lambda#Lambda_capture
+
+lambda 앞에 [] 이거.
+코드 보는게 이해가 더 빠름
+130_lambda/lambda_capture.cpp
+
 ## etc
 
 ### RAII(자원 획득은 초기화, resource acquisition is initialization)
