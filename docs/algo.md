@@ -2,7 +2,6 @@
 
 ## mental model
 
-h
 자료구조 보듯 insert, search, delete의 시간 및 공간 복잡도를 고려.
 
 각 세부 동작이 존재하는 것도 살펴볼 것.
@@ -71,8 +70,11 @@ bool comp2(vector<int>& v1, vector<int>& v2, int idx) {
 
 ## cpp stream과 c stream의 동기화 끊기 + cout 버퍼 비우지 않기
 
-printf/scanf와 cout/cin의 호출 순서에 따른 입출력을 위해 동기화가 기본적으로 유지 됨.
-그러나 cout/cin만 쓴다면 동기화를 끊는 것이 속도 향상에 유리.
+https://www.acmicpc.net/blog/view/128
+
+-   printf/scanf와 cout/cin의 호출 순서에 따른 입출력을 위해 동기화가 기본적으로 유지 됨. 그러나 cout/cin만 쓴다면 동기화를 끊는 것이 속도 향상에 유리.
+
+-   cin 을 사용할 때 마다 cout 에 flush 연산이 발생합니다. flush 연산은 출력 버퍼에 보관하고 있었던 내용을 모두 출력하고 출력 버퍼를 비우는 연산으로, 매우 무거운 연산입니다. 특히나 cin, cout을 번갈아 쓸 때 이 flush가 계속 발생하면 시간 초과 나곤 함. cin.tie(nullptr); 를 넣으면 cin과 cout 를 번갈아가며 사용해도 flush 연산을 수행하지 않게 되면서 수행 시간을 상당히 줄일 수 있습니다.
 
 ```cpp
 ios::sync_with_stdio(0); // cpp stream와 c stream의 동기화 끊기

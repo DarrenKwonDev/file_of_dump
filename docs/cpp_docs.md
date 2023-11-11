@@ -52,6 +52,9 @@
     + [shared_ptr (C++11), make_shared (C++11)](#shared_ptr-c11-make_shared-c11)
       - [자동 메모리 관리](#%EC%9E%90%EB%8F%99-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC)
     + [weak_ptr (C++11)](#weak_ptr-c11)
+  * [이동 생성자와 이동 대입 연산자](#%EC%9D%B4%EB%8F%99-%EC%83%9D%EC%84%B1%EC%9E%90%EC%99%80-%EC%9D%B4%EB%8F%99-%EB%8C%80%EC%9E%85-%EC%97%B0%EC%82%B0%EC%9E%90)
+  * [이동 생성자](#%EC%9D%B4%EB%8F%99-%EC%83%9D%EC%84%B1%EC%9E%90)
+  * [이동 대입 연산자](#%EC%9D%B4%EB%8F%99-%EB%8C%80%EC%9E%85-%EC%97%B0%EC%82%B0%EC%9E%90)
   * [etc](#etc)
     + [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
     + [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
@@ -740,6 +743,7 @@ https://en.cppreference.com/w/cpp/types/integer
 -   객체의 수명에 따라 메모리 관리를 자동으로 하는 효과. 스마트 포인터를 사용하면 delete를 직접 호출할 필요가 없다. GC보다도 빠르다.
 
 -   unique_ptr / shared_ptr & weak_ptr 로 묶여 사용되는 편.
+    -   smart pointer를 반드시 쓸 필요는 없다. naked ptr도 아직도 자주 사용된다. 단, unique_ptr는 가능하면 사용하자.
 
 ### unique_ptr (C++11), make_unique (C++14)
 
@@ -833,6 +837,26 @@ https://en.cppreference.com/w/cpp/memory/weak_ptr
 
 -   사용하기 좋은 경우
     순환 참조 해결 (객체가 소유한 다른 객체를 weak_ptr로 참조하게 하면 순환 참조가 발생하지 않음)
+
+## 이동 생성자와 이동 대입 연산자
+
+```cpp
+class MyClass {
+public:
+    MyClass() = default; // constructor
+    ~MyClass() = default; // destructor
+
+    MyClass(const MyClass&) = default; // 복사 생성자 (copy constructor)
+    MyClass& operator=(const MyClass&) = default; // 복사 대입 연산자 (Copy Assignment Operator)
+
+    MyClass& operator=(MyClass&&) = default; // 이동 대입 연산자(move assignment operator)
+    MyClass(MyClass&&) = default; // 이동 생성자(move constructor)
+};
+```
+
+## 이동 생성자
+
+## 이동 대입 연산자
 
 ## etc
 
