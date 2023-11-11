@@ -1,64 +1,65 @@
-
-
 <!-- toc -->
 
-- [cpp_docs](#cpp_docs)
-  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-  * [version](#version)
-  * [compiler](#compiler)
-  * [stream input/output](#stream-inputoutput)
-    + [stream 종류](#stream-%EC%A2%85%EB%A5%98)
-    + [stream state](#stream-state)
-    + [seek, indicator](#seek-indicator)
-  * [explicit casting (명시적 캐스팅)](#explicit-casting-%EB%AA%85%EC%8B%9C%EC%A0%81-%EC%BA%90%EC%8A%A4%ED%8C%85)
-  * [class](#class)
-    + [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
-    + [The rule of three/five/zero](#the-rule-of-threefivezero)
-      - [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-      - [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
-  * [class 상속](#class-%EC%83%81%EC%86%8D)
-    + [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
-    + [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
-    + [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
-    + [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
-    + [추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4abstract-class%EC%99%80-%EC%88%9C%EC%88%98-%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98pure-virtual-function)
-    + [interface](#interface)
-  * [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
-    + [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
-    + [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
-    + [그래서 virtual을 왜 쓰냐?](#%EA%B7%B8%EB%9E%98%EC%84%9C-virtual%EC%9D%84-%EC%99%9C-%EC%93%B0%EB%83%90)
-    + [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
-  * [inline function](#inline-function)
-  * [static = 범위의 제한을 받는 전역 변수](#static--%EB%B2%94%EC%9C%84%EC%9D%98-%EC%A0%9C%ED%95%9C%EC%9D%84-%EB%B0%9B%EB%8A%94-%EC%A0%84%EC%97%AD-%EB%B3%80%EC%88%98)
-  * [exceptions](#exceptions)
-    + [cpp에서의 exception](#cpp%EC%97%90%EC%84%9C%EC%9D%98-exception)
-    + [os exception != cpp exception](#os-exception--cpp-exception)
-    + [예외 안전성(exception-safety)](#%EC%98%88%EC%99%B8-%EC%95%88%EC%A0%84%EC%84%B1exception-safety)
-  * [template programming](#template-programming)
-  * [template class linking error](#template-class-linking-error)
-    + [언제 template을 사용하면 좋나요](#%EC%96%B8%EC%A0%9C-template%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4-%EC%A2%8B%EB%82%98%EC%9A%94)
-    + [generic과 무슨 차이가 있나요 = compile time polymorphism](#generic%EA%B3%BC-%EB%AC%B4%EC%8A%A8-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94--compile-time-polymorphism)
-  * [C++11](#c11)
-    + [auto (C++11)](#auto-c11)
-    + [static_assert (C++11)](#static_assert-c11)
-    + [default/delete (C++11)](#defaultdelete-c11)
-    + [final/override (C++11)](#finaloverride-c11)
-    + [nullptr (C++11)](#nullptr-c11)
-    + [fixed width integer type (C++11)](#fixed-width-integer-type-c11)
-    + [enum class (C++11)](#enum-class-c11)
-    + [범위 기반 for문 (C+11)](#%EB%B2%94%EC%9C%84-%EA%B8%B0%EB%B0%98-for%EB%AC%B8-c11)
-  * [smart pointer (C+11)](#smart-pointer-c11)
-    + [unique_ptr (C++11), make_unique (C++14)](#unique_ptr-c11-make_unique-c14)
-    + [shared_ptr (C++11), make_shared (C++11)](#shared_ptr-c11-make_shared-c11)
-      - [자동 메모리 관리](#%EC%9E%90%EB%8F%99-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC)
-    + [weak_ptr (C++11)](#weak_ptr-c11)
-  * [이동 생성자와 이동 대입 연산자](#%EC%9D%B4%EB%8F%99-%EC%83%9D%EC%84%B1%EC%9E%90%EC%99%80-%EC%9D%B4%EB%8F%99-%EB%8C%80%EC%9E%85-%EC%97%B0%EC%82%B0%EC%9E%90)
-  * [이동 생성자](#%EC%9D%B4%EB%8F%99-%EC%83%9D%EC%84%B1%EC%9E%90)
-  * [이동 대입 연산자](#%EC%9D%B4%EB%8F%99-%EB%8C%80%EC%9E%85-%EC%97%B0%EC%82%B0%EC%9E%90)
-  * [etc](#etc)
-    + [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
-    + [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
-    + [string + string slow. why?](#string--string-slow-why)
+-   [cpp_docs](#cpp_docs)
+    -   [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
+    -   [version](#version)
+    -   [compiler](#compiler)
+    -   [stream input/output](#stream-inputoutput)
+        -   [stream 종류](#stream-%EC%A2%85%EB%A5%98)
+        -   [stream state](#stream-state)
+        -   [seek, indicator](#seek-indicator)
+    -   [explicit casting (명시적 캐스팅)](#explicit-casting-%EB%AA%85%EC%8B%9C%EC%A0%81-%EC%BA%90%EC%8A%A4%ED%8C%85)
+    -   [class](#class)
+        -   [class에 암시적으로 정의되는 것들](#class%EC%97%90-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%A0%95%EC%9D%98%EB%90%98%EB%8A%94-%EA%B2%83%EB%93%A4)
+        -   [The rule of three/five/zero](#the-rule-of-threefivezero)
+            -   [new/delete와 malloc()/free()의 차이?](#newdelete%EC%99%80-mallocfree%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+            -   [struct와 class의 차이?](#struct%EC%99%80-class%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+    -   [class 상속](#class-%EC%83%81%EC%86%8D)
+        -   [생성자, 소멸자 호출 순서](#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%86%8C%EB%A9%B8%EC%9E%90-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C)
+        -   [클래스와 메모리 레이아웃](#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%A0%88%EC%9D%B4%EC%95%84%EC%9B%83)
+        -   [접근 제어 상속](#%EC%A0%91%EA%B7%BC-%EC%A0%9C%EC%96%B4-%EC%83%81%EC%86%8D)
+        -   [다중 상속은 안티패턴.](#%EB%8B%A4%EC%A4%91-%EC%83%81%EC%86%8D%EC%9D%80-%EC%95%88%ED%8B%B0%ED%8C%A8%ED%84%B4)
+        -   [추상 클래스(abstract class)와 순수 가상 함수(pure virtual function)](#%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4abstract-class%EC%99%80-%EC%88%9C%EC%88%98-%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98pure-virtual-function)
+        -   [interface](#interface)
+    -   [다형성](#%EB%8B%A4%ED%98%95%EC%84%B1)
+        -   [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#%EC%A0%95%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EC%BB%B4%ED%8C%8C%EC%9D%BC-%EB%B0%94%EC%9D%B8%EB%94%A9--%EC%A0%81%EC%9D%80-%EB%8C%80%EB%A1%9C-%ED%96%89%ED%95%9C%EB%8B%A4)
+        -   [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#%EB%8F%99%EC%A0%81-%EB%B0%94%EC%9D%B8%EB%94%A9%EB%9F%B0%ED%83%80%EC%9E%84-%EB%B0%94%EC%9D%B8%EB%94%A9--%EA%B0%80%EC%83%81-%ED%95%A8%EC%88%98virtual%EB%A1%9C-%EC%8B%A4%EC%A7%88%EC%9D%84-%EB%9F%B0%ED%83%80%EC%9E%84%EC%97%90-%EC%B0%BE%EC%95%84-%ED%98%B8%EC%B6%9C%ED%95%98%EB%8F%84%EB%A1%9D-%ED%95%9C%EB%8B%A4)
+        -   [그래서 virtual을 왜 쓰냐?](#%EA%B7%B8%EB%9E%98%EC%84%9C-virtual%EC%9D%84-%EC%99%9C-%EC%93%B0%EB%83%90)
+        -   [가상 소멸자](#%EA%B0%80%EC%83%81-%EC%86%8C%EB%A9%B8%EC%9E%90)
+    -   [inline function](#inline-function)
+    -   [static = 범위의 제한을 받는 전역 변수](#static--%EB%B2%94%EC%9C%84%EC%9D%98-%EC%A0%9C%ED%95%9C%EC%9D%84-%EB%B0%9B%EB%8A%94-%EC%A0%84%EC%97%AD-%EB%B3%80%EC%88%98)
+    -   [exceptions](#exceptions)
+        -   [cpp에서의 exception](#cpp%EC%97%90%EC%84%9C%EC%9D%98-exception)
+        -   [os exception != cpp exception](#os-exception--cpp-exception)
+        -   [예외 안전성(exception-safety)](#%EC%98%88%EC%99%B8-%EC%95%88%EC%A0%84%EC%84%B1exception-safety)
+    -   [template programming](#template-programming)
+    -   [template class linking error](#template-class-linking-error)
+        -   [언제 template을 사용하면 좋나요](#%EC%96%B8%EC%A0%9C-template%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4-%EC%A2%8B%EB%82%98%EC%9A%94)
+        -   [generic과 무슨 차이가 있나요 = compile time polymorphism](#generic%EA%B3%BC-%EB%AC%B4%EC%8A%A8-%EC%B0%A8%EC%9D%B4%EA%B0%80-%EC%9E%88%EB%82%98%EC%9A%94--compile-time-polymorphism)
+    -   [C++11](#c11)
+        -   [auto (C++11)](#auto-c11)
+        -   [static_assert (C++11)](#static_assert-c11)
+        -   [default/delete (C++11)](#defaultdelete-c11)
+        -   [final/override (C++11)](#finaloverride-c11)
+        -   [nullptr (C++11)](#nullptr-c11)
+        -   [fixed width integer type (C++11)](#fixed-width-integer-type-c11)
+        -   [enum class (C++11)](#enum-class-c11)
+        -   [범위 기반 for문 (C+11)](#%EB%B2%94%EC%9C%84-%EA%B8%B0%EB%B0%98-for%EB%AC%B8-c11)
+    -   [smart pointer (C+11)](#smart-pointer-c11)
+        -   [unique_ptr (C++11), make_unique (C++14)](#unique_ptr-c11-make_unique-c14)
+        -   [shared_ptr (C++11), make_shared (C++11)](#shared_ptr-c11-make_shared-c11)
+            -   [자동 메모리 관리](#%EC%9E%90%EB%8F%99-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC)
+        -   [weak_ptr (C++11)](#weak_ptr-c11)
+    -   [이동 생성자와 이동 대입 연산자 (C++11)](#%EC%9D%B4%EB%8F%99-%EC%83%9D%EC%84%B1%EC%9E%90%EC%99%80-%EC%9D%B4%EB%8F%99-%EB%8C%80%EC%9E%85-%EC%97%B0%EC%82%B0%EC%9E%90-c11)
+    -   [값의 분류 (lvalue, rvalue) (C++11)](#%EA%B0%92%EC%9D%98-%EB%B6%84%EB%A5%98-lvalue-rvalue-c11)
+    -   [rvalue의 reference (&&) (C++11)](#rvalue%EC%9D%98-reference--c11)
+    -   [이동 생성자와 이동 대입 연산자, move](#%EC%9D%B4%EB%8F%99-%EC%83%9D%EC%84%B1%EC%9E%90%EC%99%80-%EC%9D%B4%EB%8F%99-%EB%8C%80%EC%9E%85-%EC%97%B0%EC%82%B0%EC%9E%90-move)
+        -   [rvalue 최적화 남용 금지](#rvalue-%EC%B5%9C%EC%A0%81%ED%99%94-%EB%82%A8%EC%9A%A9-%EA%B8%88%EC%A7%80)
+    -   [constexpr (C++11)](#constexpr-c11)
+    -   [etc](#etc)
+        -   [RAII(자원 획득은 초기화, resource acquisition is initialization)](#raii%EC%9E%90%EC%9B%90-%ED%9A%8D%EB%93%9D%EC%9D%80-%EC%B4%88%EA%B8%B0%ED%99%94-resource-acquisition-is-initialization)
+        -   [c의 헤더를 써도 되나?](#c%EC%9D%98-%ED%97%A4%EB%8D%94%EB%A5%BC-%EC%8D%A8%EB%8F%84-%EB%90%98%EB%82%98)
+        -   [string + string slow. why?](#string--string-slow-why)
 
 <!-- tocstop -->
 
@@ -339,26 +340,29 @@ cpp에서 class에 암시적으로 만들어주는게 많다보니...
 
 -   rule of five(C+11)
 
-    -   위의 rule of three에 얹어서 2개 더 구현해야 함
+    -   위의 rule of three에 얹어서 2개 더 구현해야 함. rvalue란게 등장 했기 때문에...
     -   [move constructor](https://en.cppreference.com/w/cpp/language/move_constructor)
     -   [move assignment operator](https://en.cppreference.com/w/cpp/language/move_assignment)
+
+-   rule of zero
+    -   힘들지? 객체가 자원을 직접 관리하지 않고, 대신에 자원 관리를 스마트 포인터, 표준 라이브러리의 컨테이너, RAII(Resource Acquisition Is Initialization) 등을 통해 자동으로 처리하도록 .
 
 ```cpp
 class MyClass {
 public:
-    MyClass() = default; // constructor
-    ~MyClass() = default; // destructor
+    MyClass(); // constructor
+    ~MyClass(); // destructor
 
-    MyClass(const MyClass&) = default; // 복사 생성자 (copy constructor)
-    MyClass& operator=(const MyClass&) = default; // 복사 대입 연산자 (Copy Assignment Operator)
+    MyClass(const MyClass&); // 복사 생성자 (copy constructor) Vector copied(v); 꼴.
+    MyClass& operator=(const MyClass&); // 복사 대입 연산자 (Copy Assignment Operator). obj2 = obj1; 와 같은 꼴로 사용됨.  객체의 내용을 복사하여 다른 객체에 할당할 때
 
-    MyClass& operator=(MyClass&&) = default; // 이동 대입 연산자(move assignment operator)
-    MyClass(MyClass&&) = default; // 이동 생성자(move constructor)
+    // rvalue C+11 에선 아래도 작성. (rule of five)
+
+    MyClass(MyClass&&); // 이동 생성자(move constructor). 이동한 후 rvalue는 사라지도록 로직 작성해야 함. Vector moveCopied(move(v)); 꼴
+
+    MyClass& operator=(MyClass&&); // 이동 대입 연산자(move assignment operator). obj2 = std::move(obj1); 의 꼴로 사용됨. 객체의 내용을 이동하여 다른 객체에 할당할 때
 };
 ```
-
--   rule fo zero
-    -   힘들지? 객체가 자원을 직접 관리하지 않고, 대신에 자원 관리를 스마트 포인터, 표준 라이브러리의 컨테이너, RAII(Resource Acquisition Is Initialization) 등을 통해 자동으로 처리하도록 .
 
 #### new/delete와 malloc()/free()의 차이?
 
@@ -838,25 +842,73 @@ https://en.cppreference.com/w/cpp/memory/weak_ptr
 -   사용하기 좋은 경우
     순환 참조 해결 (객체가 소유한 다른 객체를 weak_ptr로 참조하게 하면 순환 참조가 발생하지 않음)
 
-## 이동 생성자와 이동 대입 연산자
+## 이동 생성자와 이동 대입 연산자 (C++11)
+
+## 값의 분류 (lvalue, rvalue) (C++11)
+
+https://en.cppreference.com/w/c/language/value_category
+
+Every expression belongs to one of three value categories:
+`lvalue`, `non-lvalue object (rvalue)`, and `function designator`
+
+좌측값(lvalue)는 메모리 주소가 있는 값.
+우측값(rvalue)인 10은 메모리 주소가 없는 임시값.
+
+```cpp
+int num = 10;
+```
+
+-   lvalue
+    단일 식을 넘어 지속되는 것. 일반적인 값.
+    `메모리 위치에 저장되어 있는 값을 가리키는 표현식이나 변수`
+
+    -   예시
+        이름이 있는 변수, 배열, 구조체, 공용체, 열거형 상수, 함수 등 대부분의 식
+
+-   rvalue
+    단일 식을 넘어 지속되지 않는 것. 임시 값.
+    해당 식을 넘어가면 다시 찾아올 수 없는 값.
+    값을 갖고 있지만 `메모리 위치에 저장되어 있지 않는 표현식이나 값.`
+
+    -   예시
+        함수의 반환값, 상수 리터럴, 임시 객체, i++, --i, 산술식, 논리식, 비교식, enum, lambda
+
+## rvalue의 reference (&&) (C++11)
+
+reference를 쓸 때
+& : lvalue 참조
+&& : rvalue 참조
+
+## 이동 생성자와 이동 대입 연산자, move
+
+std::move는 lvalue를 rvalue로 변환하는 것. 즋, 임시적인 값으로 변환하는 것.
+
+이동 생성자를 사용하면 데이터를 복사하는 대신 이동할 수 있으므로 데이터 이동 작업이 훨씬 빠릅니다. 특히 동적으로 할당된 메모리 또는 큰 데이터 구조를 다룰 때 성능이 향상될 수 있습니다.
+
+이동 생성자나 이동 대입 연산은 대상이 되는 rvalue의 값을 모두 빼앗아 흡수하는 것이라고 이해할 수 있습니다.
 
 ```cpp
 class MyClass {
 public:
-    MyClass() = default; // constructor
-    ~MyClass() = default; // destructor
+    MyClass(); // constructor
+    ~MyClass(); // destructor
 
-    MyClass(const MyClass&) = default; // 복사 생성자 (copy constructor)
-    MyClass& operator=(const MyClass&) = default; // 복사 대입 연산자 (Copy Assignment Operator)
+    MyClass(const MyClass&); // 복사 생성자 (copy constructor) Vector copied(v); 꼴.
+    MyClass& operator=(const MyClass&); // 복사 대입 연산자 (Copy Assignment Operator). obj2 = obj1; 와 같은 꼴로 사용됨.  객체의 내용을 복사하여 다른 객체에 할당할 때
 
-    MyClass& operator=(MyClass&&) = default; // 이동 대입 연산자(move assignment operator)
-    MyClass(MyClass&&) = default; // 이동 생성자(move constructor)
+    // rvalue C+11 에선 아래도 작성. (rule of five)
+
+    MyClass(MyClass&&); // 이동 생성자(move constructor). 이동한 후 rvalue는 사라지도록 로직 작성해야 함. Vector moveCopied(move(v)); 꼴
+
+    MyClass& operator=(MyClass&&); // 이동 대입 연산자(move assignment operator). obj2 = std::move(obj1); 의 꼴로 사용됨. 객체의 내용을 이동하여 다른 객체에 할당할 때
 };
 ```
 
-## 이동 생성자
+### rvalue 최적화 남용 금지
 
-## 이동 대입 연산자
+함수에서 rvalue 반환하면 오히려 느려짐. RVO(return value optimization)이라는 컴파일러 최적화가 깨짐.
+
+함수가 반환하는 건 그냥 객체 반환하는게 오히려 나을 때가 있음. 제한적으로 확실하게 빠른 경우에만 rvalue 최적화를 하자. 극한의 최적화가 필요한 상황이 아니면 직접 rvalue 최적화를 하는 경우는 드물다...
 
 ## etc
 
@@ -880,3 +932,7 @@ heap에 데이터 할당하는 작업이 overhead로 들어갈 수밖에 없음.
 또한, 내부 버퍼 증가는 멀티 스레드 환경에서 안전하지 않을 수도 있다.
 그 결과,
 아직도 정해진 길이의 문자 배열 선언한 다음에 sprintf로 쓰는 작업을 C++에서도 자주함.
+
+```
+
+```

@@ -30,6 +30,8 @@ int main(void) {
 
     // 소유권 이전.
     // 메모리 할당/해제가 이루어지지 않고 단순히 소유권을 옮기기만 함.
+    // move는 lvalue를 rvalue로 변환하는 역할임.
+    // unique_ptr를 복사 생성하면 unique의 정의와 다름. 따라서 임시적인 rvalue로 변환하는 과정이 필요하여 std::move 사용.
     unique_ptr<Vector> v2(move(v));
 
     cout << (v == nullptr) << endl; // true
