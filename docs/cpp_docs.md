@@ -955,6 +955,31 @@ lambda 앞에 [] 이거.
 코드 보는게 이해가 더 빠름
 130_lambda/lambda_capture.cpp
 
+## <thread> (C+11)
+
+multi thread 구현이 한층 편해짐.
+
+## File system lib (C++17)
+
+https://en.cppreference.com/w/cpp/filesystem
+
+그냥 fs API임. 문서 참고해서 사용.
+
+## module system (C++20)
+
+https://en.cppreference.com/w/cpp/language/modules
+
+Modules aim to replace the legacy header system inherited from C
+
+.cppm, .ixx
+
+1. 모듈 미리 컴파일: C++ 모듈 파일인 .cppm 파일을 모듈로 미리 컴파일하여 .pcm 파일을 생성합니다.
+2. 실행 파일 컴파일: .cpp 파일을 컴파일하고, 모듈 파일을 가져와서 실행 파일을 생성합니다
+
+## coroutine (C++20)
+
+js, python에서 쓰던 그거 맞다.
+
 ## etc
 
 ### RAII(자원 획득은 초기화, resource acquisition is initialization)
@@ -977,7 +1002,3 @@ heap에 데이터 할당하는 작업이 overhead로 들어갈 수밖에 없음.
 또한, 내부 버퍼 증가는 멀티 스레드 환경에서 안전하지 않을 수도 있다.
 그 결과,
 아직도 정해진 길이의 문자 배열 선언한 다음에 sprintf로 쓰는 작업을 C++에서도 자주함.
-
-```
-
-```

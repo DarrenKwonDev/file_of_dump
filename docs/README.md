@@ -32,6 +32,7 @@
 
 ## study materials
 
+-   [Google의 robots.txt 파서](https://github.com/google/robotstxt)
 -   [smallchat](https://github.com/antirez/smallchat)
 -   [pintOS](https://casys-kaist.github.io/pintos-kaist/introduction/getting_started.html)
     -   https://github.com/casys-kaist/pintos-kaist
