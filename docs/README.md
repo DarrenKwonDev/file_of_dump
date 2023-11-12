@@ -1,14 +1,12 @@
-
-
 <!-- toc -->
 
-- [contents](#contents)
-  * [C](#c)
-  * [Cpp](#cpp)
-  * [cheat sheet](#cheat-sheet)
-  * [cmake and tools](#cmake-and-tools)
-  * [study materials](#study-materials)
-  * [youtube](#youtube)
+-   [contents](#contents)
+    -   [C](#c)
+    -   [Cpp](#cpp)
+    -   [cheat sheet](#cheat-sheet)
+    -   [cmake and tools](#cmake-and-tools)
+    -   [study materials](#study-materials)
+    -   [youtube](#youtube)
 
 <!-- tocstop -->
 
@@ -50,6 +48,7 @@
 -   [cpp books](https://m.blog.naver.com/sssang97/221324271234)
 -   [learning-v8](https://github.com/danbev/learning-v8)
 
-## youtube
+## peoples
 
+[Bjarne Stroustrup's homepage](https://www.stroustrup.com/)  
 [Jacob Sorber](https://www.youtube.com/watch?v=AYSISa95oJE&ab_channel=JacobSorber)
