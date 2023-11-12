@@ -114,7 +114,9 @@
         "filesystem": "cpp",
         "iterator": "cpp",
         "functional": "cpp",
-        "version": "cpp"
+        "version": "cpp",
+        "__std_stream": "cpp",
+        "*.cppm": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

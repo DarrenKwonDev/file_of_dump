@@ -15,6 +15,7 @@ hello.txt
 *.i
 *.bc
 *.o
+*.class
 
 **/build/
 
