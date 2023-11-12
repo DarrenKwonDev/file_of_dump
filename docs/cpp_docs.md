@@ -957,7 +957,57 @@ lambda 앞에 [] 이거.
 
 ## <thread> (C+11)
 
-multi thread 구현이 한층 편해짐.
+https://en.cppreference.com/w/cpp/thread/thread
+
+### multi thread, multi process
+
+multi process, multi thread는 OS단의 함수를 직접 호출해서 작성했는데 wrapper로 묶어서 같은 interface로 사용할 수 있게끔 만들어줌.
+
+각 OS별 thread api (<Windows.h>, <pthread.h>) 등을 직접 사용해도 되지만, C++ 표준 thread 라이브러리를 사용하면 OS에 종속되지 않고 동일한 코드로 멀티 스레드 프로그램을 작성할 수 있습니다.
+
+어... 근데 어느 한 플랫폼에서 지원할 것이 확실하다면 그냥 OS native한 thread api를 쓰는 걸 더 선호하는 것 같다. 다양한 동시 지원을 위해 성능상 타협한 부분이 있다.
+
+근데 multi process는 C++ 없더라. boost에서는 제공이 되는 걸로 알고 있는데 C++ 표준에는 없는 듯. 직접 OS 의존적인 코드를 작성하던가 (<unistd.h> 같은...) boost 쓰던가.
+
+### std::thread
+
+-   특징
+    std::thread 는 표준 C++ 쓰레드로 이동이 가능하지만 복사는 불가능하다.
+    thread::id는 OS마다 관리 방법이 다르고 형도 다름.
+
+-   ref?
+    C++에서는 람다 함수가 참조하는 변수에 대한 스레드 안전성을 보장하기 위해 추가적인 처리가 필요합니다.
+    const reference가 아닌 reference를 전달할면 ref로 한 번 묶어야 한다.
+
+-   std::this_thread
+    provide functions that access the current thread of execution
+
+### <mutex>
+
+thread는 각자 stack 가지고 heap, code, data는 공유함. 공유 메모리 영역에 대한 race condition과 공유 자원 문제 발생의 해결책으로 mutex, semaphore 등이 존재.
+
+동일 스레드에서 두 번 lock 하면 deadlock이 발생함. 꼭 그렇게 해야 한다면 std::recursive_mutex를 사용할 것.
+
+### lock_guard (C++11)
+
+https://en.cppreference.com/w/cpp/thread/lock_guard
+
+lock_guard 클래스는 범위가 지정된 블록의 기간 동안 뮤텍스를 소유하기 위한 편리한 RAII 스타일 메커니즘을 제공하는 뮤텍스 래퍼입니다.
+
+scope 벗어나면 unlock됨. unlock(release) 잊어버리는 경우를 방지하기 위함.
+
+### scoped_lock (C++17)
+
+lock_guard와 마찬가지로 scope를 벗어나면 자동으로 unlock이 된다.
+데드락을 방지할 수 있으므로 가능하면 scoped_lock을 사용하자.
+
+lock_guard와 차이가 있다면,
+std::lock_guard는 하나의 뮤텍스(락)만을 관리하는 데 사용되며, std::scoped_lock은 여러 개의 뮤텍스를 관리할 수 있습니다.
+
+```cpp
+lock_guard<mutex>(sMutex)
+scoped_lock<mutex, mutex>(sMutex, tMutex, ...)
+```
 
 ## File system lib (C++17)
 
@@ -976,7 +1026,7 @@ Modules aim to replace the legacy header system inherited from C
 1. 모듈 미리 컴파일: C++ 모듈 파일인 .cppm 파일을 모듈로 미리 컴파일하여 .pcm 파일을 생성합니다.
 2. 실행 파일 컴파일: .cpp 파일을 컴파일하고, 모듈 파일을 가져와서 실행 파일을 생성합니다
 
-## coroutine (C++20)
+## <coroutine> (C++20)
 
 js, python에서 쓰던 그거 맞다.
 

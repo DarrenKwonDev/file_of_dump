@@ -116,7 +116,8 @@
         "functional": "cpp",
         "version": "cpp",
         "__std_stream": "cpp",
-        "*.cppm": "cpp"
+        "*.cppm": "cpp",
+        "thread": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
