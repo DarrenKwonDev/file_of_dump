@@ -67,6 +67,11 @@
 
 ## 권고 사항
 
+-   mem
+
+    -   힙 할당은 스택 할당보다 느리다. 너무 큰 객체가 스택이 터질 것 같을 때만 한정적으로 사용하라.
+    -   힙 할당을 하더라도 반환된 포인터에 대하여 smart pointer를 사용하라. (unique_ptr, shared_ptr, weak_ptr)
+
 -   delete
 
     -   delete로 지울 수 있는 건 heap 할당된 객체 뿐임.
@@ -75,7 +80,7 @@
 
 -   class
 
-    -   모든 소멸자는 가상 소멸자로 작성하는 것이 좋다
+    -   모든 소멸자는 가상 소멸자로 작성하는 것이 좋다. 왜냐하면 기본 클래스(base class)에 가상 소멸자(virtual destructor)를 만들면 파생 클래스(derived class)가 삭제될 때 기본 클래스의 가상 소멸자도 호출되기 때문. 아니라면 기본 클래스가 클린업 되지 않음.
     -   rule of three(five) / zero
     -   `클래스의  멤버 함수는 컴파일시 딱 한 번만 메모리에 할당됨`. 저수준에서 전역 함수와 그다지 다르지 않음. 개체마다 멤버 함수가 메모리에 위치한다면 상당한 공간 낭비.
     -   c++11의 override는 부모가 가상함수라는점 + 가상 함수를 바르게 오버라이드했다라는 것을 보장하는 효과가 있기 때문에 가능하면 사용하자.
@@ -111,20 +116,29 @@
     -   최대한 가독성 있게 적자. auto, auto\*, auto&를 구분하여 해당 변수가 값인지, 포인터인지, 참조인지를 구분할 수 있도록 하자.
     -   ::iterator, 이름이 긴 클래스 생성자 등을 auto로 선언하면 편리하다.
 
--   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
+-   constexpr
 
-    -   func(int\* a, const int b, const int c)
-    -   func(&a, b, c)
+    -   지원하는 C++ 버전을 쓴다면 적극적으로 활용하자.
 
--   C와 Cpp간의 확장자는 분리하여 적을 것
+-   etc
 
-    -   c : `*.c`
-    -   cpp: `*.cpp`, `*.cc`, `*.cxx`
-    -   `*.h` vs`*.hpp`
-        -   https://stackoverflow.com/questions/152555/h-or-hpp-for-your-class-definitions
-        -   .h : C/C++ compatible or pure C Headers
-        -   .hpp : C++ Headers
-    -   `.inl`: 인라인 함수를 포함하는 C++ 헤더 파일을 위한 확장자, 주로 템플릿 구현에 사용됩니다.
+    -   raw pointer는 나쁜게 아니다. smart pointer만 쓸 필욘 없다.
+    -   반환값으로 rvalue를 굳이 주려고 하지 말 것. 반환값 최적화 (RVO)를 믿자.
+    -   https://www.youtube.com/watch?v=i_wDa2AS_8w&ab_channel=mCoding
+    -   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
+
+        -   func(int\* a, const int b, const int c)
+        -   func(&a, b, c)
+
+    -   C와 Cpp간의 확장자는 분리하여 적을 것
+
+        -   c : `*.c`
+        -   cpp: `*.cpp`, `*.cc`, `*.cxx`
+        -   `*.h` vs`*.hpp`
+            -   https://stackoverflow.com/questions/152555/h-or-hpp-for-your-class-definitions
+            -   .h : C/C++ compatible or pure C Headers
+            -   .hpp : C++ Headers
+        -   `.inl`: 인라인 함수를 포함하는 C++ 헤더 파일을 위한 확장자, 주로 템플릿 구현에 사용됩니다.
 
 ## version
 

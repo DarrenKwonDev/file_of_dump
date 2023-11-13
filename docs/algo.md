@@ -135,3 +135,15 @@ int ceil_up = ((n + 9) / 10) * 10;
 
 배열의 인덱스를 특정 수의 존재 여부 혹은 존재 갯수로 활용하는 방식.
 해시맵의 기본 아이디어.
+
+## permutation
+
+## structured binding
+
+struct, map 등에 대해서 javascript에서 하듯 deconstruct할 수 있음.
+
+199_cpp_trics/structued_binding.cpp 참고
+
+## etc
+
+std::find_if
