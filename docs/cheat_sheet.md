@@ -1,9 +1,7 @@
-
-
 <!-- toc -->
 
-- [c](#c)
-- [cpp](#cpp)
+-   [c](#c)
+-   [cpp](#cpp)
 
 <!-- tocstop -->
 
@@ -76,8 +74,8 @@ int main(void) {
 
 ---
 
--   `int* const`
-    -   주소를 보호하는 ptr
+-   `int* const` (Const Pointer, 상수 포인터)
+    -   주소를 보호하는 ptr (const pointer to int)
     -   <u>포인터의 메모리를 고정하고 싶을 때 사용함. 메모리가 가리키는 값은 변경 가능</u>
         -   ```c
             int* const p = &a;
@@ -86,9 +84,9 @@ int main(void) {
             p++;    // error
             ```
     -   <u>ptr = &new 꼴 불가.</u>
--   `const int*`
+-   `const int*` (Pointer to Const)
 
-    -   값을 보호하는 ptr
+    -   값을 보호하는 ptr (pointer to const int)
     -   <u>포인터가 가리키는 값을 고정하고 싶을 때 사용함. 포인터가 담은 메모리 주소를 변경 가능</u>
     -   <u>\*ptr = new 꼴 불가.</u>
     -   ptr를 통한 값 변경을 막는 것이지 그 외의 작업은 가능.
@@ -98,6 +96,14 @@ int main(void) {
             p = &b; // ok.
             *p = 5; // error
             ```
+
+[rt_lt rule]에 의해서 읽어봅시다.
+
+```cpp
+const int* ptr1 = &x; // ptr1 is pointer to const int
+int const* ptr2 = &x; // ptr2 is pointer to const int
+int* const ptr3 = &x; // ptr3 is const pointer to int
+```
 
 ---
 

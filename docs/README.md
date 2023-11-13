@@ -28,7 +28,8 @@
 
 ## cmake and tools
 
-[cmake](./cmake.md)
+[cmake](./cmake.md)  
+[Makefiles](./Makefiles.md)
 
 ## study materials
 
