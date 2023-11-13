@@ -984,7 +984,7 @@ multi process, multi thread는 OS단의 함수를 직접 호출해서 작성했�
 
 ### <mutex>
 
-thread는 각자 stack 가지고 heap, code, data는 공유함. 공유 메모리 영역에 대한 race condition과 공유 자원 문제 발생의 해결책으로 mutex, semaphore 등이 존재.
+thread는 각자 stack 가지고 heap, code, data는 공유함. 공유 메모리 영역에 대한 race condition과 공유 자원 문제 발생의 해결책, concurrency primitives (동기화 프리미티브)로 mutex, semaphore 등이 존재. python 기준으로 생각해보면 threading.Lock, threading.RLock, threading.Condition, threading.Semaphore 정도가 있음.
 
 동일 스레드에서 두 번 lock 하면 deadlock이 발생함. 꼭 그렇게 해야 한다면 std::recursive_mutex를 사용할 것.
 
@@ -1008,6 +1008,25 @@ std::lock_guard는 하나의 뮤텍스(락)만을 관리하는 데 사용되며,
 lock_guard<mutex>(sMutex)
 scoped_lock<mutex, mutex>(sMutex, tMutex, ...)
 ```
+
+## condition_variable (C++11), unique_lock (C++11)
+
+이벤트 방식의 동기화 프리미티브.
+
+https://en.cppreference.com/w/cpp/thread/condition_variable  
+https://en.cppreference.com/w/cpp/thread/unique_lock
+
+-   conditional variable (event로 부르는 것이 더 적합한데...)
+    이벤트 개체로, 신호를 받을 때 까지 thread의 실행을 멈춤.
+    notify_one, notify_all로 신호를 보내 thread를 깨울 수 있음.
+    wait, wait_for, wait_until로 신호를 받을 때 까지 대기할 수 있음.
+    std::unique_lock를 사용하여 lock을 걸어야 함.
+    만약, notify가 호출되지 않거나, wait가 notify보다 먼저 호출되면 영원히 기다림
+    notify를 안 했는데도 깨어나는 OS가 있어서 wait에 pred 함수는 반드시 쓰자.
+
+-   unique_lock
+    scoped_lock과 동일한 기능이지만 생성 시에 lock을 걸지 않을 수 있으며 (std::defer_lock)  
+    condition_variable과 함께 사용할 수 있는 유일한 락.
 
 ## File system lib (C++17)
 
