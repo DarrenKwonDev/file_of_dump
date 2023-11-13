@@ -124,6 +124,11 @@ int* (*foo)(int, void(*)(int)) // foo is pointer to (int, void(*)(int)) -> int*
 void (*func(int, void (*)(int)))(int); // func is function retuning pointer to function (int) -> void
 int (*(*fun_one)(char *,double))[9][20]; // fun_one is pointer to function expecting (char *,double) and returning pointer to array (size 9) of array (size 20) of int.
 void (*(*f[])())() // f is array of pointer to function () -> pointer to function () -> void
+
+// const가 붙어도 같다.
+const int* ptr1 = &x; // ptr1 is pointer to const int
+int const* ptr2 = &x; // ptr2 is pointer to const int
+int* const ptr3 = &x; // ptr3 is const pointer to int
 ```
 
 ---
