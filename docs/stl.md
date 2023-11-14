@@ -22,6 +22,8 @@
 
 # STL(standard template library)
 
+알고리즘, 컨테이너, 이터레이터, 펑터 이렇게 4가지를 제공합니다.
+
 ## STL container
 
 https://en.cppreference.com/w/cpp/container
@@ -114,10 +116,6 @@ https://en.cppreference.com/w/cpp/container/map
 
 -   multi set
     -   중복키를 허용하는 set
-
-### tuple
-
-https://en.cppreference.com/w/cpp/utility/tuple
 
 ### stack
 

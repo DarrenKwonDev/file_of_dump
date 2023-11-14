@@ -26,6 +26,13 @@ nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out < ./input" -e cpp
 -   arr, string
     -   insert, erase: O(N);
 
+## fill, memset, copy, memecopy
+
+-   {0, } 형태로의 초기화는 초기 정적 초기화만 가능함. 동적으론 불가능.
+    -   가급적 0으로 초기화할 때는 memset을, 그 외의 값은 fill을 추천.
+-   `(first, last]` 꼴의 iterator 주의.
+-   깊은복사 array엔 memcpy, vector엔 memcpy나 copy
+
 ## 실수의 동등 비교
 
 float은 상대 오차 10-6까지 안전하고 double은 10-15까지 안전하다는 소리입니다.
@@ -81,7 +88,7 @@ ios::sync_with_stdio(0); // cpp stream와 c stream의 동기화 끊기
 cin.tie(0); // cin 전에 cout 버퍼를 비우지 않도록 함.
 ```
 
-## size() - 1 금지
+## size() - 1 금지, 할거면 (int)v.size()로 캐스팅
 
 ```cpp
 // don't do that.
