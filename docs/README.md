@@ -54,3 +54,8 @@
 
 [Bjarne Stroustrup's homepage](https://www.stroustrup.com/)  
 [Jacob Sorber](https://www.youtube.com/watch?v=AYSISa95oJE&ab_channel=JacobSorber)
+
+## tools
+
+[godbolt](https://godbolt.org/)  
+[perfbench](https://perfbench.com/)

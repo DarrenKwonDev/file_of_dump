@@ -145,6 +145,9 @@ int ceil_up = ((n + 9) / 10) * 10;
 
 ## permutation
 
+next_permutation "오름차순의 배열"을 기반으로 순열  
+prev_permutation은 "내림차순의 배열"을 기반으로 순열
+
 ## structured binding
 
 struct, map 등에 대해서 javascript에서 하듯 deconstruct할 수 있음.
