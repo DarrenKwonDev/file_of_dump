@@ -79,9 +79,7 @@ build: create $(CXX_OBJECTS)
 execute:
 	./${BUILD_DIR}/$(EXECUTABLE_NAME)
 
-clean:
-	rm -f $(BUILD_DIR)/*.o
-	rm -f $(BUILD_DIR)/$(EXECUTABLE_NAME)
+
 
 # ############
 # patterns
@@ -104,4 +102,11 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp
 # ############
 # phony
 # ############
+# 특정 명령어가 파일 이름이 아닌 명령어임을 지정함.
+# 아래는 각각의 명령어가 파일 이름이 아님을 지정하는 것.
 .PHONY: create build execute clean
+
+.PHONY: clean # phony target. 일괄 지정할수도 있고, 이렇게 단 건만 지정할 수도.
+clean:
+	rm -f $(BUILD_DIR)/*.o
+	rm -f $(BUILD_DIR)/$(EXECUTABLE_NAME)
