@@ -2,11 +2,12 @@
 
 <!-- tocstop -->
 
-CMake는 Makefiles를 생성하는 역할을 합니다. CMake 프로젝트를 설정하면 CMake는 해당 프로젝트에 대한 Makefiles를 생성하거나 다른 빌드 시스템 파일을 생성합니다.
-
 ## docs
 
 https://www.gnu.org/software/make/
+
+-   [implicit rules](https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html)
+-   [pattern rules](https://www.gnu.org/software/make/manual/html_node/Pattern-Rules.html)
 
 ## compile process
 
@@ -18,10 +19,6 @@ clang -S $file # assembly output
 clang -c $file # object output
 clang -save-temps $file # 컴파일 과정 중에 생성되는 임시 파일들을 보존. 위 명령어들 귀찮아서 보통 다 저장할 때 사용함.
 ```
-
-# implicit rules
-
-`make -p` to see all predefined variables
 
 ## etc
 
