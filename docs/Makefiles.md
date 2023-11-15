@@ -22,6 +22,4 @@ clang -save-temps $file # 컴파일 과정 중에 생성되는 임시 파일들�
 
 ## etc
 
-https://www.gnu.org/software/make/
 https://makefiletutorial.com/
-https://github.com/franneck94/UdemyMakefile/blob/master/.clang-format
