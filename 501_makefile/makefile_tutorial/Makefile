@@ -64,10 +64,14 @@ CXX_COMPILER_CALL = $(CXX) $(CXXFLAGS) $(CPPFLAGS)
 # target: prerequisites
 # 	commands
 # ############
+
 # if no arg provied, make will execute the first target
+# as convension, first target should be all.
+all: create build
 
 create:
-	mkdir -p $(BUILD_DIR)
+# @ snmbol -> don't show termnial output
+	@mkdir -p $(BUILD_DIR)
 
 build: create $(CXX_OBJECTS)
 	$(CXX_COMPILER_CALL) $(CXX_OBJECTS) $(LDFLAGS) -o $(BUILD_DIR)/$(EXECUTABLE_NAME)
