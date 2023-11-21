@@ -9,15 +9,19 @@ search: linear, binary, hash table(occur array), ...
 sort : quick, bubble, merge, eap, ...
 reverse
 
-## gtime
+# Modular arithmetic
 
-```bash
-nodemon --exec "g++-13 -std=c++17 ./*.cpp && gtime -f '\n%P cpu \n%es exeuction time\nmomery %MKB' ./a.out < ./input" -e cpp c
-\\
-nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out" -e cpp
-\\
-nodemon --exec "g++-13 -std=c++17 ./*.cpp && ./a.out < ./input" -e cpp
+a + b 혹은 a \* b가 long long 마저도 벗어나는
+큰 수의 연산을 처리할 때 좋다.
+
+```text
+(a + b) % c = ((a % c) + (b % c)) % c
+(a * b) % c = ((a % c) * (b % c)) % c
 ```
+
+## 입출력
+
+-   일반적으로 cin.ignore() 함수는 개행 문자('\n')를 제거하기 위해 사용되며, 특히 이전 입력 작업에서 개행 문자가 입력 버퍼에 남아 있어서 다음 입력 작업에 영향을 주는 경우에 유용합니다.
 
 ## 자료형
 
