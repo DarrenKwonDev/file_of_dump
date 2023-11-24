@@ -1,5 +1,9 @@
 # cpp algo note
 
+## docs
+
+[Algorithms for competitive programming](https://cp-algorithms.com/)
+
 ## mental model
 
 자료구조 보듯 insert, search, delete의 시간 및 공간 복잡도를 고려.
@@ -9,7 +13,18 @@ search: linear, binary, hash table(occur array), ...
 sort : quick, bubble, merge, eap, ...
 reverse
 
-# Modular arithmetic
+## 정수론
+
+-   [정수론 이론](https://github.com/rkm0959/Number_Theory_in_CP_PS)
+    -   [notation](https://ahgus89.github.io/algorithm/Notation/)
+    -   [Linear-sieve(오일러의 체)와 multiplicative function](https://ahgus89.github.io/algorithm/Linear-sieve/)
+    -   [소수와 에라토스테네스의 체 문제집](https://www.acmicpc.net/workbook/view/6593)
+    -   [유클리드, 확장 유클리드 문제집](https://www.acmicpc.net/workbook/view/6594)
+    -   [확장 유클리드 호제법](https://casterian.net/algo/ext-euclidean.html)
+
+### Modular arithmetic
+
+-   분배 법칙
 
 a + b 혹은 a \* b가 long long 마저도 벗어나는
 큰 수의 연산을 처리할 때 좋다.
@@ -18,6 +33,32 @@ a + b 혹은 a \* b가 long long 마저도 벗어나는
 (a + b) % c = ((a % c) + (b % c)) % c
 (a * b) % c = ((a % c) * (b % c)) % c
 ```
+
+-   식의 활용 (1)
+
+```text
+1127 % 32
+= (1000 + 100 + 10 + 10 + 7) % 32
+= ((1000 % 32) + (100 % 32) + (10 % 32) + (10 % 32) + (7 % 32)) % 32
+= (8 + 4 + 10 + 10 + 7) % 32
+= 39 % 32
+= 7
+```
+
+-   식의 활용 (2)
+
+```text
+(a_{0}r^{0} + a_{1}r^{1} + a_{2}r^{2} + ... + a_{n}r^{n}) % m
+= (((a_{0}r^{0} % m) + (a_{1}r^{1} % m) + (a_{2}r^{2} % m) + ... + (a_{n}r^{n} % m)))% m
+```
+
+-   관련문제
+    -   [hashing](https://www.acmicpc.net/problem/15829)
+    -   [1](https://www.acmicpc.net/problem/4375)
+
+### 합동식
+
+    -   [합동식](https://casterian.net/archives/60)
 
 ## 입출력
 
