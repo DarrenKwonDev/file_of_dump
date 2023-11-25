@@ -6,6 +6,12 @@
 typedef long long ll;
 using namespace std;
 
+void inc(int x) {
+    x++;
+}
 int main() {
     fio();
+    int x = 7;
+    inc(x);
+    cout << x;
 }

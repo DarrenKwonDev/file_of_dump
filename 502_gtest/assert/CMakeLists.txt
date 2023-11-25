@@ -31,4 +31,3 @@ target_link_libraries(mainApp sumLibrary)
 # testRunner 생성 후 lib 링킹
 add_executable(testRunner testRunner.cpp)
 target_link_libraries(testRunner sumLibrary gtest_main gmock_main)
-
