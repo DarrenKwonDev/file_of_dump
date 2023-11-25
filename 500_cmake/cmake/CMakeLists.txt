@@ -5,7 +5,6 @@
 # 4.) cmake --build .
 # 5.) ./Executable
 
-
 cmake_minimum_required(VERSION 3.16)
 
 # https://cmake.org/cmake/help/v3.27/command/project.html#project
@@ -28,6 +27,7 @@ set(EXECUTABLE_NAME executable)
 # https://cmake.org/cmake/help/latest/command/function.html
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
+# ./cmake 폴더에 있는 cmake 파일을 include 할 수 있습니다.
 include(AddGitSubmodule) # include : https://cmake.org/cmake/help/v3.27/command/include.html#include
 include(FetchContent)
 include(Docs)

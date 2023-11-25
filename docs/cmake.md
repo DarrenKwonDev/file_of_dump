@@ -1,30 +1,28 @@
-
-
 <!-- toc -->
 
-- [docs](#docs)
-- [installation](#installation)
-- [keywords](#keywords)
-- [Generating a Project](#generating-a-project)
-- [Generator for GCC and Clang (-G)](#generator-for-gcc-and-clang--g)
-- [Generator for MSVC (-G)](#generator-for-msvc--g)
-- [Specify the Build Type (debug or release)](#specify-the-build-type-debug-or-release)
-- [Passing Options (-D)](#passing-options--d)
-- [Specify the Build Target (Option 1)](#specify-the-build-target-option-1)
-- [Specify the Build Target (Option 2)](#specify-the-build-target-option-2)
-- [Run the Executable](#run-the-executable)
-- [Different Linking Types](#different-linking-types)
-  * [PUBLIC](#public)
-  * [PRIVATE](#private)
-  * [INTERFACE](#interface)
-- [Different Library Types](#different-library-types)
-  * [Library](#library)
-  * [Shared (동적 라이브러리)](#shared-%EB%8F%99%EC%A0%81-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC)
-  * [Static (정적 라이브러리)](#static-%EC%A0%95%EC%A0%81-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC)
-- [external lib](#external-lib)
-  * [option 1. git submodule](#option-1-git-submodule)
-  * [option 2. FetchContent (+ CMake 3.11)](#option-2-fetchcontent--cmake-311)
-- [전체적인 그림](#%EC%A0%84%EC%B2%B4%EC%A0%81%EC%9D%B8-%EA%B7%B8%EB%A6%BC)
+-   [docs](#docs)
+-   [installation](#installation)
+-   [keywords](#keywords)
+-   [Generating a Project](#generating-a-project)
+-   [Generator for GCC and Clang (-G)](#generator-for-gcc-and-clang--g)
+-   [Generator for MSVC (-G)](#generator-for-msvc--g)
+-   [Specify the Build Type (debug or release)](#specify-the-build-type-debug-or-release)
+-   [Passing Options (-D)](#passing-options--d)
+-   [Specify the Build Target (Option 1)](#specify-the-build-target-option-1)
+-   [Specify the Build Target (Option 2)](#specify-the-build-target-option-2)
+-   [Run the Executable](#run-the-executable)
+-   [Different Linking Types](#different-linking-types)
+    -   [PUBLIC](#public)
+    -   [PRIVATE](#private)
+    -   [INTERFACE](#interface)
+-   [Different Library Types](#different-library-types)
+    -   [Library](#library)
+    -   [Shared (동적 라이브러리)](#shared-%EB%8F%99%EC%A0%81-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC)
+    -   [Static (정적 라이브러리)](#static-%EC%A0%95%EC%A0%81-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC)
+-   [external lib](#external-lib)
+    -   [option 1. git submodule](#option-1-git-submodule)
+    -   [option 2. FetchContent (+ CMake 3.11)](#option-2-fetchcontent--cmake-311)
+-   [전체적인 그림](#%EC%A0%84%EC%B2%B4%EC%A0%81%EC%9D%B8-%EA%B7%B8%EB%A6%BC)
 
 <!-- tocstop -->
 
@@ -206,13 +204,15 @@ cd build
 ./bin/ExternalLibraries_Executable
 ```
 
-## Different Linking Types
+## linking 관련 cmake
 
-```cmake
-add_library(A ...)
-add_library(B ...)
-add_library(C ...)
-```
+`add_library` : 라이브러리 생성. STATIC, SHARED, MODULE 등의 타입을 지정할 수 있음.
+
+`target_link_libraries` : 특정 실행파일에 라이브러리를 linking. target_link_libraries(A B)는 A가 B를 사용한다는 의미.
+
+`target_include_directories` : include directory를 지정. header file이 어디 있는지 알려줌.
+
+## Different Linking Types (PUBLIC, PRIVATE, INTERFACE). 생성된 lib를 어떤 방식으로 linking할 것인가.
 
 ### PUBLIC
 
@@ -244,7 +244,7 @@ target_include_directories(D INTERFACE {CMAKE_CURRENT_SOURCE_DIR}/include)
 
 In general, used for header-only libraries.
 
-## Different Library Types
+## Different Library Types. lib에는 어떤 타입이 있는가.
 
 ### Library
 
@@ -254,7 +254,7 @@ An application utilizes a library.
 
 ### Shared (동적 라이브러리)
 
--   Linux: \*.so
+-   Linux: \*.so (Shared Object)
 -   MacOS: \*.dylib
 -   Windows: \*.dll
 
@@ -264,7 +264,7 @@ In general the shared library is in the same directory as the executable.
 
 ### Static (정적 라이브러리)
 
--   Linux/MacOS: \*.a
+-   Linux/MacOS: \*.a (Archive)
 -   Windows: \*.lib
 
 Static libraries increase the overall size of the binary, but it means that you don't need to carry along a copy of the library that is being used.
@@ -294,6 +294,36 @@ https://cmake.org/cmake/help/v3.27/module/FetchContent.html
 
 단, 외부 라이브러리가 프로젝트의 빌드 디렉토리 내에 저장되므로, 프로젝트의 전체 크기가 증가할 수 있습니다.
 (build/\_deps 내에 저장됨.)
+
+#### fetch content 관련 함수
+
+`FetchContent_MakeAvailable()`, `FetchContent_Populate()`
+
+FetchContent_MakeAvailable() 또는 FetchContent_Populate()를 호출하면 언제든지 쿼리할 수 있는 글로벌 프로퍼티에 정보가 기록됩니다.
+
+`FetchContent_GetProperties()`
+
+{name}\_POPULATED
+{name}\_SOURCE_DIR
+{name}\_BUILD_DIR
+
+예컨대 이런 식이다.
+
+```cpp
+# Catch2 선언
+FetchContent_Declare(
+  catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG v2.13.0
+)
+
+# Catch2 속성 조회
+FetchContent_GetProperties(catch2)
+if(NOT catch2_POPULATED)
+  FetchContent_Populate(catch2)
+  add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
+endif()
+```
 
 ## 전체적인 그림
 

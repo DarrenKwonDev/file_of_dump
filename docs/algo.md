@@ -202,3 +202,4 @@ struct, map 등에 대해서 javascript에서 하듯 deconstruct할 수 있음.
 ## etc
 
 std::find_if
+std::count_if
