@@ -6,6 +6,7 @@
   * [C](#c)
   * [Cpp](#cpp)
   * [cheat sheet](#cheat-sheet)
+  * [compiler and tools](#compiler-and-tools)
   * [cmake and tools](#cmake-and-tools)
   * [study materials](#study-materials)
   * [peoples](#peoples)
@@ -28,6 +29,10 @@
 ## cheat sheet
 
 [cheat_sheet](./cheat_sheet.md)
+
+## compiler and tools
+
+[compiler](./compiler.md)
 
 ## cmake and tools
 
