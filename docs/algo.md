@@ -60,6 +60,10 @@ a + b 혹은 a \* b가 long long 마저도 벗어나는
 
     -   [합동식](https://casterian.net/archives/60)
 
+## DFS, BFS, 맵 이동
+
+-   [문제집](https://www.acmicpc.net/workbook/view/1833)
+
 ## 입출력
 
 -   일반적으로 cin.ignore() 함수는 개행 문자('\n')를 제거하기 위해 사용되며, 특히 이전 입력 작업에서 개행 문자가 입력 버퍼에 남아 있어서 다음 입력 작업에 영향을 주는 경우에 유용합니다.

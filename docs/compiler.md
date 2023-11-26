@@ -1,18 +1,16 @@
-
-
 <!-- toc -->
 
-- [compiler](#compiler)
-  * [env settings](#env-settings)
-  * [compiler frontend, backend](#compiler-frontend-backend)
-  * [명령어 예 clang, lldb, leaks, valgrind...](#%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%98%88-clang-lldb-leaks-valgrind)
-    + [if want to use gcc rather than clang](#if-want-to-use-gcc-rather-than-clang)
-    + [컴파일 플래그와 링커 플래그의 구분](#%EC%BB%B4%ED%8C%8C%EC%9D%BC-%ED%94%8C%EB%9E%98%EA%B7%B8%EC%99%80-%EB%A7%81%EC%BB%A4-%ED%94%8C%EB%9E%98%EA%B7%B8%EC%9D%98-%EA%B5%AC%EB%B6%84)
-    + [clang](#clang)
-    + [clang++](#clang)
-    + [lldb](#lldb)
-    + [leaks](#leaks)
-    + [기타 도구들](#%EA%B8%B0%ED%83%80-%EB%8F%84%EA%B5%AC%EB%93%A4)
+-   [compiler](#compiler)
+    -   [env settings](#env-settings)
+    -   [compiler frontend, backend](#compiler-frontend-backend)
+    -   [명령어 예 clang, lldb, leaks, valgrind...](#%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%98%88-clang-lldb-leaks-valgrind)
+        -   [if want to use gcc rather than clang](#if-want-to-use-gcc-rather-than-clang)
+        -   [컴파일 플래그와 링커 플래그의 구분](#%EC%BB%B4%ED%8C%8C%EC%9D%BC-%ED%94%8C%EB%9E%98%EA%B7%B8%EC%99%80-%EB%A7%81%EC%BB%A4-%ED%94%8C%EB%9E%98%EA%B7%B8%EC%9D%98-%EA%B5%AC%EB%B6%84)
+        -   [clang](#clang)
+        -   [clang++](#clang)
+        -   [lldb](#lldb)
+        -   [leaks](#leaks)
+        -   [기타 도구들](#%EA%B8%B0%ED%83%80-%EB%8F%84%EA%B5%AC%EB%93%A4)
 
 <!-- tocstop -->
 
@@ -67,21 +65,55 @@ use `g++-13` instead of `clang++`
     -   `-std=c++17`: C++17 표준을 사용합니다.
     -   `-O1`, `-O2`, `-O3`: 점진적으로 강화되는 최적화 수준을 제공합니다.
     -   `-D` : 매크로 정의 (-DDEBUG, -D_THREAD_SAFE)
-    -   `-I` : 추가적으로 정의한 사용자 헤더 파일 경로
+    -   `-I` : 컴파일러에게 헤더 파일을 찾을 추가적인 디렉토리를 지정합니다.
 
 -   링커 플래그
-    -   `-l`: 라이브러리 이름
-    -   `-L`: 라이브러리 경로
+    -   `-l`: 라이브러리 이름 (표준 라이브러리와 -L로 추가 제공된 경로에서 특정 라이브러리를 추가)
+        -   pre-compiled된 binary를 연결함. SDL2, lua, ...
+    -   `-L`: 링커에게 라이브러리 파일을 찾을 추가적인 디렉토리를 지정합니다. 라이브러리 경로 (표준 라이브러리 경로 외에 추가 경로 제공)
     -   `-o`: 출력 파일 이름
 
-```bash
-sdl2-config --libs --cflags
--L/opt/homebrew/lib -lSDL2
--I/opt/homebrew/include/SDL2 -D_THREAD_SAFE
+### 표준 라이브러리 경로는 어딘가?
 
-sdl2-config --libs
--L/opt/homebrew/lib -lSDL2
+```bash
+clang -print-search-dirs
+# programs: =/Library/Developer/CommandLineTools/usr/bin
+# libraries: =/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0
+
+echo $LIBRARY_PATH
+or
+echo $LD_LIBRARY_PATH
+
 ```
+
+### 설치한 라이브러리의 경로 문제로 컴파일러와 IDE intellesense의 경로가 일치하지 않을 경우
+
+심볼릭 링크와 실제 경로: Homebrew는 종종 실제 라이브러리 파일을 Cellar 디렉토리에 설치하고, /opt/homebrew/include나 /opt/homebrew/lib와 같은 일반적인 위치에는 심볼릭 링크를 생성합니다. sdl2-config 스크립트는 이러한 심볼릭 링크를 따라가서 헤더 파일과 라이브러리 파일의 위치를 제공합니다.
+
+컴파일러는 sdl2-config 스크립트의 결과를 기반으로 SDL2 헤더 파일과 라이브러리를 찾습니다. 반면, IDE(Integrated Development Environment)는 프로젝트 설정에 명시된 경로를 따라 헤더 파일을 찾습니다. 이 두 설정이 불일치할 경우, 경로 문제가 발생할 수 있습니다.
+
+가급적이면 c_cpp_properties.json에 Cellar가 아닌 /opt/homebrew/include, /opt/homebrew/lib를 직접 명시하고, 컴파일러에서도 이를 참조하도록 설정하는 것이 좋다.
+
+includePath 한 끝에 의해 달라지므로 유의할 것.
+
+```json
+"includePath": [
+    "${workspaceFolder}/**",
+    "/opt/homebrew/include/**" // 이 경우 <SDL2/SDL.h>로 임포트
+    "/opt/homebrew/include/SDL2" // 이 경우 <SDL.h>로 임포트
+],
+```
+
+### library를 pre-compiled binary로 사용하기 vs 내장 lib로 사용하기
+
+-   pre-compiled binary로 사용하기
+
+    -   이 프로젝트에선 SDL2, lua는 사용하고 있어 -l 옵션으로 링킹해주고, 바이너리를 -L로, 헤더 경로를 -I로 추가해주면 됨.
+    -   이 방식의 장점은, 컴파일 타임을 잡아 먹지 않는다는 것.
+
+-   내장 lib로 사용하기
+    -   이 프로젝트에선 glm, imgui, sol은 내장 lib로써 사용하고 있어 소스코드를 전부 다 담고 있다. -I 경로만 추가해주면 됨.
+    -   이 방식의 장점은, 커스터마이징이 용이하고 플랫폼에 종속되지 않는다는 것. 물론 손이 좀 더 가긴 한다.
 
 ### clang
 
