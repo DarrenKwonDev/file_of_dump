@@ -85,6 +85,7 @@
 
 -   mem
 
+    -   리눅스 기준 stack은 한 2mb정도?
     -   힙 할당은 스택 할당보다 느리다. 너무 큰 객체가 스택이 터질 것 같을 때만 한정적으로 사용하라.
     -   힙 할당을 하더라도 반환된 포인터에 대하여 smart pointer를 사용하라. (unique_ptr, shared_ptr, weak_ptr)
 
@@ -97,8 +98,9 @@
 -   class
 
     -   모든 소멸자는 가상 소멸자로 작성하는 것이 좋다. 왜냐하면 기본 클래스(base class)에 가상 소멸자(virtual destructor)를 만들면 파생 클래스(derived class)가 삭제될 때 기본 클래스의 가상 소멸자도 호출되기 때문. 아니라면 기본 클래스가 클린업 되지 않음.
+        -   컴파일 시 `-Wnon-virtual-dtor`을 켜두자. 가상 소멸자가 아닌 클래스의 소멸자를 가상 소멸자로 선언하지 않은 경우 경고
     -   rule of three(five) / zero
-    -   `클래스의  멤버 함수는 컴파일시 딱 한 번만 메모리에 할당됨`. 저수준에서 전역 함수와 그다지 다르지 않음. 개체마다 멤버 함수가 메모리에 위치한다면 상당한 공간 낭비.
+    -   `클래스의 멤버 함수는 컴파일시 딱 한 번만 메모리에 할당됨`. 저수준에서 전역 함수와 그다지 다르지 않음. 개체마다 멤버 함수가 메모리에 위치한다면 상당한 공간 낭비.
     -   c++11의 override는 부모가 가상함수라는점 + 가상 함수를 바르게 오버라이드했다라는 것을 보장하는 효과가 있기 때문에 가능하면 사용하자.
 
 -   struct
@@ -138,7 +140,9 @@
 
 -   etc
 
+    -   fixed width integer type 좋아요.
     -   raw pointer는 나쁜게 아니다. smart pointer만 쓸 필욘 없다.
+        -   생각해보면 go는 raw pointer만 있는데 잘 쓰이고 있음.
     -   반환값으로 rvalue를 굳이 주려고 하지 말 것. 반환값 최적화 (RVO)를 믿자.
     -   https://www.youtube.com/watch?v=i_wDa2AS_8w&ab_channel=mCoding
     -   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
@@ -485,7 +489,7 @@ class Dog: virtual public Animal;
 abstract 키워드 같은게 없다.  
 `순수 가상 함수를 가지고 있는 base 클래스가 곧 추상 클래스다.`  
 순수 가상 함수 = 구현이 없는 virtual 함수  
-`virtual (return) func(param) = 0` 꼴의 형태.
+`virtual (return type) func(param) = 0` 꼴의 형태.
 
 추상 클래스로는 개체를 만들 수 없음.
 
@@ -513,6 +517,12 @@ yourCat->Speak(); // animal의 Speak이 호출됨.
 ```
 
 ### 동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.
+
+-   virtual의 존재 이유
+
+    -   virtual 키워드가 붙으면 파생 클래스에서 재정의될 수 있다.
+    -   virtual 키워드가 안 붙어도 파생 클래스가 동일한 메서드 명으로 작성할 수 있으나 이는 'override'가 아닌 'hide'이다. '함수 가림'이라고도 한다.
+    -   결론적으로, virtual 함수만이 정확한 의미에서 오버라이드 될 수 있음.
 
 -   동적 바인딩(런타임 바인딩) = 가상 함수(virtual) 작성.
     -   실행 중에 어떤 함수를 호출할 것인지 결정됨. 따라서 런타임 바인딩.
@@ -655,7 +665,7 @@ compile time polymorphism을 구현할 수 있긴 하나 남용하면 가독성�
 
 template class를 별도의 header, cpp 파일로 분리할 경우 컴파일 도중 cpp 파일을 알 수가 없음. (linking 과정 전이므로). inline 함수와 마찬가지로 template class의 구현을 header에 넣어야 함.
 
-어.. 살펴보니 header만 정의하는 경우도 꽤 있는 듯?
+어.. 살펴보니 header만 정의하는 경우도 꽤 있는 듯? header only library 같은 경우도 있고.
 
 ### 언제 template을 사용하면 좋나요
 
