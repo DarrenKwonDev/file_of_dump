@@ -2,13 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-
-#ifdef __WIN32__
-#include <winsock2.h>
-#else
 #include <sys/socket.h>
-#endif
+#include <unistd.h>
 
 void error_handling(char* message);
 
@@ -43,20 +38,24 @@ int main(int argc, char* argv[]) {
         error_handling("serv sock creation failed");
     }
 
+    // set sock addr
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     serv_addr.sin_port = htons(atoi(argv[1]));
 
+    // socket binding(id, port, ...)
     if (
         bind(serv_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) {
         error_handling("bind error");
     }
 
+    // listen
     if (listen(serv_sock, 5) == -1) {
         error_handling("listen error");
     }
 
+    // accept client
     clnt_addr_size = sizeof(clnt_addr);
     clnt_sock = accept(
         serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
@@ -64,8 +63,11 @@ int main(int argc, char* argv[]) {
         error_handling("accept error");
     }
 
+    // send data to clint sock.
     char msg[] = "test yo";
     write(clnt_sock, msg, sizeof(msg));
+
+    // clean up
     close(clnt_sock);
     close(serv_sock);
     return 0;

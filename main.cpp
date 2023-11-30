@@ -6,30 +6,41 @@
 typedef long long ll;
 using namespace std;
 
-int dx[] = {0, 0, 1, -1};
-int dy[] = {1, -1, 0, 0};
-
 int board[100][100] = {
     0,
 };
-
-int bfs_vis[101] = {
+int vis[100][100] = {
     0,
 };
+int dy[] = {0, 0, 1, -1};
+int dx[] = {1, -1, 0, 0};
+int n, m;
 
-void bfs(int r, int c) {
-    bfs_vis[r] = 1;
-    queue<int> q;
-    q.push(r);
-
+void bfs(int y, int x) {
+    queue<pair<int, int>> q;
+    q.push(make_pair(y, x));
+    vis[y][x] = 1;
     while (!q.empty()) {
-        int here = q.front();
+        tie(y, x) = q.front();
         q.pop();
-        for (int nei : board[here]) {
-            if (nei != 0 and !bfs_vis[nei]) {
-                q.push(nei);
-                bfs_vis[nei] = bfs_vis[here] + 1;
+        for (int i = 0; i < 4; i++) {
+            int ny = y + dy[i];
+            int nx = x + dx[i];
+
+            // 범위를 벗어나거나 이미 방문한 노드거나, 갈 수 없는 곳이라면 생략
+            if (ny < 0 || ny >= n || nx < 0 || nx >= m) {
+                continue;
             }
+            if (board[ny][nx] == 0) {
+                continue;
+            }
+            if (vis[ny][nx] != 0) {
+                continue;
+            }
+
+            vis[ny][nx] = vis[y][x] + 1;
+
+            q.push(make_pair(ny, nx));
         }
     }
 }
@@ -37,15 +48,14 @@ void bfs(int r, int c) {
 int main() {
     fio();
 
-    int n, m;
     cin >> n >> m;
 
     for (int i = 0; i < n; i++) {
         string str;
         cin >> str;
-        for (int j = 0; j < str.length(); j++) {
+        for (int j = 0; j < m; j++) {
             int is_conn = str[j] - '0';
-            if (is_conn != 0) {
+            if (is_conn) {
                 board[i][j] = 1;
             }
         }
@@ -53,7 +63,7 @@ int main() {
 
     bfs(0, 0);
 
-    for (int i = 0; i < 102; i++) {
-        cout << bfs_vis[i] << " ";
-    }
+    cout << vis[n - 1][m - 1];
+
+    return 0;
 }

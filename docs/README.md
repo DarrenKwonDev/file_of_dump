@@ -6,8 +6,8 @@
   * [C](#c)
   * [Cpp](#cpp)
   * [cheat sheet](#cheat-sheet)
-  * [compiler and tools](#compiler-and-tools)
-  * [cmake and tools](#cmake-and-tools)
+  * [sock](#sock)
+  * [compiler, cmake and other tools](#compiler-cmake-and-other-tools)
   * [study materials](#study-materials)
   * [peoples](#peoples)
   * [tools](#tools)
@@ -30,12 +30,13 @@
 
 [cheat_sheet](./cheat_sheet.md)
 
-## compiler and tools
+## sock
+
+[sock](./sock.md)
+
+## compiler, cmake and other tools
 
 [compiler](./compiler.md)
-
-## cmake and tools
-
 [cmake](./cmake.md)  
 [Makefiles](./Makefiles.md)
 [gtest & gmock](./gtestgmock.md)
