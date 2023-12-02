@@ -1,21 +1,20 @@
 
-
 <!-- toc -->
 
 - [compiler](#compiler)
-  * [env settings](#env-settings)
-  * [compiler frontend, backend](#compiler-frontend-backend)
-  * [명령어 예 clang, lldb, leaks, valgrind...](#%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%98%88-clang-lldb-leaks-valgrind)
-    + [if want to use gcc rather than clang](#if-want-to-use-gcc-rather-than-clang)
-    + [컴파일 플래그와 링커 플래그의 구분](#%EC%BB%B4%ED%8C%8C%EC%9D%BC-%ED%94%8C%EB%9E%98%EA%B7%B8%EC%99%80-%EB%A7%81%EC%BB%A4-%ED%94%8C%EB%9E%98%EA%B7%B8%EC%9D%98-%EA%B5%AC%EB%B6%84)
-    + [표준 라이브러리 경로는 어딘가?](#%ED%91%9C%EC%A4%80-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC-%EA%B2%BD%EB%A1%9C%EB%8A%94-%EC%96%B4%EB%94%98%EA%B0%80)
-    + [설치한 라이브러리의 경로 문제로 컴파일러와 IDE intellesense의 경로가 일치하지 않을 경우](#%EC%84%A4%EC%B9%98%ED%95%9C-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC%EC%9D%98-%EA%B2%BD%EB%A1%9C-%EB%AC%B8%EC%A0%9C%EB%A1%9C-%EC%BB%B4%ED%8C%8C%EC%9D%BC%EB%9F%AC%EC%99%80-ide-intellesense%EC%9D%98-%EA%B2%BD%EB%A1%9C%EA%B0%80-%EC%9D%BC%EC%B9%98%ED%95%98%EC%A7%80-%EC%95%8A%EC%9D%84-%EA%B2%BD%EC%9A%B0)
-    + [library를 pre-compiled binary로 사용하기 vs 내장 lib로 사용하기](#library%EB%A5%BC-pre-compiled-binary%EB%A1%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0-vs-%EB%82%B4%EC%9E%A5-lib%EB%A1%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0)
-    + [clang](#clang)
-    + [clang++](#clang)
-    + [lldb](#lldb)
-    + [leaks](#leaks)
-    + [기타 도구들](#%EA%B8%B0%ED%83%80-%EB%8F%84%EA%B5%AC%EB%93%A4)
+  - [env settings](#env-settings)
+  - [compiler frontend, backend](#compiler-frontend-backend)
+  - [명령어 예 clang, lldb, leaks, valgrind](#명령어-예-clang-lldb-leaks-valgrind)
+    - [if want to use gcc rather than clang](#if-want-to-use-gcc-rather-than-clang)
+    - [컴파일 플래그와 링커 플래그의 구분](#컴파일-플래그와-링커-플래그의-구분)
+    - [표준 라이브러리 경로는 어딘가?](#표준-라이브러리-경로는-어딘가)
+    - [설치한 라이브러리의 경로 문제로 컴파일러와 IDE intellesense의 경로가 일치하지 않을 경우](#설치한-라이브러리의-경로-문제로-컴파일러와-ide-intellesense의-경로가-일치하지-않을-경우)
+    - [library를 pre-compiled binary로 사용하기 vs 내장 lib로 사용하기](#library를-pre-compiled-binary로-사용하기-vs-내장-lib로-사용하기)
+    - [clang](#clang)
+    - [clang++](#clang-1)
+    - [lldb](#lldb)
+    - [leaks](#leaks)
+    - [기타 도구들](#기타-도구들)
 
 <!-- tocstop -->
 
@@ -32,20 +31,20 @@
 컴파일러는 frontend, backend로 나뉨.
 프론트엔드는 소스 코드를 읽고 문법적으로 분석하며 중간 코드(Intermediate Code)를 생성합니다. 이 중간 코드는 프로그램의 의미를 나타내는 중간 표현입니다. 이어서 백엔드가 중간 코드를 가져와서 어셈블리 코드 또는 기계어로 번역하여 실행 파일을 생성합니다.
 
--   clang
-    -   LLVM(Low-Level Virtual Machine) 백엔드를 사용하는 계열
-    -   gcc 사용 인터페이스를 거의 비슷함. mac에서 gcc는 clang을 wrapping한 것일 정도.
-    -   보통 이걸 쓰게 된다.
--   gcc (GNU Compiler Collection)
-    -   거의 모든 표준 지원 + cross platform
-    -   그래서 GCC의 각 아키텍처별 백엔드는 해당 아키텍처의 이름이라. (ARM 아키텍처, RISC-V 아키텍처, ...)
--   MS visual C++
-    -   MASM(Microsoft Macro Assembler) 백엔드를 사용함.
-    -   cpp 컴파일러임에도 .c 확장자면 컴파일함.
-    -   C99 표준. C11은 거의 지원하지 않음.
-    -   window에서는 이 컴파일러를 사용하는 경우가 많음.
+- clang
+  - LLVM(Low-Level Virtual Machine) 백엔드를 사용하는 계열
+  - gcc 사용 인터페이스를 거의 비슷함. mac에서 gcc는 clang을 wrapping한 것일 정도.
+  - 보통 이걸 쓰게 된다.
+- gcc (GNU Compiler Collection)
+  - 거의 모든 표준 지원 + cross platform
+  - 그래서 GCC의 각 아키텍처별 백엔드는 해당 아키텍처의 이름이라. (ARM 아키텍처, RISC-V 아키텍처, ...)
+- MS visual C++
+  - MASM(Microsoft Macro Assembler) 백엔드를 사용함.
+  - cpp 컴파일러임에도 .c 확장자면 컴파일함.
+  - C99 표준. C11은 거의 지원하지 않음.
+  - window에서는 이 컴파일러를 사용하는 경우가 많음.
 
-## 명령어 예 clang, lldb, leaks, valgrind...
+## 명령어 예 clang, lldb, leaks, valgrind
 
 ### if want to use gcc rather than clang
 
@@ -62,21 +61,21 @@ use `g++-13` instead of `clang++`
 
 ### 컴파일 플래그와 링커 플래그의 구분
 
--   컴파일 플래그
+- 컴파일 플래그
 
-    -   `-Wall`: 일반적인 경고 메시지를 모두 활성화합니다.
-    -   `-Wextra`: -Wall보다 더 많은 경고 메시지를 활성화합니다.
-    -   `-Werror`: 모든 경고를 오류로 처리하여 경고가 발생하면 컴파일을 중단합니다.
-    -   `-std=c++17`: C++17 표준을 사용합니다.
-    -   `-O1`, `-O2`, `-O3`: 점진적으로 강화되는 최적화 수준을 제공합니다.
-    -   `-D` : 매크로 정의 (-DDEBUG, -D_THREAD_SAFE)
-    -   `-I` : 컴파일러에게 헤더 파일을 찾을 추가적인 디렉토리를 지정합니다.
+  - `-Wall`: 일반적인 경고 메시지를 모두 활성화합니다.
+  - `-Wextra`: -Wall보다 더 많은 경고 메시지를 활성화합니다.
+  - `-Werror`: 모든 경고를 오류로 처리하여 경고가 발생하면 컴파일을 중단합니다.
+  - `-std=c++17`: C++17 표준을 사용합니다.
+  - `-O1`, `-O2`, `-O3`: 점진적으로 강화되는 최적화 수준을 제공합니다.
+  - `-D` : 매크로 정의 (-DDEBUG, -D_THREAD_SAFE)
+  - `-I` : 컴파일러에게 헤더 파일을 찾을 추가적인 디렉토리를 지정합니다.
 
--   링커 플래그
-    -   `-l`: 라이브러리 이름 (표준 라이브러리와 -L로 추가 제공된 경로에서 특정 라이브러리를 추가)
-        -   pre-compiled된 binary를 연결함. SDL2, lua, ...
-    -   `-L`: 링커에게 라이브러리 파일을 찾을 추가적인 디렉토리를 지정합니다. 라이브러리 경로 (표준 라이브러리 경로 외에 추가 경로 제공)
-    -   `-o`: 출력 파일 이름
+- 링커 플래그
+  - `-l`: 라이브러리 이름 (표준 라이브러리와 -L로 추가 제공된 경로에서 특정 라이브러리를 추가)
+    - pre-compiled된 binary를 연결함. SDL2, lua, ...
+  - `-L`: 링커에게 라이브러리 파일을 찾을 추가적인 디렉토리를 지정합니다. 라이브러리 경로 (표준 라이브러리 경로 외에 추가 경로 제공)
+  - `-o`: 출력 파일 이름
 
 ### 표준 라이브러리 경로는 어딘가?
 
@@ -111,14 +110,14 @@ includePath 한 끝에 의해 달라지므로 유의할 것.
 
 ### library를 pre-compiled binary로 사용하기 vs 내장 lib로 사용하기
 
--   pre-compiled binary로 사용하기
+- pre-compiled binary로 사용하기
 
-    -   이 프로젝트에선 SDL2, lua는 사용하고 있어 -l 옵션으로 링킹해주고, 바이너리를 -L로, 헤더 경로를 -I로 추가해주면 됨.
-    -   이 방식의 장점은, 컴파일 타임을 잡아 먹지 않는다는 것.
+  - 이 프로젝트에선 SDL2, lua는 사용하고 있어 -l 옵션으로 링킹해주고, 바이너리를 -L로, 헤더 경로를 -I로 추가해주면 됨.
+  - 이 방식의 장점은, 컴파일 타임을 잡아 먹지 않는다는 것.
 
--   내장 lib로 사용하기
-    -   이 프로젝트에선 glm, imgui, sol은 내장 lib로써 사용하고 있어 소스코드를 전부 다 담고 있다. -I 경로만 추가해주면 됨.
-    -   이 방식의 장점은, 커스터마이징이 용이하고 플랫폼에 종속되지 않는다는 것. 물론 손이 좀 더 가긴 한다.
+- 내장 lib로 사용하기
+  - 이 프로젝트에선 glm, imgui, sol은 내장 lib로써 사용하고 있어 소스코드를 전부 다 담고 있다. -I 경로만 추가해주면 됨.
+  - 이 방식의 장점은, 커스터마이징이 용이하고 플랫폼에 종속되지 않는다는 것. 물론 손이 좀 더 가긴 한다.
 
 ### clang
 
@@ -153,7 +152,7 @@ clang++ -Wall -std=c++17 Main.cpp $(sdl2-config --libs --cflags) -o Main
 
 ### lldb
 
-https://lldb.llvm.org/use/tutorial.html
+<https://lldb.llvm.org/use/tutorial.html>
 
 ```bash
 clang -g ./main.c
@@ -171,6 +170,6 @@ n # 한 줄 씩
 
 > 지금 와서 C 코드를 짜야 한다면 무조건 메모리 안전성을 확인해 주는 도구를 사용해야 한다. 이를테면 Zed Shaw의 《깐깐하게 배우는 C(Learn C the Hard Way)》에서는 초장에 바로 valgrind를 쓰도록 하고 있다.
 >
-> -   https://hut.mearie.org/c-language/
+> - <https://hut.mearie.org/c-language/>
 
-https://github.com/nothings/single_file_libs
+<https://github.com/nothings/single_file_libs>
