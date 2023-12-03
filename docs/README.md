@@ -1,16 +1,14 @@
-
-
 <!-- toc -->
 
-- [contents](#contents)
-  * [C](#c)
-  * [Cpp](#cpp)
-  * [cheat sheet](#cheat-sheet)
-  * [sock](#sock)
-  * [compiler, cmake and other tools](#compiler-cmake-and-other-tools)
-  * [study materials](#study-materials)
-  * [peoples](#peoples)
-  * [tools](#tools)
+-   [contents](#contents)
+    -   [C](#c)
+    -   [Cpp](#cpp)
+    -   [cheat sheet](#cheat-sheet)
+    -   [sock](#sock)
+    -   [compiler, cmake and other tools](#compiler-cmake-and-other-tools)
+    -   [study materials](#study-materials)
+    -   [peoples](#peoples)
+    -   [tools](#tools)
 
 <!-- tocstop -->
 
@@ -40,6 +38,7 @@
 [cmake](./cmake.md)  
 [Makefiles](./Makefiles.md)
 [gtest & gmock](./gtestgmock.md)
+[tools](./tools.md)
 
 ## study materials
 

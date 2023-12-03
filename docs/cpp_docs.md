@@ -108,6 +108,9 @@
     -   struct는 C처럼 쓰기를 권장한다. (plain old data).
         struct에 생성, 소멸자, 메서드 할 수 있지만 하지 말자.
         순수하게 데이터만을 담아두자. 이래야 memcpy() 등 메모리 조작이 편안해진다.
+    -   위의 권고 사항은 다르게 간단한 class를 struct로 쓰는 경우가 생각보다 잦다.
+        -   게다가 struct, class간 상호적으로 상속도 할 수 있다.
+        -   진행하는 프로젝트 컨벤션에 맞추되 개인 프로젝트에서는 POD로 사용하길 권장함.
 
 -   enum
     컴파일러는 열거형 상수를 정수 값으로 대체하여 컴파일된 코드에 포함시킵니다. 일종의 #define과 같이 작동하는 것.
@@ -140,9 +143,10 @@
 
 -   smart pointer
 
-    -   raw pointer는 나쁜게 아니다. smart pointer만 쓸 필욘 없다.
-    -   생각해보면 go는 raw pointer만 있는데 잘 쓰이고 있음.
+    -   raw pointer는 나쁜게 아니다. smart pointer만 쓸 필욘 없다. 생각해보면 go는 raw pointer만 있는데 잘 쓰이고 있음.
+    -   C library (ex - SDL)은 보통 raw ptr를 기대한다. 특히 서드 파티는 자체적으로 리소스를 수거하는 로직이 있곤 하기에 (ex - SDL_DestroyWindow) 이 경우 raw ptr를 권장함.
     -   다만, 힙에 할당해서 raw pointer 직접 다루는 것보다 안전하고 자원 회수에도 신경쓰지 않아도 됨. 따라서, new 키워드를 사용할 때면, smart pointer를 사용할 수 없는지 생각해보자
+    -   class에서 선언한 smart ptr 멤버 변수는 deconstruct될 때 수거 된다.
 
 -   etc
 

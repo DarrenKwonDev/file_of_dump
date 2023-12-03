@@ -119,7 +119,19 @@
         "*.cppm": "cpp",
         "thread": "cpp",
         "socket.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "*.tcc": "cpp",
+        "cuchar": "cpp",
+        "expected": "cpp",
+        "memory_resource": "cpp",
+        "source_location": "cpp",
+        "utility": "cpp",
+        "shared_mutex": "cpp",
+        "spanstream": "cpp",
+        "stacktrace": "cpp",
+        "stdfloat": "cpp",
+        "stop_token": "cpp",
+        "syncstream": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
