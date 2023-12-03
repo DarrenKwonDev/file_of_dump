@@ -283,10 +283,14 @@ badbit // bad()
     -   웬만하면 안티패턴임. const로 선언되어 있는 포인터를 아닌 것으로 변환하다니. 다만 서드파티 코드를 입맛대로 개조할 때는 종종 사용함.
 
 -   dynamic_cast(C++98, modern C++)
+
     -   converts within inheritance hierarchies
     -   호환되지 않는 자식형으로 캐스팅하면 NULL을 반환함. 잘못된 형 변환도 일단 컴파일하고 보는 static_cast보다 안전한 편임.
     -   그런데 이걸 사용하려면 컴파일 옵션 중 RTTI(real time type information)를 켜야 함. 그렇지 않다면 static_cast와 동일하게 작동함.
     -   RTTI 기능을 켜면 성능 저하가 일어나기 때문에 아직 적극적 사용은 요원함.
+
+-   static_pointer_cast(C++11)
+    -   이 연산은 스마트 포인터의 관리 객체에 대한 형변환을 수행하며, 참조 카운트를 증가 또는 감소시키는 등 스마트 포인터의 안전한 형변환을 지원합니다.
 
 ## class
 
