@@ -25,7 +25,8 @@ private:
 // 클래스 내 멤버 객체를 unique ptr로 선언하여 메모리 정리할 필요 없음.
 class Player {
 public:
-    Player() : mLocation(new Vector(1.1, 1.1)) {}
+    Player() : mLocation(new Vector(1.1, 1.1)) {
+    }
     virtual ~Player() {
         // mLocation을 delete할 필요 없음.
     }

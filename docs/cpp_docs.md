@@ -25,7 +25,6 @@
         -   [정적 바인딩(컴파일 바인딩) = 적은 대로 행한다.](#정적-바인딩컴파일-바인딩--적은-대로-행한다)
         -   [동적 바인딩(런타임 바인딩) = 가상 함수(virtual)로 실질을 런타임에 찾아 호출하도록 한다.](#동적-바인딩런타임-바인딩--가상-함수virtual로-실질을-런타임에-찾아-호출하도록-한다)
         -   [그래서 virtual을 왜 쓰냐?](#그래서-virtual을-왜-쓰냐)
-        -   [typeid, type_info](#typeid-type_info)
         -   [가상 소멸자](#가상-소멸자)
     -   [inline function](#inline-function)
     -   [static = 범위의 제한을 받는 전역 변수](#static--범위의-제한을-받는-전역-변수)
@@ -37,6 +36,7 @@
         -   [template 구현은 왜 header에서 이루어지는가. template class linking error](#template-구현은-왜-header에서-이루어지는가-template-class-linking-error)
         -   [언제 template을 사용하면 좋나요](#언제-template을-사용하면-좋나요)
         -   [generic과 무슨 차이가 있나요 = compile time polymorphism](#generic과-무슨-차이가-있나요--compile-time-polymorphism)
+        -   [RTTI (Run-Time Type Information)](#rtti-run-time-type-information)
     -   [C++11](#c11)
         -   [auto (C++11)](#auto-c11)
         -   [static_assert (C++11)](#static_assert-c11)
@@ -565,15 +565,6 @@ public:
 일반함수의 override는 정적 바인딩(선언을 따라감)
 virtual 함수의 override는 동적 바인딩(실질을 따라감)
 
-### typeid, type_info
-
-[typeid](https://en.cppreference.com/w/cpp/language/typeid)
-
-typeid는 런타임에 객체의 타입 정보를 얻어오는데 사용 됩니다.
-동적 바인딩처럼, 실제 타입에 대한 정보를 반환합니다.
-
-[type_info](https://en.cppreference.com/w/cpp/header/typeinfo) 와 wrapper인 [type_index](https://en.cppreference.com/w/cpp/types/type_index) 도 알아보면 좋다.
-
 ### 가상 소멸자
 
 `모든 소멸자는 가상 소멸자로 작성하는 것이 좋다`  
@@ -715,6 +706,15 @@ template은 실제 타입이 컴파일 시 결정됩니다.
 compile time에 코드를 생성하는 template의 특성으로 컴파일 시간이 늘어날 것입니다.
 
 또한, template에 넣는 자료형 가짓수에 비례하여 실행 파일의 크기가 증가할 것입니다.
+
+### RTTI (Run-Time Type Information)
+
+[typeid](https://en.cppreference.com/w/cpp/language/typeid)
+
+typeid는 런타임에 객체의 타입 정보(동적 바인딩된 실제 타입)를 얻어오는데 사용 됩니다.
+
+-   [type_info](https://en.cppreference.com/w/cpp/header/typeinfo)
+-   type_info의 wrapper인 [type_index](https://en.cppreference.com/w/cpp/types/type_index). 타입을 index로 사용하려는 경우에 유용하다. map<std::type_index, std::Base>와 같은 꼴로. std::type_index는 std::type_info 객체를 기반으로 하면서도 복사 가능하고 비교 가능한 형태로 가공되었다.
 
 ## C++11
 
