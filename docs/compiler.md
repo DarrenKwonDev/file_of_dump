@@ -1,18 +1,16 @@
-
-
 <!-- toc -->
 
-- [compiler](#compiler)
-  * [env settings](#env-settings)
-  * [compiler frontend, backend](#compiler-frontend-backend)
-  * [명령어 예 clang, lldb, leaks, valgrind](#%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%98%88-clang-lldb-leaks-valgrind)
-    + [if want to use gcc rather than clang](#if-want-to-use-gcc-rather-than-clang)
-    + [컴파일 플래그와 링커 플래그의 구분](#%EC%BB%B4%ED%8C%8C%EC%9D%BC-%ED%94%8C%EB%9E%98%EA%B7%B8%EC%99%80-%EB%A7%81%EC%BB%A4-%ED%94%8C%EB%9E%98%EA%B7%B8%EC%9D%98-%EA%B5%AC%EB%B6%84)
-    + [표준 라이브러리 경로는 어딘가?](#%ED%91%9C%EC%A4%80-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC-%EA%B2%BD%EB%A1%9C%EB%8A%94-%EC%96%B4%EB%94%98%EA%B0%80)
-    + [설치한 라이브러리의 경로 문제로 컴파일러와 IDE intellesense의 경로가 일치하지 않을 경우](#%EC%84%A4%EC%B9%98%ED%95%9C-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC%EC%9D%98-%EA%B2%BD%EB%A1%9C-%EB%AC%B8%EC%A0%9C%EB%A1%9C-%EC%BB%B4%ED%8C%8C%EC%9D%BC%EB%9F%AC%EC%99%80-ide-intellesense%EC%9D%98-%EA%B2%BD%EB%A1%9C%EA%B0%80-%EC%9D%BC%EC%B9%98%ED%95%98%EC%A7%80-%EC%95%8A%EC%9D%84-%EA%B2%BD%EC%9A%B0)
-    + [library를 pre-compiled binary로 사용하기 vs 내장 lib로 사용하기](#library%EB%A5%BC-pre-compiled-binary%EB%A1%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0-vs-%EB%82%B4%EC%9E%A5-lib%EB%A1%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0)
-    + [clang](#clang)
-    + [clang++](#clang)
+-   [compiler](#compiler)
+    -   [env settings](#env-settings)
+    -   [compiler frontend, backend](#compiler-frontend-backend)
+    -   [명령어 예 clang, lldb, leaks, valgrind](#명령어-예-clang-lldb-leaks-valgrind)
+        -   [if want to use gcc rather than clang](#if-want-to-use-gcc-rather-than-clang)
+        -   [컴파일 플래그와 링커 플래그의 구분](#컴파일-플래그와-링커-플래그의-구분)
+        -   [표준 라이브러리 경로는 어딘가?](#표준-라이브러리-경로는-어딘가)
+        -   [설치한 라이브러리의 경로 문제로 컴파일러와 IDE intellesense의 경로가 일치하지 않을 경우](#설치한-라이브러리의-경로-문제로-컴파일러와-ide-intellesense의-경로가-일치하지-않을-경우)
+        -   [library를 pre-compiled binary로 사용하기 vs 내장 lib로 사용하기](#library를-pre-compiled-binary로-사용하기-vs-내장-lib로-사용하기)
+        -   [clang](#clang)
+        -   [clang++](#clang-1)
 
 <!-- tocstop -->
 
@@ -110,11 +108,11 @@ includePath 한 끝에 의해 달라지므로 유의할 것.
 
 -   pre-compiled binary로 사용하기
 
-    -   이 프로젝트에선 SDL2, lua는 사용하고 있어 -l 옵션으로 링킹해주고, 바이너리를 -L로, 헤더 경로를 -I로 추가해주면 됨.
+    -   -l 옵션으로 링킹해주고, 바이너리를 -L로, 헤더 경로를 -I로 추가해주면 됨.
     -   이 방식의 장점은, 컴파일 타임을 잡아 먹지 않는다는 것.
 
 -   내장 lib로 사용하기
-    -   이 프로젝트에선 glm, imgui, sol은 내장 lib로써 사용하고 있어 소스코드를 전부 다 담고 있다. -I 경로만 추가해주면 됨.
+    -   내장 lib로써 사용하고 있어 소스코드를 전부 다 담고 있다. -I 경로만 추가해주면 됨.
     -   이 방식의 장점은, 커스터마이징이 용이하고 플랫폼에 종속되지 않는다는 것. 물론 손이 좀 더 가긴 한다.
 
 ### clang

@@ -150,11 +150,13 @@
 
 -   etc
 
+    -   `포인터를 들고 있는 stl container를 clear할 때는, 내부 원소들을 delete해주어야 한다. (114_stl_container/vector/ptr_vector_heap_cleanup.cpp) 참고`
     -   fixed width integer type 좋아요.
     -   인자는 값복사(포인터를 넘겨도 포인터란 값을 복사), 반환도 값복사
     -   static 멤버 변수를 초기화하지 않으면, 링커는 해당 변수에 대한 정의를 찾을 수 없어 "Undefined symbols" 오류를 발생시킴.
     -   반환값으로 rvalue를 굳이 주려고 하지 말 것. 반환값 최적화 (RVO)를 믿자.
-    -   https://www.youtube.com/watch?v=i_wDa2AS_8w&ab_channel=mCoding
+    -   class 내부에서 다른 class를 참조하면 circular dependency 문제의 소지가 있다. 사용할 때는 주의하자.
+    -   [31 nooby C++ habits you need to ditch](https://www.youtube.com/watch?v=i_wDa2AS_8w&ab_channel=mCoding)
     -   읽기 전용 매개변수는 상수 참조로, 출력용 매개변수는 포인터로.
 
         -   func(int\* a, const int b, const int c)
@@ -291,6 +293,7 @@ badbit // bad()
 
 -   static_pointer_cast(C++11)
     -   이 연산은 스마트 포인터의 관리 객체에 대한 형변환을 수행하며, 참조 카운트를 증가 또는 감소시키는 등 스마트 포인터의 안전한 형변환을 지원합니다.
+    -   단순 ptr이 아닌 shared_ptr를 반환합니다.
 
 ## class
 

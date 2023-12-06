@@ -1,11 +1,10 @@
-
-
 <!-- toc -->
 
-- [lldb](#lldb)
-  * [문제 해결의 flow](#%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0%EC%9D%98-flow)
-- [leaks](#leaks)
-- [기타 도구들](#%EA%B8%B0%ED%83%80-%EB%8F%84%EA%B5%AC%EB%93%A4)
+-   [lldb](#lldb)
+    -   [문제 해결의 flow](#문제-해결의-flow)
+-   [clangd](#clangd)
+-   [leaks](#leaks)
+-   [기타 도구들](#기타-도구들)
 
 <!-- tocstop -->
 
@@ -57,6 +56,13 @@ n # 한 줄 씩
 # 시작 주소에서 28바이트를 읽어라.
 memory read/x 0x0000000100004f4c --count 28
 ```
+
+## [clangd](https://clangd.llvm.org/)
+
+c/c++ default intellisense가 아주 느리다.  
+clangd를 사용하자. c_cpp_properties.json과도 싸울 필요가 없어진다.
+
+-   https://80000coding.oopy.io/6e809d3a-dea5-40f3-9c72-de454a9d3632
 
 ## leaks
 
