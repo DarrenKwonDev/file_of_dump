@@ -1,4 +1,7 @@
 ## custom
+**/.vs
+**/*.vcxproj.user
+**/*.vcxproj.filters
 client
 server
 main.cpp
