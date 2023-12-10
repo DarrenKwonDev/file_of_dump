@@ -58,6 +58,7 @@
 -   [cpling](https://github.com/rdjondo/cplings)
 -   [cpp books](https://m.blog.naver.com/sssang97/221324271234)
 -   [learning-v8](https://github.com/danbev/learning-v8)
+-   [beej's guide](https://beej.us/guide/)
 
 ## peoples
 
