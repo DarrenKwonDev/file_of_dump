@@ -3,7 +3,8 @@
 **/*.vcxproj.user
 **/*.vcxproj.filters
 client
-server
+**/client
+**/server
 main.cpp
 main.c
 **/.DS_Store

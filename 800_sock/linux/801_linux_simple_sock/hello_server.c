@@ -11,22 +11,11 @@ int main(int argc, char* argv[]) {
     int serv_sock_fd;
     int clnt_sock;
 
-    /*
-        family(주소 체계), ip, port로 이루어짐.
-        struct sockaddr_in {
-            __uint8_t       sin_len;
-            sa_family_t     sin_family;
-            in_port_t       sin_port;
-            struct  in_addr sin_addr;
-            char            sin_zero[8];
-        }
-    */
     struct sockaddr_in serv_addr;
     struct sockaddr_in clnt_addr;
     socklen_t clnt_addr_size;
 
     if (argc != 2) {
-        printf("port is %s", argv[0]);
         exit(1);
     }
 
@@ -39,9 +28,9 @@ int main(int argc, char* argv[]) {
     }
 
     // set sock addr
-    memset(&serv_addr, 0, sizeof(serv_addr));
+    memset(&serv_addr, 0, sizeof(serv_addr)); // sin_zero를 채우기 위해.
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); // server의 ip를 자동으로 할당함.
     serv_addr.sin_port = htons(atoi(argv[1]));
 
     // socket binding(id, port, ...)

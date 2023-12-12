@@ -15,14 +15,14 @@ int main(int argc, char* argv[]) {
     int str_len;
 
     if (argc != 3) {
-        printf("port is %s", argv[0]);
+        printf("arg is not match");
         exit(1);
     }
 
     // create socket
-    sock = socket(PF_INET, SOCK_STREAM, 0);
-    if (sock == -1) {
-        error_handling("socket error");
+    if ((sock = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
+        perror("socket creation error");
+        exit(1);
     }
 
     // set sock addr
@@ -34,8 +34,11 @@ int main(int argc, char* argv[]) {
     serv_addr.sin_port = htons(atoi(argv[2])); // atoi: 문자열을 정수로 변환
 
     // client sock이 지정한 곳으로 connect 요청
+    // connect가 반환되었다고 연결된 것이 아님. 서버 측의 backlog queue에 담겼음을 의미함.
+    // 클라이언트 즉의 ip, port를 connect 호출 시 커널에서 자동으로 임의 선택함.
     if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) {
-        error_handling("connect error");
+        perror("connect error");
+        exit(1);
     }
 
     // read data
