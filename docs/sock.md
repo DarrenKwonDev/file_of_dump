@@ -11,6 +11,7 @@
         -   [데이터 교환 및 종료](#데이터-교환-및-종료)
         -   [client socket과 server socket의 차이점](#client-socket과-server-socket의-차이점)
     -   [theoretical background](#theoretical-background)
+        -   [tcp-ip model](#tcp-ip-model)
         -   [tcp](#tcp)
         -   [UDP](#udp)
     -   [portability](#portability)
@@ -111,11 +112,13 @@ close()
 
 ### client socket과 server socket의 차이점
 
-server sock flow : socket 생성 -> bind -> listen -> accept -> read/write -> close
+server sock flow : socket 생성 -> bind -> listen -> accept(conn socket 생성) -> read/write -> close
 
-client sock flow : socket 생성 -> connect -> read/write -> close
+client sock flow : socket 생성 -> connect(커널에 의한 자동 ip, port 지정) -> read/write -> close
 
 ## theoretical background
+
+### tcp-ip model
 
 -   port는 응용 프로그램을 구분하기 위한 번호가 아니라, 통신을 위해 소켓에 부여되는 번호다. 응용 프로그램이 소켓을 하나 물고 있다고 오해한다. 한 응용 프로그램이 여러 소켓을 물고 있을 수도 있다.
 
