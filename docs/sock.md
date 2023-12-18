@@ -9,7 +9,7 @@
         -   [accept](#accept)
         -   [connect (client socket)](#connect-client-socket)
         -   [데이터 교환 및 종료](#데이터-교환-및-종료)
-        -   [client socket과 server socket의 차이점](#client-socket과-server-socket의-차이점)
+        -   [client socket과 server socket의 flow](#client-socket과-server-socket의-flow)
     -   [theoretical background](#theoretical-background)
         -   [tcp-ip model](#tcp-ip-model)
         -   [tcp](#tcp)
@@ -107,20 +107,40 @@ int connect(int, const struct sockaddr\*, socklen_t)
 sockaddr로 연결 요청.
 connect 함수가 반환되었다고 연결된 것이 아님. 서버 측의 backlog queue에 담겼음을 의미함.
 
+UDP socket(DGRAM)의 경우에는 기본적으로 unconnected 소켓이라서 connect를 하지 않아도 데이터를 보낼 수 있음.
+만약 connect를 한다면 connected 소켓이 되어서 read, write를 사용할 수 있게 됨.
+
 ### 데이터 교환 및 종료
 
-read(), write()
+read(), write(), recvfrom(), sendto()
 close()
 
-### client socket과 server socket의 차이점
+### client socket과 server socket의 flow
+
+-   tcp 기준
 
 server sock flow : socket 생성 -> bind -> listen -> accept(conn socket 생성) -> read/write -> close
 
 client sock flow : socket 생성 -> connect(커널에 의한 자동 ip, port 지정) -> read/write -> close
 
+-   udp 기준
+
+수락을 허용하는 과정이 아니라 곧바로 각 소켓 간의 소통이 이뤄지므로 서버와 클라이언트란 구분이 모호한 편이다.
+
+socket 생성 -> bind -> recvfrom/sendto -> close
+
+하나의 소켓만 존재하면 되며, tcp와 달리 연결 상태를 유지하지 않으므로 데이터 전송시 주소를 명시해야 함. 대신, listen, accept가 없음.
+
+sendto 시점에 socket의 ip, port 지정이 안 되어 있으면 자동 할당됨.
+
 ## theoretical background
 
 ### tcp-ip model
+
+application
+tcp/udp(transport) : 도착한 호스트 내에서 열린 소켓으로 패킷을 전달하는 역할은 tcp/udp
+ip(network) : 특정 호스트에서 다른 호스트까지 패킷을 보내는 역할은 ip
+link : 물리계층
 
 -   port는 응용 프로그램을 구분하기 위한 번호가 아니라, 통신을 위해 소켓에 부여되는 번호다. 응용 프로그램이 소켓을 하나 물고 있다고 오해한다. 한 응용 프로그램이 여러 소켓을 물고 있을 수도 있다.
 
@@ -128,18 +148,14 @@ client sock flow : socket 생성 -> connect(커널에 의한 자동 ip, port 지
 
     스트림 지향: TCP는 전송되는 데이터를 개별적인 메시지로 취급하지 않고 연속적인 바이트 스트림으로 다룹니다. 이는 데이터가 전송 순서대로 정확하게 도착한다는 것을 의미합니다.
 
-    경계 없음 (No Boundary): TCP는 데이터를 바이트 단위로 전송하며, 각 바이트 사이에 명시적인 경계나 구분이 없습니다. 예를 들어, 응용 프로그램이 TCP를 통해 500바이트를 전송하면, 이 데이터는 도착지에서 500바이트 묶음으로 수신될 수도 있고, 여러 작은 조각으로 분할되어 수신될 수도 있습니다. TCP는 이러한 조각들을 원래 순서대로 재조립합니다. -> `application protocol을 설정해야 함. 특정 문자가 등장하면 stream을 한 번 끊는 등의 방식으로 클라-서버 간의 규약을 정해야 함.`
-
-
-    메시지 경계 인식 불가: TCP는 전송된 데이터의 개별 메시지 경계를 인식하지 못합니다. 예를 들어, 응용 프로그램이 두 개의 메시지를 연속적으로 보냈다면, TCP는 이를 하나의 연속된 데이터 스트림으로 처리합니다. 수신 측 응용 프로그램은 이 데이터를 적절히 구분해야 합니다.
-
-    응용 계층에서의 경계 설정: 데이터의 경계를 명확히 하기 위해서는, 응용 계층에서 이를 관리해야 합니다. 예를 들어, 메시지의 시작과 끝을 나타내는 특정 문자나 길이 정보를 포함시켜 데이터를 구분할 수 있습니다.
+    데이터 간 경계 없음 (No Boundary): TCP는 데이터를 바이트 단위로 전송하며, 각 바이트 사이에 명시적인 경계나 구분이 없습니다. 예를 들어, 응용 프로그램이 TCP를 통해 500바이트를 전송하면, 이 데이터는 도착지에서 500바이트 묶음으로 수신될 수도 있고, 여러 작은 조각으로 분할되어 수신될 수도 있습니다. TCP는 이러한 조각들을 원래 순서대로 재조립합니다. -> 응용 계층에서의 경계 설정이 필요함, 즉, `application protocol을 설정해야 함. 특정 문자가 등장하면 stream을 한 번 끊는 등의 방식으로 클라-서버 간의 규약을 정해야 함.`
 
 ### UDP
 
-    UDP (User Datagram Protocol)는 TCP와 달리 비연결 지향적이고, 메시지 지향적인 프로토콜입니다. UDP의 주요 특징들을 자세히 설명하겠습니다:
+    UDP (User Datagram Protocol)는 TCP와 달리 비연결 지향적이고, 메시지 지향적인 프로토콜.
 
     비연결 지향 (Connectionless): UDP는 연결을 설정하거나 종료하는 과정이 없습니다. 즉, 데이터를 보내기 전에 통신 상대방과의 연결을 미리 설정할 필요가 없습니다. 이는 UDP가 간단한 네트워크 요청에 적합하게 만들며, TCP에 비해 오버헤드가 적습니다.
+    -> listen, accept가 없음.
 
     메시지 지향 (Message-Oriented): UDP는 데이터를 독립적인 메시지 단위로 처리합니다. 각 UDP 패킷(또는 '데이터그램'이라고 불림)은 독립적으로 전송되며, 각 패킷은 명확한 경계를 가지고 있습니다. 이는 수신자가 각각의 메시지를 별도로 인식할 수 있게 합니다.
 
