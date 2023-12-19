@@ -8,7 +8,8 @@
         -   [listen (server socket)](#listen-server-socket)
         -   [accept](#accept)
         -   [connect (client socket)](#connect-client-socket)
-        -   [데이터 교환 및 종료](#데이터-교환-및-종료)
+        -   [데이터 교환](#데이터-교환)
+        -   [half-close for graceful shutdown (shutdown)](#half-close-for-graceful-shutdown-shutdown)
         -   [client socket과 server socket의 flow](#client-socket과-server-socket의-flow)
     -   [theoretical background](#theoretical-background)
         -   [tcp-ip model](#tcp-ip-model)
@@ -110,10 +111,24 @@ connect 함수가 반환되었다고 연결된 것이 아님. 서버 측의 back
 UDP socket(DGRAM)의 경우에는 기본적으로 unconnected 소켓이라서 connect를 하지 않아도 데이터를 보낼 수 있음.
 만약 connect를 한다면 connected 소켓이 되어서 read, write를 사용할 수 있게 됨.
 
-### 데이터 교환 및 종료
+### 데이터 교환
 
-read(), write(), recvfrom(), sendto()
-close()
+tcp, connected socket : read/write
+udp, unconnected socket : recvfrom/sendto
+
+### half-close for graceful shutdown (shutdown)
+
+두 호스트 간 tcp connection이 수립되면 각 호스트는 (1) 입력 스트림, (2) 출력 스트림 2개를 소유한다. 어느 한 쪽의 입력 스트림은 반대편의 출력 스트림으로 이어진다.
+
+어느 한 호스트가 모든 스트림을 닫아버리면 유실되는 패킷이 발생할 수 있다. 때문에 2개의 스트림 중 어느 한 개만을 닫는 것을 `half close`라고 한다.
+
+`close` 는 모든 스트림을 닫는 것이고, `shutdown` 은 half close를 의미한다.
+
+shutdown(sock, howto)
+
+SHUT_RD : 입력 스트림 닫아 (수신 불가능해짐. 수신 관련 함수 호출도 불가)
+SHUT_WR : 출력 스트림 닫아 (송신 불가능해짐. 송신 관련 함수 호출도 불가)
+SHUT_RDWR : close과 같음.
 
 ### client socket과 server socket의 flow
 
