@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
         error_handling("socket error");
     }
 
-    // set sock addr
+    // set sock addr으
     // port는 16비트이므로 short형이다. 그래서 hton(s)
     // ip는 32비트이므로 long형이다. 그래서 hton(l)
     memset(&serv_addr, 0, sizeof(serv_addr));
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     serv_addr.sin_addr.s_addr = inet_addr(argv[1]); // inet_addr: 문자열을 네트워크 바이트 순서의 정수로 변환
     serv_addr.sin_port = htons(atoi(argv[2])); // atoi: 문자열을 정수로 변환
 
-    // client sock이 지정한 곳으로 connect 요청
+    // client sock이 지정한 곳로 connect 요청
     if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) {
         error_handling("connect error");
     }

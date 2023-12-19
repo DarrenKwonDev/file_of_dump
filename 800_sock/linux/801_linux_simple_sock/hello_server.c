@@ -9,7 +9,7 @@ void error_handling(char* message);
 
 int main(int argc, char* argv[]) {
     int serv_sock_fd;
-    int clnt_sock;
+    int conn_sock_fd;
 
     struct sockaddr_in serv_addr;
     struct sockaddr_in clnt_addr;
@@ -46,18 +46,18 @@ int main(int argc, char* argv[]) {
 
     // accept client
     clnt_addr_size = sizeof(clnt_addr);
-    clnt_sock = accept(
+    conn_sock_fd = accept(
         serv_sock_fd, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
-    if (clnt_sock == -1) {
+    if (conn_sock_fd == -1) {
         error_handling("accept error");
     }
 
     // send data to clint sock.
     char msg[] = "test yo";
-    write(clnt_sock, msg, sizeof(msg));
+    write(conn_sock_fd, msg, sizeof(msg));
 
     // clean up
-    close(clnt_sock);
+    close(conn_sock_fd);
     close(serv_sock_fd);
     return 0;
 }

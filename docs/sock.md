@@ -8,12 +8,15 @@
         -   [listen (server socket)](#listen-server-socket)
         -   [accept](#accept)
         -   [connect (client socket)](#connect-client-socket)
-        -   [데이터 교환](#데이터-교환)
+        -   [데이터 교환 (read/write, recvfrom/sendto)](#데이터-교환-readwrite-recvfromsendto)
         -   [half-close for graceful shutdown (shutdown)](#half-close-for-graceful-shutdown-shutdown)
+        -   [getsockopt, setsockopt](#getsockopt-setsockopt)
         -   [client socket과 server socket의 flow](#client-socket과-server-socket의-flow)
     -   [theoretical background](#theoretical-background)
         -   [tcp-ip model](#tcp-ip-model)
         -   [tcp](#tcp)
+        -   [time-wait 상태의 TCP socket](#time-wait-상태의-tcp-socket)
+        -   [Nagle algorithm](#nagle-algorithm)
         -   [UDP](#udp)
     -   [portability](#portability)
         -   [조건부 컴파일](#조건부-컴파일)
@@ -111,7 +114,7 @@ connect 함수가 반환되었다고 연결된 것이 아님. 서버 측의 back
 UDP socket(DGRAM)의 경우에는 기본적으로 unconnected 소켓이라서 connect를 하지 않아도 데이터를 보낼 수 있음.
 만약 connect를 한다면 connected 소켓이 되어서 read, write를 사용할 수 있게 됨.
 
-### 데이터 교환
+### 데이터 교환 (read/write, recvfrom/sendto)
 
 tcp, connected socket : read/write
 udp, unconnected socket : recvfrom/sendto
@@ -129,6 +132,10 @@ shutdown(sock, howto)
 SHUT_RD : 입력 스트림 닫아 (수신 불가능해짐. 수신 관련 함수 호출도 불가)
 SHUT_WR : 출력 스트림 닫아 (송신 불가능해짐. 송신 관련 함수 호출도 불가)
 SHUT_RDWR : close과 같음.
+
+### getsockopt, setsockopt
+
+socket options를 확인해보는 것이 좋을 것이다.
 
 ### client socket과 server socket의 flow
 
@@ -164,6 +171,27 @@ link : 물리계층
     스트림 지향: TCP는 전송되는 데이터를 개별적인 메시지로 취급하지 않고 연속적인 바이트 스트림으로 다룹니다. 이는 데이터가 전송 순서대로 정확하게 도착한다는 것을 의미합니다.
 
     데이터 간 경계 없음 (No Boundary): TCP는 데이터를 바이트 단위로 전송하며, 각 바이트 사이에 명시적인 경계나 구분이 없습니다. 예를 들어, 응용 프로그램이 TCP를 통해 500바이트를 전송하면, 이 데이터는 도착지에서 500바이트 묶음으로 수신될 수도 있고, 여러 작은 조각으로 분할되어 수신될 수도 있습니다. TCP는 이러한 조각들을 원래 순서대로 재조립합니다. -> 응용 계층에서의 경계 설정이 필요함, 즉, `application protocol을 설정해야 함. 특정 문자가 등장하면 stream을 한 번 끊는 등의 방식으로 클라-서버 간의 규약을 정해야 함.`
+
+### time-wait 상태의 TCP socket
+
+먼저 연결 종료를 위해 FIN 메세지를 전송한 측은, 상대 호스트의 FIN 메세지를 받고나서 socket을 바로 소멸시키지 않는다.
+해당 상태를 time-wait 상태라 하는데, 마지막 전송 후 해당 패킷의 에러로 인한 재전송등의 잔업 처리를 위해 일정 시간 socket을 살려두는 것이다.
+일반적으론 안전한 해제를 위해서 필요하지만,
+SO_REUSEADDR는 time-wait 상태의 소켓을 동일한 포트로 재사용할 수 있게 만드는 옵션이다.
+default가 0 이라 1로 켜준 후 곧바로 서버가 재실행 가능해진다.
+
+### Nagle algorithm
+
+Nagle은 앞서 전송한 데이터에 대한 ACK를 받아야만 다음 데이터를 전송하는 알고리즘이다.
+TCP 소켓은 Nagle이 기본적으로 적용되어 있다.
+
+-   Nagle이 비활성화 되면 (TCP_NODELAY = 1)
+    -   ACK를 받지 않아도 보낼 수 있으니 전송 버퍼가 다 찰 걱정도 없고 속도 향상을 기대할 수 있다.
+    -   1byte 전송을 위해 패킷에 포함되는 헤더 정보를 다 붙여야하므로 효율성이 떨어지고 많이 전송하기 때문에 네트워크 트래픽에 좋지 않은 영향을 미친다.
+    -   따라서, 짜잘하게 많이 보낼 때는 Nagle 비활성화가 낭비다. 그러나 대용량 데이터의 전송은 거의 출력 버퍼를 꽉 채워서 보내기 마련이므로 Nagle 비활성화가 효율적이다.
+
+TCP_NODELAY가 0이면 Nagle이 활성화 되어 있다.
+TCP_NODELAY가 1이면 Nagle이 비활성화 되어 있다.
 
 ### UDP
 
