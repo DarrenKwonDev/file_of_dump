@@ -1,47 +1,45 @@
-
-
 <!-- toc -->
 
-- [clang_tutorial](#clang_tutorial)
-  * [권고 사항](#%EA%B6%8C%EA%B3%A0-%EC%82%AC%ED%95%AD)
-  * [build process](#build-process)
-    + [module & lib](#module--lib)
-      - [extern](#extern)
-      - [static](#static)
-    + [preprocessor(전처리기)](#preprocessor%EC%A0%84%EC%B2%98%EB%A6%AC%EA%B8%B0)
-  * [static, dynamic library](#static-dynamic-library)
-  * [register](#register)
-    + [registers 종류](#registers-%EC%A2%85%EB%A5%98)
-  * [memory](#memory)
-    + [mem model](#mem-model)
-    + [stack](#stack)
-      - [왜 heap 할당은 느리고 stack 할당은 빠릅니까?](#%EC%99%9C-heap-%ED%95%A0%EB%8B%B9%EC%9D%80-%EB%8A%90%EB%A6%AC%EA%B3%A0-stack-%ED%95%A0%EB%8B%B9%EC%9D%80-%EB%B9%A0%EB%A6%85%EB%8B%88%EA%B9%8C)
-    + [heap](#heap)
-      - [동적 메모리 할당](#%EB%8F%99%EC%A0%81-%EB%A9%94%EB%AA%A8%EB%A6%AC-%ED%95%A0%EB%8B%B9)
-    + [data, code](#data-code)
-    + [func about mem management](#func-about-mem-management)
-    + [mem issues](#mem-issues)
-  * [ptr, dereference](#ptr-dereference)
-    + [포인터와 함수를 읽는 방법(rt_lt rule)](#%ED%8F%AC%EC%9D%B8%ED%84%B0%EC%99%80-%ED%95%A8%EC%88%98%EB%A5%BC-%EC%9D%BD%EB%8A%94-%EB%B0%A9%EB%B2%95rt_lt-rule)
-    + [ptr basic](#ptr-basic)
-    + [const ptr](#const-ptr)
-    + [function ptr](#function-ptr)
-  * [Stream](#stream)
-    + [파일 스트림을 다루기](#%ED%8C%8C%EC%9D%BC-%EC%8A%A4%ED%8A%B8%EB%A6%BC%EC%9D%84-%EB%8B%A4%EB%A3%A8%EA%B8%B0)
-    + [io](#io)
-    + [FILE type](#file-type)
-    + [stream indicator](#stream-indicator)
-    + [io redirection](#io-redirection)
-  * [struct](#struct)
-  * [err handing principle](#err-handing-principle)
-  * [stdlib](#stdlib)
-    + [string.h](#stringh)
-  * [standard](#standard)
-    + [C89, ANSI](#c89-ansi)
-    + [C99](#c99)
-    + [C11](#c11)
-    + [그 후](#%EA%B7%B8-%ED%9B%84)
-  * [다국어, 인코딩, 멀티 바이트 char 등](#%EB%8B%A4%EA%B5%AD%EC%96%B4-%EC%9D%B8%EC%BD%94%EB%94%A9-%EB%A9%80%ED%8B%B0-%EB%B0%94%EC%9D%B4%ED%8A%B8-char-%EB%93%B1)
+-   [clang_tutorial](#clang_tutorial)
+    -   [권고 사항](#권고-사항)
+    -   [build process](#build-process)
+        -   [module \& lib](#module--lib)
+            -   [extern](#extern)
+            -   [static](#static)
+        -   [preprocessor(전처리기)](#preprocessor전처리기)
+    -   [static, dynamic library](#static-dynamic-library)
+    -   [register](#register)
+        -   [registers 종류](#registers-종류)
+    -   [memory](#memory)
+        -   [mem model](#mem-model)
+        -   [stack](#stack)
+            -   [왜 heap 할당은 느리고 stack 할당은 빠릅니까?](#왜-heap-할당은-느리고-stack-할당은-빠릅니까)
+        -   [heap](#heap)
+            -   [동적 메모리 할당](#동적-메모리-할당)
+        -   [data, code](#data-code)
+        -   [func about mem management](#func-about-mem-management)
+        -   [mem issues](#mem-issues)
+    -   [ptr, dereference](#ptr-dereference)
+        -   [포인터와 함수를 읽는 방법(rt_lt rule)](#포인터와-함수를-읽는-방법rt_lt-rule)
+        -   [ptr basic](#ptr-basic)
+        -   [const ptr](#const-ptr)
+        -   [function ptr](#function-ptr)
+    -   [Stream](#stream)
+        -   [파일 스트림을 다루기](#파일-스트림을-다루기)
+        -   [io](#io)
+        -   [FILE type](#file-type)
+        -   [stream indicator](#stream-indicator)
+        -   [io redirection](#io-redirection)
+    -   [struct](#struct)
+    -   [err handing principle](#err-handing-principle)
+    -   [stdlib](#stdlib)
+        -   [string.h](#stringh)
+    -   [standard](#standard)
+        -   [C89, ANSI](#c89-ansi)
+        -   [C99](#c99)
+        -   [C11](#c11)
+        -   [그 후](#그-후)
+    -   [다국어, 인코딩, 멀티 바이트 char 등](#다국어-인코딩-멀티-바이트-char-등)
 
 <!-- tocstop -->
 
@@ -478,6 +476,7 @@ right-left rule(rt_lt rule)은 매우 중요하다!
 -   as "pointer to" - always on the left side
 -   [] as "array of" - always on the right side
 -   () as "function returning" - always on the right side
+    -   `(`를 만나면 '함수구나'라고 판단
 
 ```c
 int *a; // a is pointer to int
@@ -487,9 +486,10 @@ int (*p)(char); // p is pointer to function (char) -> int
 int (*f[2])(float, float); // f is array of pointers to (float, float) -> int
 char (*foo)(void*) // foo is pointer to (void*) -> char
 int* (*foo)(int, void(*)(int)) // foo is pointer to (int, void(*)(int)) -> int*
-void (*func(int, void (*)(int)))(int); // func is function retuning pointer to function (int) -> void
+void (*func(int, void (*)(int)))(int); // func is function get param (int, void (*)(int)) -> retuning pointer to function (int) -> void
 int (*(*fun_one)(char *,double))[9][20]; // fun_one is pointer to function expecting (char *,double) and returning pointer to array (size 9) of array (size 20) of int.
 void (*(*f[])())() // f is array of pointer to function () -> pointer to function () -> void
+void (*signal(int signo, void (*func)(int)))(int); // signal is function get param (int, void (*)(int)) -> retuning pointer to function (int) -> void. 참고로 이 함수 시그니처는 시그널 등록 함수이며 멀티 프로세스 환경에서 자주 사용된다. 즉, right-left rule은 일반 프로그래밍에서도 매우 중요하다.
 ```
 
 ### ptr basic

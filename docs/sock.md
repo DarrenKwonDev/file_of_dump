@@ -18,6 +18,11 @@
         -   [time-wait 상태의 TCP socket](#time-wait-상태의-tcp-socket)
         -   [Nagle algorithm](#nagle-algorithm)
         -   [UDP](#udp)
+    -   [다중 접속 서버](#다중-접속-서버)
+        -   [mp](#mp)
+            -   [자식 프로세스를 생성하는 방법 (fork, spawn, fork server)](#자식-프로세스를-생성하는-방법-fork-spawn-fork-server)
+            -   [좀비 프로세스?](#좀비-프로세스)
+            -   [signal handling](#signal-handling)
     -   [portability](#portability)
         -   [조건부 컴파일](#조건부-컴파일)
         -   [third party library](#third-party-library)
@@ -209,6 +214,55 @@ TCP_NODELAY가 1이면 Nagle이 비활성화 되어 있다.
     오류 검사 기능: UDP 헤더에는 체크섬이 포함되어 있어 데이터가 손상되었는지 간단히 검사할 수 있습니다. 그러나 손상된 패킷의 복구나 재전송은 제공하지 않습니다.
 
     헤더 크기: UDP의 헤더 크기는 TCP보다 작습니다. 이는 전송되는 데이터에 대한 추가적인 오버헤드를 줄여줍니다.
+
+## 다중 접속 서버
+
+-   multi process 기반 : 프로세스 여러개 생성
+-   multi flexing 기반 : 입출력 대상을 묶어 관리
+-   multi thread 기반 : 클라 수 만큼 thread 만들기 (application thread 수준이면 좋을 것 같은디)
+
+물리적 CPU 코어의 수 만큼 프로세스가 동시 실행될 수 있다. 그 이상의 프로세스는 scheduling에 의해 동시에 실행되는 것처럼 보이는 것이다.
+
+### mp
+
+#### 자식 프로세스를 생성하는 방법 (fork, spawn, fork server)
+
+1. **spawn**:
+    - 'spawn' 방식은 새로운 프로세스를 생성할 때 자식 프로세스가 부모 프로세스와 독립적으로 동작하도록 새로운 파이썬 인터프리터를 실행하는 방식입니다.
+    - 이 방식은 여러 운영체제에서 사용할 수 있으며, 특히 윈도우와 같은 환경에서 유용합니다.
+    - 각 프로세스가 독립적인 인터프리터 공간을 가지기 때문에 글로벌 변수 등이 분리되며, 안전한 병렬 처리가 가능합니다.
+2. **fork**:
+    - 'fork' 방식은 부모 프로세스의 메모리를 복제하여 자식 프로세스를 생성하는 방식입니다.
+    - 이 방식은 주로 유닉스 계열 운영체제에서 사용됩니다.
+    - 부모 프로세스의 상태와 메모리 등이 자식 프로세스에 복제되기 때문에 부모와 자식 간에 상태 공유가 빠르게 이루어집니다. 하지만 이로 인해 부모와 자식의 상태가 복잡하게 얽힐 수 있습니다.
+3. **forkserver**:
+    - 'forkserver' 방식은 'fork' 방식의 한 변형으로, 자식 프로세스를 생성하는 서버 프로세스를 두고 필요할 때 해당 서버 프로세스로부터 자식 프로세스를 생성하는 방식입니다.
+    - 이 방식은 'fork' 방식의 한계를 극복하여 메모리 사용량을 줄이고 프로세스 생성/소멸 비용을 최소화합니다.
+    - 각 프로세스가 독립적인 메모리 공간을 가지며, 필요할 때만 서버 프로세스로부터 자식 프로세스를 생성하여 상황에 따라 효율적으로 운영할 수 있습니다.
+
+#### 좀비 프로세스?
+
+종료되었지만, 부모 프로세스에 의해 아직 회수(리소스 해제)되지 않은 프로세스.
+할 일 끝나면 리소스 반납해야 하는데 계속 물고 있는 프로세스.
+
+부모 프로세스가 자식 프로세스의 exit code(exit(int) 혹은 main return(int))을 요청해야 함.
+
+wait : 자식 프로세스가 종료될 때까지 기다림 (blocking)
+waitpid : 특정 자식 프로세스가 종료될 때까지 기다림 (option에 WNOHANG을 통해 non blocking으로 작동하게 가능)
+WIFEXITED(status) : 자식 프로세스가 정상적으로 종료되었으면 true 반환
+WEXITSTATUS(status) : 자식 프로세스의 exit code 반환
+
+#### signal handling
+
+`kill -l | tr " " "\n" | cat -n`
+
+kill 명령어로 signal을 확인하거나 볼 수 있음.
+
+signal에 따른 handler는 다양한 활용법이 있는데
+
+-   자식 프로세스 리소스 회수
+-   graceful shutdown: SIGTERM 또는 SIGINT 시그널을 받았을 때, 프로그램이 정리 작업을 수행하고 안전하게 종료
+-   SIGSEGV, SIGFPE, SIGILL과 같은 시그널 받았을 때 에러 로깅 및 적절한 조치
 
 ## portability
 
