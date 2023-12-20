@@ -470,13 +470,14 @@ right-left rule(rt_lt rule)은 매우 중요하다!
 1.  Start reading from the identifier
 2.  go right, and then go left. When you encounter parentheses, the direction should be reversed.
 3.  If you hit a left parenthesis, that's the beginning of a () symbol, even if there is stuff in between the parentheses.
+    -   `(`를 만나면 '함수구나'라고 판단
+    -   `)`를 만나면 튕겨 나와 반대편으로 이동하여 해석한다.
 
 각 symbol은 아래처럼 영문 번역하는 것이 쉽다.
 
 -   as "pointer to" - always on the left side
 -   [] as "array of" - always on the right side
 -   () as "function returning" - always on the right side
-    -   `(`를 만나면 '함수구나'라고 판단
 
 ```c
 int *a; // a is pointer to int

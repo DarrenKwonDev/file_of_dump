@@ -247,8 +247,8 @@ TCP_NODELAY가 1이면 Nagle이 비활성화 되어 있다.
 
 부모 프로세스가 자식 프로세스의 exit code(exit(int) 혹은 main return(int))을 요청해야 함.
 
-wait : 자식 프로세스가 종료될 때까지 기다림 (blocking)
-waitpid : 특정 자식 프로세스가 종료될 때까지 기다림 (option에 WNOHANG을 통해 non blocking으로 작동하게 가능)
+wait : 자식 프로세스가 종료될 때까지 기다렸다가 종료되면 리소스 정리. (blocking)
+waitpid : 특정 자식 프로세스가 종료될 때까지 기다렸다 종료되면 리소스 정리. (option에 WNOHANG을 통해 non blocking으로 작동하게 가능)
 WIFEXITED(status) : 자식 프로세스가 정상적으로 종료되었으면 true 반환
 WEXITSTATUS(status) : 자식 프로세스의 exit code 반환
 
