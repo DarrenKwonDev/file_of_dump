@@ -19,7 +19,8 @@
         -   [Nagle algorithm](#nagle-algorithm)
         -   [UDP](#udp)
     -   [다중 접속 서버](#다중-접속-서버)
-        -   [mp](#mp)
+        -   [multi process](#multi-process)
+            -   [process-per-conn 모델의 한계와 C10K](#process-per-conn-모델의-한계와-c10k)
             -   [자식 프로세스를 생성하는 방법 (fork, spawn, fork server)](#자식-프로세스를-생성하는-방법-fork-spawn-fork-server)
             -   [좀비 프로세스?](#좀비-프로세스)
             -   [signal handling](#signal-handling)
@@ -223,7 +224,22 @@ TCP_NODELAY가 1이면 Nagle이 비활성화 되어 있다.
 
 물리적 CPU 코어의 수 만큼 프로세스가 동시 실행될 수 있다. 그 이상의 프로세스는 scheduling에 의해 동시에 실행되는 것처럼 보이는 것이다.
 
-### mp
+### multi process
+
+connect 요청이 올 때마다 메인 프로세스가 요청 당 프로세스를 생성하는 방식.
+어... 사실 이 방식에 대해서 비판 의견이 꽤 있다. 아래 적어보겠다.
+
+#### process-per-conn 모델의 한계와 C10K
+
+아래 글은 DB와 관련해서 내가 적은 글을 발췌한 것이다.
+
+```
+psql은 process-per-conn model 이지만 mysql은 thread-per-conn model을 사용한다.
+apache도 process-per-conn model 이었기 때문에 C10K 문제를 발생시켰고,
+그래서 mysql은 연결당 스레드 모델을 사용하므로 오버헤드가 훨씬 낮다.
+그래서 high connection counts를 가진 애플리케이션이라면 psql을 사용하지 않는 것에 대해서도 고려해봄직하다.
+그러나 이미 psql을 쓰고 있다면 pg_bouncer를 사용해야 한다.
+```
 
 #### 자식 프로세스를 생성하는 방법 (fork, spawn, fork server)
 
