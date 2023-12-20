@@ -258,6 +258,8 @@ WEXITSTATUS(status) : 자식 프로세스의 exit code 반환
 
 kill 명령어로 signal을 확인하거나 볼 수 있음.
 
+signal이 발생하면, blocking되어 있는 프로세스를 깨운다.
+
 signal에 따른 handler는 다양한 활용법이 있는데
 
 -   자식 프로세스 리소스 회수
