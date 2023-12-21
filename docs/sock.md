@@ -24,7 +24,11 @@
             -   [자식 프로세스를 생성하는 방법 (fork, spawn, fork server)](#자식-프로세스를-생성하는-방법-fork-spawn-fork-server)
             -   [좀비 프로세스?](#좀비-프로세스)
             -   [signal handling](#signal-handling)
-        -   [multi flexing](#multi-flexing)
+        -   [multiplexing](#multiplexing)
+            -   [select](#select)
+            -   [poll](#poll)
+            -   [epoll](#epoll)
+            -   [IOCP(I/O Completion Ports)](#iocpio-completion-ports)
     -   [IPC (inter process communication)](#ipc-inter-process-communication)
     -   [portability](#portability)
         -   [조건부 컴파일](#조건부-컴파일)
@@ -289,7 +293,17 @@ signal에 따른 handler는 다양한 활용법이 있는데
 -   graceful shutdown: SIGTERM 또는 SIGINT 시그널을 받았을 때, 프로그램이 정리 작업을 수행하고 안전하게 종료
 -   SIGSEGV, SIGFPE, SIGILL과 같은 시그널 받았을 때 에러 로깅 및 적절한 조치
 
-### multi flexing
+### multiplexing
+
+process-per-conn 모델인 multi process에 비하여 multiplexing은 프로세스를 생성하지 않고, 하나의 프로세스 내에서 여러 개의 소켓을 관리한다.
+
+#### select
+
+#### poll
+
+#### epoll
+
+#### IOCP(I/O Completion Ports)
 
 ## IPC (inter process communication)
 
