@@ -18,12 +18,14 @@
         -   [time-wait 상태의 TCP socket](#time-wait-상태의-tcp-socket)
         -   [Nagle algorithm](#nagle-algorithm)
         -   [UDP](#udp)
-    -   [다중 접속 서버](#다중-접속-서버)
+    -   [multi client server](#multi-client-server)
         -   [multi process](#multi-process)
             -   [process-per-conn 모델의 한계와 C10K](#process-per-conn-모델의-한계와-c10k)
             -   [자식 프로세스를 생성하는 방법 (fork, spawn, fork server)](#자식-프로세스를-생성하는-방법-fork-spawn-fork-server)
             -   [좀비 프로세스?](#좀비-프로세스)
             -   [signal handling](#signal-handling)
+        -   [multi flexing](#multi-flexing)
+    -   [IPC (inter process communication)](#ipc-inter-process-communication)
     -   [portability](#portability)
         -   [조건부 컴파일](#조건부-컴파일)
         -   [third party library](#third-party-library)
@@ -181,9 +183,12 @@ link : 물리계층
 ### time-wait 상태의 TCP socket
 
 먼저 연결 종료를 위해 FIN 메세지를 전송한 측은, 상대 호스트의 FIN 메세지를 받고나서 socket을 바로 소멸시키지 않는다.
+
+그래서 tcp 서버를 닫고난 후 곧바로 동일한 포트를 사용하는 tcp 서버를 가동하려고 할 때 bind가 실패한다. 몇 분 후 재시도하면 성공한다.
+
 해당 상태를 time-wait 상태라 하는데, 마지막 전송 후 해당 패킷의 에러로 인한 재전송등의 잔업 처리를 위해 일정 시간 socket을 살려두는 것이다.
-일반적으론 안전한 해제를 위해서 필요하지만,
-SO_REUSEADDR는 time-wait 상태의 소켓을 동일한 포트로 재사용할 수 있게 만드는 옵션이다.
+
+일반적으론 안전한 해제를 위해서 필요하지만, SO_REUSEADDR는 time-wait 상태의 소켓을 동일한 포트로 재사용할 수 있게 만드는 옵션이다.
 default가 0 이라 1로 켜준 후 곧바로 서버가 재실행 가능해진다.
 
 ### Nagle algorithm
@@ -216,11 +221,12 @@ TCP_NODELAY가 1이면 Nagle이 비활성화 되어 있다.
 
     헤더 크기: UDP의 헤더 크기는 TCP보다 작습니다. 이는 전송되는 데이터에 대한 추가적인 오버헤드를 줄여줍니다.
 
-## 다중 접속 서버
+## multi client server
 
 -   multi process 기반 : 프로세스 여러개 생성
 -   multi flexing 기반 : 입출력 대상을 묶어 관리
--   multi thread 기반 : 클라 수 만큼 thread 만들기 (application thread 수준이면 좋을 것 같은디)
+-   multi thread 기반 : 클라 수 만큼 thread 만들기 (application thread 수준이면 좋을 것 같은데 이걸 언어 차원에서 지원해줘야 쓸 만 하다)
+-   비동기 기반 event driven 서버
 
 물리적 CPU 코어의 수 만큼 프로세스가 동시 실행될 수 있다. 그 이상의 프로세스는 scheduling에 의해 동시에 실행되는 것처럼 보이는 것이다.
 
@@ -251,6 +257,7 @@ apache도 process-per-conn model 이었기 때문에 C10K 문제를 발생시켰
     - 'fork' 방식은 부모 프로세스의 메모리를 복제하여 자식 프로세스를 생성하는 방식입니다.
     - 이 방식은 주로 유닉스 계열 운영체제에서 사용됩니다.
     - 부모 프로세스의 상태와 메모리 등이 자식 프로세스에 복제되기 때문에 부모와 자식 간에 상태 공유가 빠르게 이루어집니다. 하지만 이로 인해 부모와 자식의 상태가 복잡하게 얽힐 수 있습니다.
+    - fork에서 유의해야 할 것이, 운영 체제가 소유한 자원(소켓, 파이프 등)은 복사되지 않는다. 소켓의 생성 결과로 뱉은 fd는 복사되지만, 소켓 자체가 복사되지는 않는다.
 3. **forkserver**:
     - 'forkserver' 방식은 'fork' 방식의 한 변형으로, 자식 프로세스를 생성하는 서버 프로세스를 두고 필요할 때 해당 서버 프로세스로부터 자식 프로세스를 생성하는 방식입니다.
     - 이 방식은 'fork' 방식의 한계를 극복하여 메모리 사용량을 줄이고 프로세스 생성/소멸 비용을 최소화합니다.
@@ -281,6 +288,21 @@ signal에 따른 handler는 다양한 활용법이 있는데
 -   자식 프로세스 리소스 회수
 -   graceful shutdown: SIGTERM 또는 SIGINT 시그널을 받았을 때, 프로그램이 정리 작업을 수행하고 안전하게 종료
 -   SIGSEGV, SIGFPE, SIGILL과 같은 시그널 받았을 때 에러 로깅 및 적절한 조치
+
+### multi flexing
+
+## IPC (inter process communication)
+
+-   pipe는 기본적으로 단방향 통신 채널
+
+    -   pipe(int fds[2])
+        -   fds[0] : recv
+        -   fds[1] : send
+    -   fork 해서 자식 프로세스가 생기면, 자의적으로 한 쪽은 부모가 쓰고 한 쪽은 자식이 쓰도록 코더가 규칙을 정해서 사용해야 한다. 명시적으로 구분시켜주진 않는다.
+
+-   양방향 통신을 pipe로 구현하기 (800_sock/linux/812_ipc/pipe/pipe2.c)
+    -   pipe 1개만 가지로 두 프로세스간 양방향 통신은 힘들다. 왜냐하면 pipe에 들어간 데이터는 반드시 반대편 프로세스가 가져가는게 아니라 먼저 요구한 (read) 프로세스가 가져가기 때문.
+    -   그래서 양방향 통신을 위해서는 pipe를 2개 가지고 있어야 한다.
 
 ## portability
 

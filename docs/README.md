@@ -3,8 +3,9 @@
 -   [contents](#contents)
     -   [C](#c)
     -   [Cpp](#cpp)
+    -   [competitive programming](#competitive-programming)
     -   [cheat sheet](#cheat-sheet)
-    -   [sock](#sock)
+    -   [socket and network](#socket-and-network)
     -   [compiler, cmake and other tools](#compiler-cmake-and-other-tools)
     -   [study materials](#study-materials)
     -   [peoples](#peoples)
@@ -21,23 +22,26 @@
 ## Cpp
 
 [cpp_docs](./cpp_docs.md)  
-[STL](./stl.md)  
+[STL](./stl.md)
+
+## competitive programming
+
 [algo](./algo.md)
 
 ## cheat sheet
 
 [cheat_sheet](./cheat_sheet.md)
 
-## sock
+## socket and network
 
 [sock](./sock.md)
 
 ## compiler, cmake and other tools
 
-[compiler](./compiler.md)
+[compiler](./compiler.md)  
 [cmake](./cmake.md)  
-[Makefiles](./Makefiles.md)
-[gtest & gmock](./gtestgmock.md)
+[Makefiles](./Makefiles.md)  
+[gtest & gmock](./gtestgmock.md)  
 [tools](./tools.md)
 
 ## study materials
@@ -46,10 +50,6 @@
 -   [smallchat](https://github.com/antirez/smallchat)
 -   [pintOS](https://casys-kaist.github.io/pintos-kaist/introduction/getting_started.html)
     -   https://github.com/casys-kaist/pintos-kaist
--   build-your-own-x
-    -   https://github.com/codecrafters-io/build-your-own-x
-    -   https://build-your-own-x.vercel.app/
-    -   [Build Your Own Redis with C/C++](https://build-your-own.org/)
 -   [libuv](https://libuv.org/)
 -   [cython](https://github.com/cython/cython)
 -   [sqlite](https://sqlite.org/src/doc/trunk/README.md)
