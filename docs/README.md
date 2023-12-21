@@ -1,3 +1,9 @@
+```text
+❗disclaimer
+정확한 정보를 담고 있지 않으며, 개인적으로 공부한 내용을 정리한 것입니다.
+이후 잘못된 내용에 대해서도 굳이 수정하지 않을 예정입니다.
+```
+
 <!-- toc -->
 
 -   [contents](#contents)
@@ -22,7 +28,7 @@
 ## Cpp
 
 [cpp_docs](./cpp_docs.md)  
-[STL](./stl.md)
+[STL](./stl.md)  
 [concurrency](./concurrency.md)  
 [deprecated_concurrency](https://github.com/DarrenKwonDev/journey-to-concurrency)
 
