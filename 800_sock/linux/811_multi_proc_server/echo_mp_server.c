@@ -83,6 +83,7 @@ int main(int argc, char* argv[]) {
             // 자식 소켓이므로 서버 소켓을 닫자.
             // 소켓은 운영체제의 소유이며 fd만 복사되었음.
             // 이 경우 모든 fd가 close 되어야만 소켓이 닫히기 때문에 리소스 정리를 위해서라도 사용하지 않는 fd는 close하자.
+            // 즉, 한 번의 close로 socket이 정리될 것을 기대할 수 없게 되기 때문에 미리 정리.
             close(serv_sock_fd);
 
             // echoing
