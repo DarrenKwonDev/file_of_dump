@@ -17,6 +17,7 @@ int main(int argc, char* argv[]) {
         puts("pipe fail");
         exit(1);
     }
+    // 하나의 fds는 부모, 자식 양 쪽으로 찢어서 사용한다.
     int recv_pipe_fd = fds[0];
     int send_pipe_fd = fds[1];
 

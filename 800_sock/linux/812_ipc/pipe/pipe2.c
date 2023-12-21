@@ -16,8 +16,11 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
+    // 하나의 fds는 부모, 자식 양 쪽으로 찢어서 사용한다.
     int 부모측에서_받는_fd = fds1[0];
     int 자식측에서_쓰는_fd = fds1[1];
+
+    // 하나의 fds는 부모, 자식 양 쪽으로 찢어서 사용한다.
     int 자식측에서_받는_fd = fds2[0];
     int 부모측에서_쓰는_fd = fds2[1];
 
