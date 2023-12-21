@@ -23,6 +23,8 @@
 
 [cpp_docs](./cpp_docs.md)  
 [STL](./stl.md)
+[concurrency](./concurrency.md)  
+[deprecated_concurrency](https://github.com/DarrenKwonDev/journey-to-concurrency)
 
 ## competitive programming
 
