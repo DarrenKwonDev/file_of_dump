@@ -1,0 +1,4 @@
+﻿  exception_occur.cpp
+C:\Users\darrenkwon\source\repos\c-cpp_handbooks\900_concurrency\window\shared\thread_guard.h(17,17): warning C4227: anachronism used: qualifiers on reference are ignored
+C:\Users\darrenkwon\source\repos\c-cpp_handbooks\900_concurrency\window\shared\thread_guard.h(18,48): warning C4227: anachronism used: qualifiers on reference are ignored
+  904_thread_guard.vcxproj -> C:\Users\darrenkwon\source\repos\c-cpp_handbooks\900_concurrency\window\concurrency\Debug\904_thread_guard.exe

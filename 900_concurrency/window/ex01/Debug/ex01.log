@@ -1,0 +1,5 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (ex01.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  main.cpp
+C:\Users\darrenkwon\source\repos\c-cpp_handbooks\900_concurrency\window\shared\thread_guard.h(17,17): warning C4227: anachronism used: qualifiers on reference are ignored
+C:\Users\darrenkwon\source\repos\c-cpp_handbooks\900_concurrency\window\shared\thread_guard.h(18,48): warning C4227: anachronism used: qualifiers on reference are ignored
+  ex01.vcxproj -> C:\Users\darrenkwon\source\repos\c-cpp_handbooks\900_concurrency\window\concurrency\Debug\_ex01.exe
