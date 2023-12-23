@@ -303,12 +303,6 @@ process-per-conn 모델인 multi process에 비하여 multiplexing은 프로세�
 관찰 중인 fd를 fd_set으로 관리하는데 단순한 bit flags이다.
 해당 플래그에 등록된 fd를 지속적으로 관찰함으로써 한 프로세스에서 여러 클라이언트의 커넥션을 관리한다.
 
-```cpp
-typedef struct fd_set {
-	__int32_t       fds_bits[__DARWIN_howmany(__DARWIN_FD_SETSIZE, __DARWIN_NFDBITS)];
-} fd_set;
-```
-
 단순한만큼, 한계가 있어 후속 방안들이 등장한다.
 
 #### poll
