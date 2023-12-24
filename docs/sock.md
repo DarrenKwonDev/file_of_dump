@@ -27,6 +27,7 @@
             -   [signal handling](#signal-handling)
         -   [multiplexing](#multiplexing)
             -   [select](#select)
+            -   [poll (UNIX-based)](#poll-unix-based)
             -   [epoll (linux)](#epoll-linux)
             -   [IOCP(I/O Completion Ports)](#iocpio-completion-ports)
             -   [kqueue (BSD)](#kqueue-bsd)
@@ -244,6 +245,11 @@ TCP_NODELAY가 1이면 Nagle이 비활성화 되어 있다.
 -   multi thread 기반 : 클라 수 만큼 thread 만들기 (application thread 수준이면 좋을 것 같은데 이걸 언어 차원에서 지원해줘야 쓸 만 하다)
 -   event loops 기반 서버. 보통 single thread. node.js가 대표적.
 
+```text
+Due to the overhead of processes and threads, most modern production-grade software uses event loops for networking.
+- https://build-your-own.org/redis/05_event_loop_intro
+```
+
 물리적 CPU 코어의 수 만큼 프로세스가 동시 실행될 수 있다. 그 이상의 프로세스는 scheduling에 의해 동시에 실행되는 것처럼 보이는 것이다.
 
 ### multi process
@@ -317,6 +323,11 @@ process-per-conn 모델인 multi process에 비하여 multiplexing은 프로세�
 단순한만큼, 한계가 있어 후속 방안들이 등장한다.
 OS 별로 다르게 발달했는데
 epoll(linux), kqueue(BSD), IOCP(Windows) 등이 있다.
+
+#### poll (UNIX-based)
+
+select보다 조금 더 효율적.
+fd를 더 많이 처리할 수 있고, 읽기, 쓰기, 예외로 따로 관리하던 것을 pollfd 단일 구조체의 배열로 관리하는 등의 장점.
 
 #### epoll (linux)
 
