@@ -240,9 +240,9 @@ TCP_NODELAY가 1이면 Nagle이 비활성화 되어 있다.
 ## multi client server
 
 -   multi process 기반 : 프로세스 여러개 생성
--   multi flexing 기반 : 입출력 대상을 묶어 관리
+-   multiplexing 기반 : 입출력 대상을 묶어 관리
 -   multi thread 기반 : 클라 수 만큼 thread 만들기 (application thread 수준이면 좋을 것 같은데 이걸 언어 차원에서 지원해줘야 쓸 만 하다)
--   비동기 기반 event driven 서버
+-   event loops 기반 서버. 보통 single thread. node.js가 대표적.
 
 물리적 CPU 코어의 수 만큼 프로세스가 동시 실행될 수 있다. 그 이상의 프로세스는 scheduling에 의해 동시에 실행되는 것처럼 보이는 것이다.
 
