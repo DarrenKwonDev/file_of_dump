@@ -1,9 +1,7 @@
-
-
 <!-- toc -->
 
-- [c](#c)
-- [cpp](#cpp)
+-   [c](#c)
+-   [cpp](#cpp)
 
 <!-- tocstop -->
 
@@ -105,6 +103,23 @@ int main(void) {
 const int* ptr1 = &x; // ptr1 is pointer to const int
 int const* ptr2 = &x; // ptr2 is pointer to const int
 int* const ptr3 = &x; // ptr3 is const pointer to int
+```
+
+---
+
+배열 연산
+
+```c
+#include <stdio.h>
+
+int main() {
+    char* arr = "abcdefgh";
+    printf("%p\n", arr + 2); // ptr 2번 뛰기 0x402006
+    printf("%c\n", arr[2]); // 두번째 원소 c
+    printf("%p\n", &arr[2]); // 두번째 원소의 주소 0x402006
+
+    return 0;
+}
 ```
 
 ---

@@ -18,6 +18,7 @@
         -   [time-wait 상태의 TCP socket](#time-wait-상태의-tcp-socket)
         -   [Nagle algorithm](#nagle-algorithm)
         -   [UDP](#udp)
+        -   [multicast, broadcast](#multicast-broadcast)
     -   [multi client server](#multi-client-server)
         -   [multi process](#multi-process)
             -   [process-per-conn 모델의 한계와 C10K](#process-per-conn-모델의-한계와-c10k)
@@ -26,7 +27,6 @@
             -   [signal handling](#signal-handling)
         -   [multiplexing](#multiplexing)
             -   [select](#select)
-            -   [poll](#poll)
             -   [epoll (linux)](#epoll-linux)
             -   [IOCP(I/O Completion Ports)](#iocpio-completion-ports)
             -   [kqueue (BSD)](#kqueue-bsd)
@@ -129,8 +129,10 @@ UDP socket(DGRAM)의 경우에는 기본적으로 unconnected 소켓이라서 co
 
 ### 데이터 교환 (read/write, recvfrom/sendto)
 
-tcp, connected socket : read/write
-udp, unconnected socket : recvfrom/sendto
+tcp, connected socket : recv/send  
+udp, unconnected socket : recvfrom/sendto  
+linux 기본 io를 사용해도 된다 : read/write  
+vectorized I/O: readv/writev
 
 ### half-close for graceful shutdown (shutdown)
 
@@ -226,6 +228,15 @@ TCP_NODELAY가 1이면 Nagle이 비활성화 되어 있다.
 
     헤더 크기: UDP의 헤더 크기는 TCP보다 작습니다. 이는 전송되는 데이터에 대한 추가적인 오버헤드를 줄여줍니다.
 
+### multicast, broadcast
+
+-   broadcast : 네트워크 상의 모든 호스트에게 데이터를 전송하는 것. 브로드캐스트 주소를 사용하여 네트워크 내의 모든 장치에 동시에 데이터를 보냅니다.
+
+    -   브로드캐스트 주소 : x.x.x.255 → 네크워크 내 장비에게 모두 전용용
+
+-   multicast : 네트워크 상의 특정 그룹에게 데이터를 전송하는 것. 멀티캐스트 주소를 사용하여 특정 그룹의 멤버들에게만 데이터를 보냅니다. UDP 기반.
+    -   멀티 캐스트를 지원하는 라우터가 있어야만 가능함. 그렇지 않은 경우의 멀티캐스트 패킷을 전송하기 위해서는 터널링을 해야 함.
+
 ## multi client server
 
 -   multi process 기반 : 프로세스 여러개 생성
@@ -304,8 +315,8 @@ process-per-conn 모델인 multi process에 비하여 multiplexing은 프로세�
 해당 플래그에 등록된 fd를 지속적으로 관찰함으로써 한 프로세스에서 여러 클라이언트의 커넥션을 관리한다.
 
 단순한만큼, 한계가 있어 후속 방안들이 등장한다.
-
-#### poll
+OS 별로 다르게 발달했는데
+epoll(linux), kqueue(BSD), IOCP(Windows) 등이 있다.
 
 #### epoll (linux)
 
