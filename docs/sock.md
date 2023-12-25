@@ -269,7 +269,7 @@ Sync와 Async의 차이는 그것을 요청한 순서가 지켜지는가 아닌�
 
 -   `async/blocking`
 
-    -   우선 syacall로 kernel에게 i/o를 요청한다. 그러면 kernel space를 곧바로 응답을 보낸다 (non blocking). 그러나 응답을 받은 user space는 kernel space의 작업이 끝날 때까지 기다린다 (blocking). 그러면 kernel space에서 작업이 끝나면 user space에게 callback을 호출함으로써 알려준다.
+    -   우선 syacall로 kernel에게 i/o를 요청한다. 그러면 kernel space를 곧바로 응답을 보낸다 (blocking). 그러나 응답을 받은 user space는 kernel space의 작업이 끝날 때까지 기다린다 (blocking). 그러면 kernel space에서 작업이 끝나면 user space에게 callback을 호출함으로써 알려준다.
     -   꽤나 비효율적으로 보이는 방식이다. non-blocking의 장점을 살리지 못하고 blocking으로 초래되는 단점을 안고 있다.
     -   위의 IBM에서의 분류도 사실 모호한 감이 있다.
         -   read/write(I/O)를 async하게 처리할 수 있음에도 불구하고 'blocking'으로 분류. 왜냐? select, poll 같은 mutliplexing 관련 함수가 blocking이다.
@@ -383,8 +383,48 @@ epoll(linux), kqueue(BSD), IOCP(Windows) 등이 있다.
 
 #### poll (UNIX-based)
 
-select보다 조금 더 효율적.
 fd를 더 많이 처리할 수 있고, 읽기, 쓰기, 예외로 따로 관리하던 것을 pollfd 단일 구조체의 배열로 관리하는 등의 장점.
+
+```c
+int poll(struct pollfd * fds, nfds_t nfds, int timeout);
+
+struct pollfd {
+    int   fd;         // 파일 디스크립터
+    short events;     // 관심 있는 이벤트들의 비트 마스크
+    short revents;    // 실제로 발생한 이벤트들의 비트 마스크
+};
+```
+
+POLLIN: 데이터가 읽기를 위해 준비되었음 (소켓에 데이터가 도착했거나, 파일 끝에 도달했음).
+POLLOUT: 데이터를 쓸 수 있음 (쓰기 버퍼에 공간이 있음).
+POLLERR: 에러가 발생했음.
+POLLHUP: 소켓이 닫혔음.
+POLLNVAL: 유효하지 않은 요청 (예: 유효하지 않은 파일 디스크립터).
+
+```c
+초기 상태:
+// 첫 번째 poll 호출 전
+struct pollfd fds[] = {
+{fd1, POLLIN, 0}, // 첫 번째 파일 디스크립터, 읽기 이벤트에 관심
+{fd2, POLLIN, 0} // 두 번째 파일 디스크립터, 읽기 이벤트에 관심
+};
+```
+
+```c
+첫 번째 poll 호출 후:
+// 첫 번째 poll 호출 후
+// 가정: fd1에서 읽을 수 있는 데이터가 있음
+fds[0].revents = POLLIN; // fd1에서 읽을 수 있는 데이터가 있음을 나타냄
+fds[1].revents = 0; // fd2에서는 아무런 이벤트도 발생하지 않음
+두 번째 poll 호출 후:
+```
+
+```c
+// 두 번째 poll 호출 후
+// 가정: fd2에서 에러 발생
+fds[0].revents = 0; // 이번에는 fd1에서 아무런 이벤트도 발생하지 않음
+fds[1].revents = POLLERR; // fd2에서 에러 발생
+```
 
 #### epoll (linux)
 
