@@ -25,13 +25,13 @@
             -   [자식 프로세스를 생성하는 방법 (fork, spawn, fork server)](#자식-프로세스를-생성하는-방법-fork-spawn-fork-server)
             -   [좀비 프로세스?](#좀비-프로세스)
             -   [signal handling](#signal-handling)
+            -   [IPC (inter process communication)](#ipc-inter-process-communication)
         -   [multiplexing](#multiplexing)
             -   [select](#select)
             -   [poll (UNIX-based)](#poll-unix-based)
             -   [epoll (linux)](#epoll-linux)
             -   [IOCP(I/O Completion Ports)](#iocpio-completion-ports)
             -   [kqueue (BSD)](#kqueue-bsd)
-    -   [IPC (inter process communication)](#ipc-inter-process-communication)
     -   [portability](#portability)
         -   [조건부 컴파일](#조건부-컴파일)
         -   [third party library](#third-party-library)
@@ -311,9 +311,40 @@ signal에 따른 handler는 다양한 활용법이 있는데
 -   graceful shutdown: SIGTERM 또는 SIGINT 시그널을 받았을 때, 프로그램이 정리 작업을 수행하고 안전하게 종료
 -   SIGSEGV, SIGFPE, SIGILL과 같은 시그널 받았을 때 에러 로깅 및 적절한 조치
 
+#### IPC (inter process communication)
+
+-   pipe는 기본적으로 단방향 통신 채널
+
+    -   pipe(int fds[2])
+        -   fds[0] : recv
+        -   fds[1] : send
+    -   fork 해서 자식 프로세스가 생기면, 자의적으로 한 쪽은 부모가 쓰고 한 쪽은 자식이 쓰도록 코더가 규칙을 정해서 사용해야 한다. 명시적으로 구분시켜주진 않는다.
+
+-   양방향 통신을 pipe로 구현하기 (800_sock/linux/812_ipc/pipe/pipe2.c)
+    -   pipe 1개만 가지로 두 프로세스간 양방향 통신은 힘들다. 왜냐하면 pipe에 들어간 데이터는 반드시 반대편 프로세스가 가져가는게 아니라 먼저 요구한 (read) 프로세스가 가져가기 때문.
+    -   그래서 양방향 통신을 위해서는 pipe를 2개 가지고 있어야 한다.
+
 ### multiplexing
 
 process-per-conn 모델인 multi process에 비하여 multiplexing은 프로세스를 생성하지 않고, 하나의 프로세스 내에서 여러 개의 소켓을 관리한다.
+
+```
+2개 이상의 파일을 동시에 처리할 때는 multi-process 또는 multi-thread로 동작해야 합니다. 하지만 multi-process 환경에선 IPC나 동기화(Semaphore, Mutex 등)를 고려해야만 하기 때문에 복잡한 이슈가 생기기 마련이죠. 그 때문에 Multiplexing, 즉 다중화 기법이 각광받게 됩니다.
+```
+
+-   [[네이버클라우드 기술&경험] IO Multiplexing (IO 멀티플렉싱) 기본 개념부터 심화까지 -1부-](https://blog.naver.com/n_cloudplatform/222189669084)
+
+-   [[네이버클라우드 기술&경험] IO Multiplexing (IO 멀티플렉싱) 기본 개념부터 심화까지 -2부-](https://blog.naver.com/n_cloudplatform/222255261317)
+
+| 기능/OS | Linux | BSD | Windows |
+| ------- | ----- | --- | ------- |
+| select  | O     | O   | O       |
+| pselect | O     | O   | X       |
+| poll    | O     | O   | 제한적  |
+| ppoll   | O     | O   | X       |
+| epoll   | O     | X   | X       |
+| kqueue  | X     | O   | X       |
+| IOCP    | X     | X   | O       |
 
 #### select
 
@@ -334,19 +365,6 @@ fd를 더 많이 처리할 수 있고, 읽기, 쓰기, 예외로 따로 관리�
 #### IOCP(I/O Completion Ports)
 
 #### kqueue (BSD)
-
-## IPC (inter process communication)
-
--   pipe는 기본적으로 단방향 통신 채널
-
-    -   pipe(int fds[2])
-        -   fds[0] : recv
-        -   fds[1] : send
-    -   fork 해서 자식 프로세스가 생기면, 자의적으로 한 쪽은 부모가 쓰고 한 쪽은 자식이 쓰도록 코더가 규칙을 정해서 사용해야 한다. 명시적으로 구분시켜주진 않는다.
-
--   양방향 통신을 pipe로 구현하기 (800_sock/linux/812_ipc/pipe/pipe2.c)
-    -   pipe 1개만 가지로 두 프로세스간 양방향 통신은 힘들다. 왜냐하면 pipe에 들어간 데이터는 반드시 반대편 프로세스가 가져가는게 아니라 먼저 요구한 (read) 프로세스가 가져가기 때문.
-    -   그래서 양방향 통신을 위해서는 pipe를 2개 가지고 있어야 한다.
 
 ## portability
 
