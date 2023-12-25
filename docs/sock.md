@@ -20,6 +20,7 @@
         -   [UDP](#udp)
         -   [multicast, broadcast](#multicast-broadcast)
     -   [multi client server](#multi-client-server)
+        -   [IO 모델의 분류](#io-모델의-분류)
         -   [multi process](#multi-process)
             -   [process-per-conn 모델의 한계와 C10K](#process-per-conn-모델의-한계와-c10k)
             -   [자식 프로세스를 생성하는 방법 (fork, spawn, fork server)](#자식-프로세스를-생성하는-방법-fork-spawn-fork-server)
@@ -240,10 +241,9 @@ TCP_NODELAY가 1이면 Nagle이 비활성화 되어 있다.
 
 ## multi client server
 
--   multi process 기반 : 프로세스 여러개 생성
--   multiplexing 기반 : 입출력 대상을 묶어 관리
--   multi thread 기반 : 클라 수 만큼 thread 만들기 (application thread 수준이면 좋을 것 같은데 이걸 언어 차원에서 지원해줘야 쓸 만 하다)
--   event loops 기반 서버. 보통 single thread. node.js가 대표적.
+-   multi process 기반 : 프로세스 여러개 생성. context switching이 발생한다.
+-   multi thread 기반 : 클라 수 만큼 thread 만들기 (application thread 수준이면 좋을 것 같은데 이걸 언어 차원에서 지원해줘야 쓸 만 하다). stack 영역을 제외한 context switching이 발생한다.
+-   multiplexing 기반 : 하나의 프로세스 혹은 스레드에서 다수의 file discriptor를 관리한다. (select, poll, epoll, IOCP 등)
 
 ```text
 Due to the overhead of processes and threads, most modern production-grade software uses event loops for networking.
@@ -251,6 +251,36 @@ Due to the overhead of processes and threads, most modern production-grade softw
 ```
 
 물리적 CPU 코어의 수 만큼 프로세스가 동시 실행될 수 있다. 그 이상의 프로세스는 scheduling에 의해 동시에 실행되는 것처럼 보이는 것이다.
+
+### IO 모델의 분류
+
+<img src="../imgs/(a)sync,(non)blocking.png" />
+
+Sync와 Async의 차이는 그것을 요청한 순서가 지켜지는가 아닌가에 있고 Blocking와 Non-blocking은 그 요청에 대해 받은 쪽에서 처리가 끝나기 전에 리턴해주는가 아닌가에 있다.
+
+-   `sync/blocking`은 syscall로 요청하고 올 때 까지 가만히 기다림
+
+    -   가장 단순하지만 1:1 통신에서, 바쁘지 않을때나 가능함.
+
+-   `sync/nonblocking`은 syscall로 요청하고 바로 return됨. 그러나 정말로 데이터가 왔는지는 주기적으로 polling을 해야 함
+
+    -   polling 주기가 너무 길면 작업이 완료되었음에도 곧바로 kernel space에서 데이터를 가져오지 못하는 즉시성에 대한 문제가 있다.
+    -   polling 주기가 너무 짧으면 busy - wait. 즉 가만히 있지 못하고 계속 확인해야 하는 불편함이 있다.
+
+-   `async/blocking`
+
+    -   우선 syacall로 kernel에게 i/o를 요청한다. 그러면 kernel space를 곧바로 응답을 보낸다 (non blocking). 그러나 응답을 받은 user space는 kernel space의 작업이 끝날 때까지 기다린다 (blocking). 그러면 kernel space에서 작업이 끝나면 user space에게 callback을 호출함으로써 알려준다.
+    -   꽤나 비효율적으로 보이는 방식이다. non-blocking의 장점을 살리지 못하고 blocking으로 초래되는 단점을 안고 있다.
+    -   위의 IBM에서의 분류도 사실 모호한 감이 있다.
+        -   read/write(I/O)를 async하게 처리할 수 있음에도 불구하고 'blocking'으로 분류. 왜냐? select, poll 같은 mutliplexing 관련 함수가 blocking이다.
+
+-   `async/nonblocking`은 요청한 후 바로 return되고, 데이터가 왔을 때 알림을 받는다. (callback)
+
+    -   대표적으로 single thread에서 도는 node.js event loop 기반 비동기 시스템, coroutine을 차용한 언어들의 비동기 시스템이 여기에 해당한다.
+
+-   [[네이버클라우드 기술&경험] IO Multiplexing (IO 멀티플렉싱) 기본 개념부터 심화까지 -1부-](https://blog.naver.com/n_cloudplatform/222189669084)
+
+-   [[네이버클라우드 기술&경험] IO Multiplexing (IO 멀티플렉싱) 기본 개념부터 심화까지 -2부-](https://blog.naver.com/n_cloudplatform/222255261317)
 
 ### multi process
 
@@ -331,10 +361,6 @@ process-per-conn 모델인 multi process에 비하여 multiplexing은 프로세�
 ```
 2개 이상의 파일을 동시에 처리할 때는 multi-process 또는 multi-thread로 동작해야 합니다. 하지만 multi-process 환경에선 IPC나 동기화(Semaphore, Mutex 등)를 고려해야만 하기 때문에 복잡한 이슈가 생기기 마련이죠. 그 때문에 Multiplexing, 즉 다중화 기법이 각광받게 됩니다.
 ```
-
--   [[네이버클라우드 기술&경험] IO Multiplexing (IO 멀티플렉싱) 기본 개념부터 심화까지 -1부-](https://blog.naver.com/n_cloudplatform/222189669084)
-
--   [[네이버클라우드 기술&경험] IO Multiplexing (IO 멀티플렉싱) 기본 개념부터 심화까지 -2부-](https://blog.naver.com/n_cloudplatform/222255261317)
 
 | 기능/OS | Linux | BSD | Windows |
 | ------- | ----- | --- | ------- |
