@@ -1,4 +1,5 @@
 ## custom
+utm_shared/
 **/.vs
 **/*.vcxproj.user
 **/*.vcxproj.filters
