@@ -1,15 +1,62 @@
 <!-- toc -->
 
--   [lldb](#lldb)
+-   [정적 분석? 동적 분석? 린터?](#정적-분석-동적-분석-린터)
+-   [필수적 도구들](#필수적-도구들)
+    -   [clang-tidy ](#clang-tidy)
+    -   [Cppcheck](#cppcheck)
+    -   [sanitizers](#sanitizers)
+    -   [clang-format (formatter)](#clang-format-formatter)
+-   [debugger](#debugger)
+    -   [lldb](#lldb)
     -   [문제 해결의 flow](#문제-해결의-flow)
--   [clangd](#clangd)
--   [valgrind](#valgrind)
+-   [lsp](#lsp)
+    -   [clangd](#clangd)
+-   [profiling](#profiling)
+    -   [valgrind](#valgrind)
 -   [leaks](#leaks)
 -   [기타 도구들](#기타-도구들)
 
 <!-- tocstop -->
 
-## lldb
+## 정적 분석? 동적 분석? 린터?
+
+정적 분석은 린터와 non-린터로 나뉨.
+린터는 주로 코딩 스타일, 포매팅, 코드 구조와 같은 문제들을 중점적으로 다루는 반면, 비린터 타입의 정적 코드 분석 도구들은 보다 복잡하고 섬세한 코드 문제들을 탐지하는 데 초점을 맞춤. 비린터 대표적 예로 SonarQube가 있다.
+
+## 필수적 도구들
+
+### clang-tidy 
+
+정적 분석 도구. c/cpp linter의 대표격.
+
+### [Cppcheck](https://github.com/danmar/cppcheck/)
+
+정적 코드 분석 도구. 코드를 실행하지 않고 코드 자체를 분석하여 버그, 미사용 코드, 메모리 누수, 잘못된 구문 등을 찾아준다.
+
+### [sanitizers](https://github.com/google/sanitizers)
+
+동적 코드 분석 도구.
+
+문서에 따르면 다음 종류 존재
+
+AddressSanitizer (ASan): 메모리 오류를 찾아내는 도구로, 버퍼 오버플로, 사용 후 해제된 메모리 사용(use-after-free), 메모리 누수 등을 탐지합니다.
+
+ThreadSanitizer (TSan): 멀티스레드 프로그램에서의 데이터 경쟁(race condition) 같은 스레드 관련 오류를 탐지합니다.
+
+MemorySanitizer (MSan): 초기화되지 않은 메모리 읽기를 탐지하는 도구입니다. 이는 때때로 예상치 못한 동작이나 보안 취약점을 일으킬 수 있는 문제입니다.
+
+LeakSanitizer (LSan): 메모리 누수를 탐지하는데 사용됩니다.
+
+UndefinedBehaviorSanitizer (UBSan): 정의되지 않은 동작(예: 정수 오버플로, 타입 오류 등)을 탐지합니다.
+
+### clang-format (formatter)
+
+코드 포매팅 도구. 코드를 읽기 쉽게 만들어준다.
+rule 설정을 해당 repo에 맞게 세팅해두었다.
+
+## debugger
+
+### lldb
 
 <https://lldb.llvm.org/use/tutorial.html>
 
@@ -61,14 +108,18 @@ n # 한 줄 씩
 memory read/x 0x0000000100004f4c --count 28
 ```
 
-## [clangd](https://clangd.llvm.org/)
+## lsp
+
+### [clangd](https://clangd.llvm.org/)
 
 c/c++ default intellisense가 아주 느리다.  
 clangd를 사용하자. c_cpp_properties.json과도 싸울 필요가 없어진다.
 
 -   https://80000coding.oopy.io/6e809d3a-dea5-40f3-9c72-de454a9d3632
 
-## [valgrind](https://valgrind.org/)
+## profiling
+
+### [valgrind](https://valgrind.org/)
 
 > 지금 와서 C 코드를 짜야 한다면 무조건 메모리 안전성을 확인해 주는 도구를 사용해야 한다. 이를테면 Zed Shaw의 《깐깐하게 배우는 C(Learn C the Hard Way)》에서는 초장에 바로 valgrind를 쓰도록 하고 있다.
 >
